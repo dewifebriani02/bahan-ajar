@@ -1,3 +1,8 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pertemuan 2 — Proses Bisnis &amp; Data dalam AIS</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600;700&display=swap">
 <script src="../../cloud-sync.js?v=20260912b"></script>
@@ -5,7 +10,7 @@
 /* ═══ MEETING COLOR VARIABLES (P02 = Deep Navy & Amber Gold) ═══ */
 :root{
   --meet-from:#070F1C; --meet-mid:#0C1D30; --meet-to:#112538;
-  --meet-acc:#D46020;  --meet-acc2:#E88030; --meet-star:#D46020;
+  --meet-acc:#D46020;  --meet-acc2:#E88030; --meet-star:#D46020; --meet-gold:#F0A830;
   /* SYSTEM TOKENS */
   --bg:#EDF1F6;--sf:#FFFFFF;--sf2:#E4EFF8;--sf3:#F5F7FA;
   --bd:#C4CDD8;--bs:#DDE3EC;
@@ -243,7 +248,173 @@ ul.bullet li{margin-bottom:5px;color:var(--txm);font-size:14px;line-height:1.5}
 .completion h2{font-family:'Amiri',serif;font-size:24px;font-weight:700;margin-bottom:8px}
 .completion p{color:rgba(255,255,255,.7);font-size:13.5px;margin-bottom:14px}
 .completion .lab-btn{display:inline-block;background:var(--meet-acc);color:#fff;border-radius:20px;padding:10px 24px;font-weight:700;font-size:14px;text-decoration:none}
+
+/* ═══════════ GAME EDUKATIF TERINTEGRASI (per tema) ═══════════ */
+/* ── GAME SLOT (pembungkus game di dalam seksi materi) ── */
+.game-slot{margin-top:22px;padding-top:18px;border-top:2px dashed var(--bd)}
+.game-slot-lbl{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--acc);background:var(--accl);border:1px solid var(--acc);border-radius:12px;padding:3px 12px;margin-bottom:12px}
+.game-slot .gcard{margin-bottom:14px}
+.game-slot .gcard:last-child{margin-bottom:0}
+/* ── GAME CARD SHELL ── */
+.gcard{background:var(--sf);border:1px solid var(--bs);border-radius:var(--r);padding:20px;box-shadow:var(--shadow);margin-bottom:14px}
+.ghead{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--bs)}
+.gicon{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0;background:var(--prx)}
+.gtitle{font-family:'Amiri',serif;font-size:20px;font-weight:700;color:var(--pri);line-height:1.25}
+.gsub{font-size:12.5px;color:var(--txm);margin-top:2px}
+.glink{font-size:11.5px;color:var(--pmid);font-weight:700;text-decoration:none;border:1px solid var(--bs);border-radius:10px;padding:2px 9px;white-space:nowrap}
+.glink:hover{background:var(--prx)}
+
+/* ── HUD ── */
+.hud{display:flex;justify-content:space-between;align-items:center;background:linear-gradient(135deg,#070F1C,#0C1D30);color:#fff;border-radius:var(--rs);padding:11px 16px;margin-bottom:14px;gap:10px;flex-wrap:wrap}
+.hud-cell{text-align:center;min-width:64px}
+.hud-lbl{font-size:10px;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.hud-val{font-family:'Source Code Pro',monospace;font-size:20px;font-weight:700;color:var(--meet-gold)}
+.hud-val.time{color:#FF7B6B}
+.hud-val.combo{color:#70E0A0;font-size:16px}
+
+/* ── BUTTONS ── */
+.btn-main{background:linear-gradient(135deg,var(--meet-acc),var(--meet-gold));color:#fff;border:none;border-radius:26px;padding:11px 28px;font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(212,96,32,.3);transition:transform .16s;font-family:inherit;display:inline-flex;align-items:center;gap:8px}
+.btn-main:hover:not(:disabled){transform:scale(1.03)}
+.btn-main:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+.btn-ghost{background:var(--sf3);border:1.5px solid var(--bs);color:var(--txm);border-radius:22px;padding:8px 18px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+.btn-ghost:hover{border-color:var(--pmid);color:var(--pri)}
+.opt-grid{display:grid;gap:7px;margin-top:10px}
+.opt-btn{background:var(--sf);border:1.5px solid var(--bs);border-radius:var(--rs);padding:11px 13px;font-size:13.5px;font-weight:600;color:var(--tx);cursor:pointer;transition:all .15s;text-align:left;font-family:inherit;display:flex;align-items:center;gap:10px}
+.opt-btn:hover:not(:disabled){border-color:var(--pmid);background:var(--prx);transform:translateX(2px)}
+.opt-btn:disabled{cursor:default}
+.opt-btn .okey{width:22px;height:22px;border-radius:50%;background:var(--sf3);border:1px solid var(--bs);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--txm)}
+.opt-btn.correct{background:var(--okl);border-color:var(--ok);color:var(--ok)}
+.opt-btn.correct .okey{background:var(--ok);border-color:var(--ok);color:#fff}
+.opt-btn.wrong{background:var(--warnl);border-color:var(--warn);color:var(--warn)}
+.opt-btn.wrong .okey{background:var(--warn);border-color:var(--warn);color:#fff}
+
+/* ── PROMPT / FEEDBACK ── */
+.prompt{background:linear-gradient(135deg,#0C1D30,#1B3B5E);color:#fff;border-radius:var(--rs);padding:15px 17px;margin-bottom:12px}
+.prompt-tag{font-size:10.5px;color:#FFB885;text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+.prompt-txt{font-family:'Amiri',serif;font-size:18px;font-weight:700;margin:5px 0 4px;line-height:1.35}
+.prompt-meta{font-family:'Source Code Pro',monospace;font-size:12.5px;color:#70E0A0}
+.fb{margin-top:11px;padding:11px 14px;border-radius:var(--rs);font-size:13.5px;font-weight:600;display:none;line-height:1.55}
+.fb.show{display:block;animation:pIn .25s ease both}
+.fb.good{background:var(--okl);color:var(--ok);border-left:4px solid var(--ok)}
+.fb.bad{background:var(--warnl);color:var(--warn);border-left:4px solid var(--warn)}
+
+/* ── GUIDE BOX ── */
+.guide{background:var(--sf2);border-left:4px solid var(--pmid);border-radius:var(--rs);padding:13px 16px;margin-top:14px;font-size:13px;line-height:1.6}
+.guide-t{font-weight:700;color:var(--pri);margin-bottom:3px}
+
+/* ── PROGRESS DOTS ── */
+.pdots{display:flex;gap:5px;justify-content:center;margin-bottom:12px}
+.pdot{width:9px;height:9px;border-radius:50%;background:var(--bs);transition:all .25s}
+.pdot.done{background:var(--ok)}
+.pdot.miss{background:var(--warn)}
+.pdot.now{background:var(--acc);transform:scale(1.35)}
+
+/* ── G1: SPIN WHEEL ── */
+.wheel-stage{text-align:center;padding:10px 0 4px;position:relative}
+.wheel-holder{position:relative;display:inline-block;margin-bottom:12px}
+#wheelCanvas{display:block;max-width:100%;height:auto;filter:drop-shadow(0 6px 20px rgba(12,29,48,.25))}
+.wheel-ptr{position:absolute;top:-6px;left:50%;transform:translateX(-50%);font-size:30px;line-height:1;z-index:2;filter:drop-shadow(0 2px 4px rgba(0,0,0,.35))}
+.wheel-hub{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:62px;height:62px;border-radius:50%;background:linear-gradient(135deg,var(--meet-mid),var(--meet-to));border:4px solid #fff;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 3px 12px rgba(0,0,0,.3);pointer-events:none}
+.wheel-result{font-family:'Amiri',serif;font-size:19px;font-weight:700;color:var(--acc);min-height:28px;margin-bottom:8px}
+
+/* ── G2: PIPELINE DRAG-DROP ── */
+.dd-pool{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:14px;background:var(--sf3);border:2px dashed var(--bd);border-radius:var(--r);min-height:74px;margin-bottom:14px}
+.dd-chip{background:var(--sf);border:2px solid var(--pmid);border-radius:22px;padding:9px 16px;font-size:13px;font-weight:700;color:var(--pri);cursor:grab;user-select:none;transition:all .15s;box-shadow:var(--shadow-sm);display:flex;align-items:center;gap:7px}
+.dd-chip:active{cursor:grabbing}
+.dd-chip.dragging{opacity:.4;transform:scale(.95)}
+.dd-chip.locked{cursor:default;border-color:var(--ok);background:var(--okl);color:var(--ok)}
+.dd-slots{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+@media(max-width:620px){.dd-slots{grid-template-columns:1fr 1fr}}
+.dd-slot{background:var(--sf3);border:2px dashed var(--bd);border-radius:var(--r);min-height:96px;padding:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;transition:all .18s}
+.dd-slot.over{border-color:var(--acc);background:var(--accl);transform:scale(1.03)}
+.dd-slot.filled{border-style:solid;border-color:var(--pmid);background:var(--prx)}
+.dd-slot.ok{border-color:var(--ok);background:var(--okl)}
+.dd-slot.no{border-color:var(--warn);background:var(--warnl);animation:shake .4s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.dd-num{font-family:'Source Code Pro',monospace;font-size:11px;font-weight:700;color:var(--txl);letter-spacing:.06em}
+.dd-hint{font-size:11.5px;color:var(--txl);line-height:1.4}
+
+/* ── G3: MEMORY MATCH ── */
+.mem-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+@media(max-width:620px){.mem-grid{grid-template-columns:repeat(3,1fr);gap:6px}}
+.mem-card{aspect-ratio:1/0.74;perspective:700px;cursor:pointer}
+@media(max-width:620px){.mem-card{aspect-ratio:1/1}}
+.mem-inner{position:relative;width:100%;height:100%;transition:transform .45s cubic-bezier(.4,.2,.2,1);transform-style:preserve-3d}
+.mem-card.flip .mem-inner{transform:rotateY(180deg)}
+.mem-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:var(--rs);display:flex;align-items:center;justify-content:center;padding:7px;text-align:center;font-size:11.5px;font-weight:700;line-height:1.3;overflow:hidden}
+.mem-back{background:linear-gradient(135deg,var(--meet-mid),var(--meet-to));color:rgba(255,255,255,.45);font-size:30px;border:2px solid var(--meet-to)}
+.mem-front{background:var(--sf3);border:2px solid var(--bs);color:var(--tx);transform:rotateY(180deg)}
+.mem-card.term .mem-front{background:var(--prx);border-color:var(--pmid);color:var(--pri)}
+.mem-card.def .mem-front{background:var(--accl);border-color:var(--acc);color:#8A3810}
+.mem-card.matched{pointer-events:none}
+.mem-card.matched .mem-front{background:var(--okl);border-color:var(--ok);color:var(--ok);animation:pop .35s}
+@keyframes pop{0%{transform:rotateY(180deg) scale(1)}50%{transform:rotateY(180deg) scale(1.09)}100%{transform:rotateY(180deg) scale(1)}}
+
+/* ── G4: COA CIPHER ── */
+.cipher-clue{background:#0C1D30;color:#fff;border-radius:var(--rs);padding:15px 18px;margin-bottom:12px;border-left:4px solid var(--meet-gold)}
+.cipher-lbl{font-size:10.5px;color:#70E0A0;font-weight:700;text-transform:uppercase;letter-spacing:.07em}
+.cipher-txt{font-family:'Amiri',serif;font-size:17px;font-weight:700;margin-top:5px;line-height:1.45}
+.cipher-hints{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.chint{font-size:11px;font-weight:700;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:11px;padding:3px 10px;color:rgba(255,255,255,.8)}
+.coa-code{font-family:'Source Code Pro',monospace;font-weight:700;color:var(--pmid)}
+
+/* ── G5: DFD SNAP ── */
+.dfd-board{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:620px){.dfd-board{grid-template-columns:1fr}}
+.dfd-col-t{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--txl);margin-bottom:7px}
+.dfd-item{border:2px solid var(--bs);border-radius:var(--rs);padding:11px 13px;margin-bottom:7px;cursor:pointer;background:var(--sf);transition:all .15s;font-size:13px;display:flex;align-items:center;gap:10px}
+.dfd-item:hover{border-color:var(--pmid);background:var(--prx)}
+.dfd-item.sel{border-color:var(--acc);background:var(--accl);box-shadow:0 0 0 3px rgba(212,96,32,.14)}
+.dfd-item.paired{border-color:var(--ok);background:var(--okl);color:var(--ok);cursor:default;pointer-events:none}
+.dfd-item.paired::after{content:'✓';margin-left:auto;font-weight:700}
+.dfd-sym{width:44px;height:32px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.dfd-sym svg{width:100%;height:100%}
+
+/* ── G6: TADLIS DETECTOR ── */
+.tcard{background:linear-gradient(135deg,#0C1D30,#1B3B5E);color:#fff;border-radius:var(--r);padding:20px;margin-bottom:12px;min-height:150px;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
+.tcard-tag{font-size:10.5px;color:#FFB885;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.tcard-txt{font-family:'Amiri',serif;font-size:18px;font-weight:700;line-height:1.45}
+.tcard-meta{font-family:'Source Code Pro',monospace;font-size:12px;color:#70E0A0;margin-top:8px}
+.tbtns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tbtn{border-radius:var(--rs);padding:14px 10px;font-size:14.5px;font-weight:700;cursor:pointer;font-family:inherit;transition:transform .15s;border:2px solid}
+.tbtn:hover:not(:disabled){transform:translateY(-2px)}
+.tbtn:disabled{opacity:.5;cursor:not-allowed}
+.tbtn.halal{background:var(--syal);border-color:var(--sya);color:var(--sya)}
+.tbtn.tadlis{background:var(--warnl);border-color:var(--warn);color:var(--warn)}
+
+/* ── SCOREBOARD ── */
+.sb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;margin-bottom:16px}
+.sb-item{background:var(--sf3);border:1.5px solid var(--bs);border-radius:var(--rs);padding:12px 14px;border-left-width:4px}
+.sb-name{font-size:12px;font-weight:700;color:var(--txm);margin-bottom:3px;line-height:1.3}
+.sb-val{font-family:'Source Code Pro',monospace;font-size:22px;font-weight:700;color:var(--pri)}
+.sb-max{font-size:11px;color:var(--txl);font-weight:600}
+.teams-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}
+@media(max-width:640px){.teams-grid{grid-template-columns:1fr 1fr}}
+.team-card{background:var(--sf);border:1.5px solid var(--bs);border-radius:var(--rs);padding:12px;text-align:center;border-top-width:4px}
+.team-name{font-weight:700;font-size:13px;color:var(--pri)}
+.team-role{font-size:10.5px;color:var(--txl);margin-bottom:5px}
+.team-pts{font-family:'Source Code Pro',monospace;font-size:23px;font-weight:700;color:var(--acc);margin:3px 0}
+.point-btns{display:flex;justify-content:center;gap:5px}
+.pts-add,.pts-sub{width:30px;height:28px;border-radius:7px;font-weight:700;cursor:pointer;font-size:11.5px;font-family:inherit}
+.pts-add{background:var(--okl);border:1px solid var(--ok);color:var(--ok)}
+.pts-sub{background:var(--warnl);border:1px solid var(--warn);color:var(--warn)}
+.lb-row{display:flex;align-items:center;justify-content:space-between;background:var(--sf);border:1px solid var(--bs);border-radius:var(--rs);padding:8px 12px;font-size:12.5px}
+
+#confettiCanvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:999}
+
+/* ── EMBEDDED GAME RESPONSIVE ── */
+@media(max-width:640px){
+  .gcard{padding:14px 12px}
+  .gtitle{font-size:16.5px}
+  .hud{padding:10px 11px;gap:7px}
+  .hud-cell{min-width:52px}
+  .hud-val{font-size:17px}
+}
 </style>
+</head>
+<body>
+
+<canvas id="confettiCanvas"></canvas>
 
 <!-- TOPBAR -->
 <div class="topbar">
@@ -257,6 +428,8 @@ ul.bullet li{margin-bottom:5px;color:var(--txm);font-size:14px;line-height:1.5}
   </div>
   <div class="topbar-right">
     <span class="top-badge">CPMK-1 · Romney Ch. 2</span>
+    <span class="top-badge" style="background:rgba(240,168,48,.18);border-color:rgba(240,168,48,.45);color:#F0A830;font-family:'Source Code Pro',monospace">🏅 <span id="grandTotal">0</span> pts</span>
+    <button class="top-badge" onclick="toggleSound()" id="soundBtn" style="cursor:pointer;font-family:inherit">🔊 ON</button>
     <div class="prog-wrap"><div class="prog-bar" id="topProg" style="width:14%"></div></div>
     <span class="prog-txt" id="topPct">14%</span>
   </div>
@@ -335,11 +508,11 @@ ul.bullet li{margin-bottom:5px;color:var(--txm);font-size:14px;line-height:1.5}
 
     <div class="callout warn" style="display:flex;align-items:center;justify-content:space-between;gap:12px;background:linear-gradient(135deg,var(--meet-mid),var(--meet-to));color:#fff;border-left:4px solid var(--meet-acc);padding:14px 18px;border-radius:var(--rs)">
       <div>
-        <div style="font-size:11px;color:var(--meet-acc2);font-weight:700;text-transform:uppercase;letter-spacing:.08em">🎮 ICE BREAKING &amp; MULTI-STUDENT GAME</div>
-        <div style="font-family:'Amiri',serif;font-size:17px;font-weight:700;color:#fff;margin:2px 0 3px">Ekspedisi Transaksi BMT: Data Relay &amp; COA Cipher Challenge</div>
-        <div style="font-size:12.5px;color:rgba(255,255,255,.8)">Mainkan game kolaboratif antar mahasiswa: Relay Alur Transaksi, Tebak Kode Akun (COA), dan Deteksi Kejujuran Data (Anti-Tadlis)!</div>
+        <div style="font-size:11px;color:var(--meet-acc2);font-weight:700;text-transform:uppercase;letter-spacing:.08em">🎮 6 TEMA · 6 GAME INTERAKTIF</div>
+        <div style="font-family:'Amiri',serif;font-size:17px;font-weight:700;color:#fff;margin:2px 0 3px">Ekspedisi Transaksi BMT: Game Arena per Tema</div>
+        <div style="font-size:12.5px;color:rgba(255,255,255,.8)">Game-nya menyatu di dalam setiap seksi materi di bawah: 🎡 Roda Siklus · 🔄 Pipeline Data · 🃏 Kartu Hierarki · 🔐 Sandi COA · 🗺️ Rakit DFD · ⚖️ Detektif Tadlis — lengkap dengan skor, kombo, dan rekap di bagian kuis.</div>
       </div>
-      <a href="Game-02-AIS.html" target="_blank" style="background:var(--meet-acc);color:#fff;font-size:13px;font-weight:700;padding:9px 18px;border-radius:20px;text-decoration:none;white-space:nowrap;box-shadow:0 3px 10px rgba(0,0,0,.3);transition:background .15s">Mainkan Game Kelas ↗</a>
+      <a href="#sec1" style="background:var(--meet-acc);color:#fff;font-size:13px;font-weight:700;padding:9px 18px;border-radius:20px;text-decoration:none;white-space:nowrap;box-shadow:0 3px 10px rgba(0,0,0,.3);transition:background .15s">Mulai dari Game Tema 1 ↓</a>
     </div>
 
     <div class="callout info">
@@ -407,6 +580,56 @@ ul.bullet li{margin-bottom:5px;color:var(--txm);font-size:14px;line-height:1.5}
     <div class="callout case">
       <div class="case-label">Contoh Kasus: Lembaga Keuangan Syariah (BMT / BPRS)</div>
       <p>Pada BMT (Baitul Maal wat Tamwil), siklus transaksi mencakup: <strong>Siklus Pendanaan</strong> (menghimpun simpanan wadiah / deposito mudharabah), <strong>Siklus Pengeluaran &amp; Pembiayaan</strong> (menyalurkan pembiayaan murabahah / ijarah kepada nasabah), <strong>Siklus Pendapatan</strong> (menerima angsuran pokok dan margin/bagi hasil), dan <strong>Siklus ZIS</strong> (menghimpun dan menyalurkan zakat, infaq, dan shadaqah).</p>
+    </div>
+
+
+    <div class="game-slot">
+      <div class="game-slot-lbl">🎮 GAME EDUKATIF TEMA INI</div>
+
+  <div class="gcard">
+    <div class="ghead">
+      <div class="gicon" style="background:#D8EEF6">🎡</div>
+      <div style="flex:1">
+        <div class="gtitle">Roda Siklus Transaksi</div>
+        <div class="gsub">Tema 1 · Putar roda → dapat skenario BMT → tentukan siklus transaksinya</div>
+      </div>
+    </div>
+
+    <div class="hud">
+      <div class="hud-cell"><div class="hud-lbl">Skor</div><div class="hud-val" id="g1Score">0</div></div>
+      <div class="hud-cell"><div class="hud-lbl">Waktu</div><div class="hud-val time" id="g1Time">—</div></div>
+      <div class="hud-cell"><div class="hud-lbl">Ronde</div><div class="hud-val" id="g1Round">0/6</div></div>
+      <div class="hud-cell"><div class="hud-lbl">Kombo</div><div class="hud-val combo" id="g1Combo">🔥 x1</div></div>
+    </div>
+
+    <div class="pdots" id="g1Dots"></div>
+
+    <div class="wheel-stage">
+      <div class="wheel-holder">
+        <div class="wheel-ptr">🔻</div>
+        <canvas id="wheelCanvas" width="320" height="320"></canvas>
+        <div class="wheel-hub">🕌</div>
+      </div>
+      <div class="wheel-result" id="g1WheelTxt">Putar roda untuk memulai ekspedisi!</div>
+      <button class="btn-main" id="g1Spin" onclick="g1DoSpin()">🎡 Putar Roda Siklus</button>
+    </div>
+
+    <div id="g1QuizBox" style="display:none;margin-top:16px">
+      <div class="prompt">
+        <span class="prompt-tag" id="g1Tag">BUSINESS EVENT</span>
+        <div class="prompt-txt" id="g1Scenario">—</div>
+        <div class="prompt-meta" id="g1Meta">—</div>
+      </div>
+      <p style="font-size:12.5px;font-weight:700;color:var(--txm);margin-bottom:2px">Siklus transaksi mana yang memproses peristiwa bisnis ini?</p>
+      <div class="opt-grid" id="g1Opts"></div>
+      <div class="fb" id="g1Fb"></div>
+    </div>
+
+    <div class="guide">
+      <div class="guide-t">💡 Panduan Dosen</div>
+      Tampilkan di proyektor. Tunjuk mahasiswa bergantian memutar roda, lalu beri 15 detik berdiskusi dengan teman sebangku sebelum menjawab. Bahas kenapa opsi lain salah — di situ letak pemahaman siklusnya.
+    </div>
+  </div>
     </div>
   </div>
   <div class="sec-foot">
@@ -553,6 +776,56 @@ ul.bullet li{margin-bottom:5px;color:var(--txm);font-size:14px;line-height:1.5}
         <p style="font-size:12px;color:var(--txm);margin-top:8px;margin-bottom:0">Inilah <em>Data Processing Cycle</em> secara utuh — dari kejadian bisnis hingga menghasilkan entri akuntansi berpasangan yang seimbang.</p>
       </div>
     </div>
+
+
+    <div class="game-slot">
+      <div class="game-slot-lbl">🎮 GAME EDUKATIF TEMA INI</div>
+
+  <div class="gcard">
+    <div class="ghead">
+      <div class="gicon" style="background:#FCEBD8">🔄</div>
+      <div style="flex:1">
+        <div class="gtitle">Pipeline Pemrosesan Data</div>
+        <div class="gsub">Tema 2 · Seret 4 tahap Data Processing Cycle ke urutan yang benar</div>
+      </div>
+    </div>
+
+    <div class="hud">
+      <div class="hud-cell"><div class="hud-lbl">Skor</div><div class="hud-val" id="g2Score">0</div></div>
+      <div class="hud-cell"><div class="hud-lbl">Waktu</div><div class="hud-val time" id="g2Time">—</div></div>
+      <div class="hud-cell"><div class="hud-lbl">Tahap</div><div class="hud-val" id="g2Stage">1/2</div></div>
+      <div class="hud-cell"><div class="hud-lbl">Salah</div><div class="hud-val combo" id="g2Err">0</div></div>
+    </div>
+
+    <div id="g2Part1">
+      <p style="font-size:13px;color:var(--txm);margin-bottom:10px"><strong>Babak 1 —</strong> Seret setiap kartu tahap ke kotak urutan yang tepat. Di HP, ketuk kartu lalu ketuk kotak tujuan.</p>
+      <div class="dd-pool" id="g2Pool"></div>
+      <div class="dd-slots" id="g2Slots"></div>
+      <div class="fb" id="g2Fb"></div>
+      <div style="text-align:center;margin-top:14px">
+        <button class="btn-main" id="g2Check" onclick="g2Check()" disabled>✅ Periksa Urutan</button>
+        <button class="btn-ghost" onclick="g2Reset()">🔄 Ulangi</button>
+      </div>
+    </div>
+
+    <div id="g2Part2" style="display:none">
+      <p style="font-size:13px;color:var(--txm);margin-bottom:10px"><strong>Babak 2 —</strong> Skenario nyata di BMT. Tahap pemrosesan data mana yang sedang berlangsung?</p>
+      <div class="pdots" id="g2Dots"></div>
+      <div class="prompt">
+        <span class="prompt-tag" id="g2Tag">SKENARIO OPERASIONAL BMT</span>
+        <div class="prompt-txt" id="g2Scenario">—</div>
+        <div class="prompt-meta" id="g2Meta">—</div>
+      </div>
+      <div class="opt-grid" id="g2Opts"></div>
+      <div class="fb" id="g2Fb2"></div>
+    </div>
+
+    <div class="guide">
+      <div class="guide-t">💡 Panduan Dosen</div>
+      Babak 1 menguji hafalan urutan; Babak 2 menguji penerapan. Minta mahasiswa menyebut <em>dokumen sumber</em> apa yang dipakai di setiap skenario Babak 2 sebelum mereka memilih jawaban.
+    </div>
+  </div>
+    </div>
   </div>
   <div class="sec-foot">
     <span class="done-msg">✓ Seksi 3 Selesai</span>
@@ -625,6 +898,80 @@ ul.bullet li{margin-bottom:5px;color:var(--txm);font-size:14px;line-height:1.5}
     </div>
     <div class="callout info">
       <strong>⚖️ Aturan Emas Rekonsiliasi:</strong> Total seluruh saldo di Buku Besar Pembantu <em>harus selalu sama</em> dengan saldo Akun Kontrol di Buku Besar Umum. Jika tidak sama → ada transaksi yang salah posting atau terlewat. Wajib diinvestigasi sebelum laporan keuangan dicetak.
+    </div>
+
+
+    <div class="game-slot">
+      <div class="game-slot-lbl">🎮 GAME EDUKATIF TEMA INI</div>
+
+  <div class="gcard">
+    <div class="ghead">
+      <div class="gicon" style="background:#D0EEE2">🃏</div>
+      <div style="flex:1">
+        <div class="gtitle">Kartu Memori Hierarki Data</div>
+        <div class="gsub">Tema 3 · Balik kartu, pasangkan istilah dengan contoh nyatanya di BMT</div>
+      </div>
+    </div>
+
+    <div class="hud">
+      <div class="hud-cell"><div class="hud-lbl">Skor</div><div class="hud-val" id="g3Score">0</div></div>
+      <div class="hud-cell"><div class="hud-lbl">Waktu</div><div class="hud-val time" id="g3Time">—</div></div>
+      <div class="hud-cell"><div class="hud-lbl">Pasangan</div><div class="hud-val" id="g3Pairs">0/8</div></div>
+      <div class="hud-cell"><div class="hud-lbl">Percobaan</div><div class="hud-val combo" id="g3Tries">0</div></div>
+    </div>
+
+    <div class="mem-grid" id="g3Grid"></div>
+    <div class="fb" id="g3Fb"></div>
+
+    <div style="text-align:center;margin-top:14px">
+      <button class="btn-main" id="g3Start" onclick="g3Start()">🃏 Mulai Membalik Kartu</button>
+    </div>
+
+    <div class="guide">
+      <div class="guide-t">💡 Panduan Dosen</div>
+      Mainkan berpasangan dan catat jumlah percobaan — pasangan dengan percobaan paling sedikit menang. Setiap kali satu pasangan terbuka, minta mahasiswa menyebutkan level di atas dan di bawahnya dalam hierarki.
+    </div>
+  </div>
+
+
+  <div class="gcard">
+    <div class="ghead">
+      <div class="gicon" style="background:#EEE0FA">🔐</div>
+      <div style="flex:1">
+        <div class="gtitle">Sandi Bagan Akun (COA Cipher)</div>
+        <div class="gsub">Tema 4 · Baca petunjuk akuntan forensik, pecahkan kode akun yang dimaksud</div>
+      </div>
+    </div>
+
+    <div class="hud">
+      <div class="hud-cell"><div class="hud-lbl">Skor</div><div class="hud-val" id="g4Score">0</div></div>
+      <div class="hud-cell"><div class="hud-lbl">Waktu</div><div class="hud-val time" id="g4Time">—</div></div>
+      <div class="hud-cell"><div class="hud-lbl">Sandi</div><div class="hud-val" id="g4Round">0/7</div></div>
+      <div class="hud-cell"><div class="hud-lbl">Kombo</div><div class="hud-val combo" id="g4Combo">🔥 x1</div></div>
+    </div>
+
+    <div class="pdots" id="g4Dots"></div>
+
+    <div id="g4Box" style="display:none">
+      <div class="cipher-clue">
+        <div class="cipher-lbl">🔎 Kartu Petunjuk Akuntan Forensik</div>
+        <div class="cipher-txt" id="g4Clue">—</div>
+        <div class="cipher-hints" id="g4Hints"></div>
+      </div>
+      <p style="font-size:12.5px;font-weight:700;color:var(--txm);margin-bottom:2px">Kode akun mana yang cocok dengan semua petunjuk di atas?</p>
+      <div class="opt-grid" id="g4Opts"></div>
+      <div class="fb" id="g4Fb"></div>
+    </div>
+
+    <div style="text-align:center;margin-top:14px">
+      <button class="btn-main" id="g4Start" onclick="g4Start()">🔐 Mulai Pecahkan Sandi</button>
+    </div>
+
+    <div class="guide">
+      <div class="guide-t">💡 Panduan Dosen</div>
+      Dua mahasiswa maju: satu membaca petunjuk keras-keras tanpa menyebut nama akun, satu lagi menebak. Tekankan logika digit pertama COA (1 Aset · 2 Liabilitas · 3 Ekuitas · 4 Pendapatan · 5 Beban) — itu kunci semua sandi di sini.
+    </div>
+  </div>
     </div>
   </div>
   <div class="sec-foot">
@@ -721,6 +1068,64 @@ ul.bullet li{margin-bottom:5px;color:var(--txm);font-size:14px;line-height:1.5}
       </div>
       <p style="font-size:12.5px;color:var(--txl);margin-top:8px;margin-bottom:0">Panah oranye = aliran data <strong>masuk</strong> ke sistem. Panah biru = aliran data <strong>keluar</strong> dari sistem (output informasi).</p>
     </div>
+
+
+    <div class="game-slot">
+      <div class="game-slot-lbl">🎮 GAME EDUKATIF TEMA INI</div>
+
+  <div class="gcard">
+    <div class="ghead">
+      <div class="gicon" style="background:#D8E4F8">🗺️</div>
+      <div style="flex:1">
+        <div class="gtitle">Rakit Data Flow Diagram</div>
+        <div class="gsub">Tema 5 · Babak 1: cocokkan simbol DFD · Babak 2: petakan elemen DFD BMT</div>
+      </div>
+    </div>
+
+    <div class="hud">
+      <div class="hud-cell"><div class="hud-lbl">Skor</div><div class="hud-val" id="g5Score">0</div></div>
+      <div class="hud-cell"><div class="hud-lbl">Waktu</div><div class="hud-val time" id="g5Time">—</div></div>
+      <div class="hud-cell"><div class="hud-lbl">Babak</div><div class="hud-val" id="g5Stage">1/2</div></div>
+      <div class="hud-cell"><div class="hud-lbl">Salah</div><div class="hud-val combo" id="g5Err">0</div></div>
+    </div>
+
+    <div id="g5Part1">
+      <p style="font-size:13px;color:var(--txm);margin-bottom:12px"><strong>Babak 1 —</strong> Klik satu simbol di kiri, lalu klik definisi pasangannya di kanan.</p>
+      <div class="dfd-board">
+        <div>
+          <div class="dfd-col-t">Simbol DFD</div>
+          <div id="g5Syms"></div>
+        </div>
+        <div>
+          <div class="dfd-col-t">Definisi &amp; Contoh di BMT</div>
+          <div id="g5Defs"></div>
+        </div>
+      </div>
+      <div class="fb" id="g5Fb"></div>
+    </div>
+
+    <div id="g5Part2" style="display:none">
+      <p style="font-size:13px;color:var(--txm);margin-bottom:10px"><strong>Babak 2 —</strong> Pada DFD siklus simpanan BMT Berkah Mandiri, elemen berikut tergolong apa?</p>
+      <div class="pdots" id="g5Dots"></div>
+      <div class="prompt">
+        <span class="prompt-tag" id="g5Tag">ELEMEN DFD</span>
+        <div class="prompt-txt" id="g5Scenario">—</div>
+        <div class="prompt-meta" id="g5Meta">—</div>
+      </div>
+      <div class="opt-grid" id="g5Opts"></div>
+      <div class="fb" id="g5Fb2"></div>
+    </div>
+
+    <div style="text-align:center;margin-top:14px">
+      <button class="btn-main" id="g5Start" onclick="g5Start()">🗺️ Mulai Merakit DFD</button>
+    </div>
+
+    <div class="guide">
+      <div class="guide-t">💡 Panduan Dosen</div>
+      Setelah Babak 1, minta satu mahasiswa menggambar ulang DFD level 0 siklus simpanan di papan tulis memakai empat simbol tadi. Babak 2 dipakai untuk mengoreksi gambarnya bersama-sama.
+    </div>
+  </div>
+    </div>
   </div>
   <div class="sec-foot">
     <span class="done-msg">✓ Seksi 5 Selesai</span>
@@ -761,6 +1166,52 @@ ul.bullet li{margin-bottom:5px;color:var(--txm);font-size:14px;line-height:1.5}
     <div class="callout sya">
       <strong>☾ Relevansi dengan Ayat Mudayanah (QS. Al-Baqarah: 282):</strong> Allah memerintahkan agar setiap transaksi tidak tunai dicatat dengan adil oleh seorang juru tulis yang jujur. Dalam konteks modern, AIS yang dirancang dengan <em>audit trail</em> yang kokoh adalah wujud implementasi perintah Allah dalam menjaga kepatuhan dan keadilan ekonomi.
     </div>
+
+
+    <div class="game-slot">
+      <div class="game-slot-lbl">🎮 GAME EDUKATIF TEMA INI</div>
+
+  <div class="gcard">
+    <div class="ghead">
+      <div class="gicon" style="background:#FCDBD0">⚖️</div>
+      <div style="flex:1">
+        <div class="gtitle">Detektif Tadlis &amp; Halalan Thayyiban</div>
+        <div class="gsub">Tema 6 · Transaksi masuk satu per satu — loloskan atau tahan sebelum waktu habis</div>
+      </div>
+    </div>
+
+    <div class="hud">
+      <div class="hud-cell"><div class="hud-lbl">Skor</div><div class="hud-val" id="g6Score">0</div></div>
+      <div class="hud-cell"><div class="hud-lbl">Waktu</div><div class="hud-val time" id="g6Time">—</div></div>
+      <div class="hud-cell"><div class="hud-lbl">Kasus</div><div class="hud-val" id="g6Round">0/8</div></div>
+      <div class="hud-cell"><div class="hud-lbl">Akurasi</div><div class="hud-val combo" id="g6Acc">—</div></div>
+    </div>
+
+    <div class="pdots" id="g6Dots"></div>
+
+    <div id="g6Box" style="display:none">
+      <div class="tcard">
+        <div class="tcard-tag" id="g6Tag">TRANSAKSI MASUK</div>
+        <div class="tcard-txt" id="g6Scenario">—</div>
+        <div class="tcard-meta" id="g6Meta">—</div>
+      </div>
+      <div class="tbtns">
+        <button class="tbtn halal" id="g6BtnH" onclick="g6Judge(false)">✅ Sah &amp; Halalan Thayyiban</button>
+        <button class="tbtn tadlis" id="g6BtnT" onclick="g6Judge(true)">⚠️ Tahan — Tadlis / Riba</button>
+      </div>
+      <div class="fb" id="g6Fb"></div>
+    </div>
+
+    <div style="text-align:center;margin-top:14px">
+      <button class="btn-main" id="g6Start" onclick="g6Start()">⚖️ Mulai Patroli Transaksi</button>
+    </div>
+
+    <div class="guide">
+      <div class="guide-t">💡 Panduan Dosen</div>
+      Bagi kelas dua kubu: kubu "Loloskan" dan kubu "Tahan". Sebelum tombol ditekan, minta perwakilan tiap kubu beradu argumen 20 detik. Baru buka jawabannya — penjelasan yang muncul jadi bahan pembahasan fikih muamalahnya.
+    </div>
+  </div>
+    </div>
   </div>
   <div class="sec-foot">
     <span class="done-msg">✓ Seksi 6 Selesai</span>
@@ -778,6 +1229,64 @@ ul.bullet li{margin-bottom:5px;color:var(--txm);font-size:14px;line-height:1.5}
     </div>
   </div>
   <div class="quiz-body">
+
+
+  <div class="gcard">
+    <div class="ghead">
+      <div class="gicon" style="background:#FCEBD8">🏆</div>
+      <div style="flex:1">
+        <div class="gtitle">Papan Skor Ekspedisi</div>
+        <div class="gsub">Rekap 6 game, skor tim kelas, dan peringkat realtime</div>
+      </div>
+    </div>
+
+    <div style="text-align:center;background:linear-gradient(135deg,#070F1C,#112538);color:#fff;border-radius:var(--r);padding:20px;margin-bottom:16px">
+      <div style="font-size:11px;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.09em;font-weight:700">Total Skor Ekspedisi Anda</div>
+      <div style="font-family:'Source Code Pro',monospace;font-size:44px;font-weight:700;color:var(--meet-gold);line-height:1.15" id="sbTotal">0</div>
+      <div style="font-size:13px;color:rgba(255,255,255,.7)" id="sbRank">Selesaikan keenam game untuk membuka gelar Ekspedisi!</div>
+    </div>
+
+    <div class="sb-grid" id="sbGrid"></div>
+
+    <div style="text-align:center;margin-bottom:18px">
+      <button class="btn-main" onclick="sbSubmit()">☁️ Kirim Skor ke Papan Kelas</button>
+    </div>
+
+    <h4 style="font-family:'Amiri',serif;font-size:17px;color:var(--pri);margin-bottom:8px">👥 Skor Tim Kelas (Mode Proyektor)</h4>
+    <div class="teams-grid">
+      <div class="team-card" style="border-top-color:#1B7898">
+        <div class="team-name">Tim 1 · Wadiah</div><div class="team-role">Penghimpunan Dana</div>
+        <div class="team-pts" id="scoreTeam0">0</div>
+        <div class="point-btns"><button class="pts-add" onclick="addTeamScore(0,10)">+10</button><button class="pts-sub" onclick="addTeamScore(0,-5)">−5</button></div>
+      </div>
+      <div class="team-card" style="border-top-color:#D46020">
+        <div class="team-name">Tim 2 · Murabahah</div><div class="team-role">Pembiayaan Jual-Beli</div>
+        <div class="team-pts" id="scoreTeam1">0</div>
+        <div class="point-btns"><button class="pts-add" onclick="addTeamScore(1,10)">+10</button><button class="pts-sub" onclick="addTeamScore(1,-5)">−5</button></div>
+      </div>
+      <div class="team-card" style="border-top-color:#1F9060">
+        <div class="team-name">Tim 3 · Mudharabah</div><div class="team-role">Bagi Hasil</div>
+        <div class="team-pts" id="scoreTeam2">0</div>
+        <div class="point-btns"><button class="pts-add" onclick="addTeamScore(2,10)">+10</button><button class="pts-sub" onclick="addTeamScore(2,-5)">−5</button></div>
+      </div>
+      <div class="team-card" style="border-top-color:#7040B0">
+        <div class="team-name">Tim 4 · Ijarah</div><div class="team-role">Sewa &amp; Jasa</div>
+        <div class="team-pts" id="scoreTeam3">0</div>
+        <div class="point-btns"><button class="pts-add" onclick="addTeamScore(3,10)">+10</button><button class="pts-sub" onclick="addTeamScore(3,-5)">−5</button></div>
+      </div>
+    </div>
+
+    <div style="margin-top:18px;background:var(--sf3);border:1.5px solid var(--bs);border-radius:var(--rs);padding:14px 16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px;flex-wrap:wrap">
+        <h4 style="font-family:'Amiri',serif;font-size:17px;color:var(--pri);margin:0">🏅 Peringkat Kelas Realtime</h4>
+        <span style="font-size:10.5px;background:var(--okl);color:var(--ok);padding:2px 9px;border-radius:10px;font-weight:700">● LIVE SYNC</span>
+      </div>
+      <div id="liveLeaderboardList" style="display:grid;gap:6px">
+        <div style="color:var(--txl);font-style:italic;font-size:12.5px">Memuat peringkat kelas dari cloud...</div>
+      </div>
+    </div>
+  </div>
+
 
     <!-- MCQ 1 -->
     <div class="q-item">
@@ -863,7 +1372,7 @@ ul.bullet li{margin-bottom:5px;color:var(--txm);font-size:14px;line-height:1.5}
   <h2>🎉 Selamat! Kamu Telah Menguasai Pertemuan 02 AIS!</h2>
   <p>Kamu sudah memahami siklus transaksi, siklus pemrosesan data, hierarki data, bagan akun, dasar DFD, dan etika kejujuran data syariah.</p>
   <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap">
-    <a class="lab-btn" href="Game-02-AIS.html" style="background:#1B7898">🎮 Mainkan Game Kolaboratif P02 ▸</a>
+    <a class="lab-btn" href="#sec1" style="background:#1B7898">🎮 Ulangi Game Tema P02 ▸</a>
     <a class="lab-btn" href="Praktikum-02-AIS.html">Buka Lembar Praktikum P02 (Lab 1) ▸</a>
   </div>
 </div>
@@ -1073,3 +1582,1111 @@ function applyState(){
 loadState();
 applyState();
 </script>
+
+<script>
+/* ═══════════ GAME EDUKATIF TERINTEGRASI (6 tema) ═══════════ */
+
+/* ═══ AUDIO (Web Audio API, offline) ═══ */
+let soundEnabled = true, audioCtx = null;
+function ac(){ if(!audioCtx){ try{ audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return audioCtx; }
+function playTone(freq,type,dur,vol){
+  if(!soundEnabled) return;
+  const c = ac(); if(!c) return;
+  try{
+    if(c.state === 'suspended') c.resume();
+    const o = c.createOscillator(), g = c.createGain();
+    o.type = type; o.frequency.value = freq;
+    g.gain.setValueAtTime(vol||0.14, c.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + dur);
+    o.connect(g); g.connect(c.destination);
+    o.start(); o.stop(c.currentTime + dur);
+  }catch(e){}
+}
+const sGood = ()=>{ playTone(523.25,'sine',.12); setTimeout(()=>playTone(659.25,'sine',.14),90); setTimeout(()=>playTone(783.99,'sine',.22),180); };
+const sBad  = ()=>{ playTone(300,'sawtooth',.14); setTimeout(()=>playTone(210,'sawtooth',.26),110); };
+const sTick = ()=> playTone(760,'square',.04,.07);
+const sFlip = ()=> playTone(480,'sine',.07,.10);
+const sWin  = ()=>[523,659,783,1046].forEach((f,i)=>setTimeout(()=>playTone(f,'triangle',.28),i*115));
+function toggleSound(){
+  soundEnabled = !soundEnabled;
+  document.getElementById('soundBtn').textContent = soundEnabled ? '🔊 ON' : '🔇 OFF';
+}
+
+/* ═══ CONFETTI ═══ */
+function confetti(n){
+  const cv = document.getElementById('confettiCanvas'), ctx = cv.getContext('2d');
+  cv.width = window.innerWidth; cv.height = window.innerHeight;
+  const cols = ['#D46020','#1B7898','#1F9060','#F0A830','#7040B0'], ps = [];
+  for(let i=0;i<(n||70);i++) ps.push({
+    x: cv.width/2, y: cv.height/2.4,
+    vx:(Math.random()-.5)*15, vy:(Math.random()-.72)*15,
+    color: cols[Math.floor(Math.random()*cols.length)],
+    r: Math.random()*6+3, a:1
+  });
+  (function loop(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    let alive = false;
+    ps.forEach(p=>{
+      p.x+=p.vx; p.y+=p.vy; p.vy+=0.3; p.a-=0.015;
+      if(p.a>0){ alive=true; ctx.globalAlpha=p.a; ctx.fillStyle=p.color;
+        ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill(); }
+    });
+    if(alive) requestAnimationFrame(loop); else ctx.clearRect(0,0,cv.width,cv.height);
+  })();
+}
+
+
+/* ═══ SHARED SCORE ENGINE ═══ */
+const GAMES = [
+  {id:0,name:'Roda Siklus Transaksi',max:900,color:'#1B7898'},
+  {id:1,name:'Pipeline Pemrosesan Data',max:700,color:'#D46020'},
+  {id:2,name:'Kartu Memori Hierarki',max:800,color:'#1F9060'},
+  {id:3,name:'Sandi Bagan Akun (COA)',max:1050,color:'#7040B0'},
+  {id:4,name:'Rakit Data Flow Diagram',max:800,color:'#2A50B0'},
+  {id:5,name:'Detektif Tadlis',max:960,color:'#C03818'}
+];
+const scores = [0,0,0,0,0,0], finished = [false,false,false,false,false,false];
+
+function setScore(g,val){
+  scores[g] = val;
+  const el = document.getElementById('g'+(g+1)+'Score');
+  if(el) el.textContent = val;
+  document.getElementById('grandTotal').textContent = scores.reduce((a,b)=>a+b,0);
+}
+function markDone(g){
+  finished[g] = true;
+  const d = document.getElementById('dn'+g);
+  if(d) d.textContent = '✓';
+  sbRender();
+}
+
+/* ═══ TIMER HELPER ═══ */
+function mkTimer(elId, seconds, onTick, onEnd){
+  let left = seconds;
+  const el = document.getElementById(elId);
+  if(el) el.textContent = left + 's';
+  const h = setInterval(()=>{
+    left--;
+    if(el) el.textContent = Math.max(0,left) + 's';
+    if(left<=5 && left>0) sTick();
+    if(onTick) onTick(left);
+    if(left<=0){ clearInterval(h); if(onEnd) onEnd(); }
+  },1000);
+  return { stop:()=>clearInterval(h), left:()=>left };
+}
+
+/* ═══ PROGRESS DOTS ═══ */
+function dots(elId, total, state){
+  const el = document.getElementById(elId); if(!el) return;
+  el.innerHTML = '';
+  for(let i=0;i<total;i++){
+    const d = document.createElement('div');
+    d.className = 'pdot' + (state[i]==='ok'?' done':state[i]==='no'?' miss':state[i]==='now'?' now':'');
+    el.appendChild(d);
+  }
+}
+
+/* ═══ FEEDBACK HELPER ═══ */
+function fb(elId, good, html){
+  const el = document.getElementById(elId); if(!el) return;
+  el.className = 'fb show ' + (good?'good':'bad');
+  el.innerHTML = html;
+}
+function fbHide(elId){ const el=document.getElementById(elId); if(el) el.className='fb'; }
+
+function shuffle(a){
+  const r = a.slice();
+  for(let i=r.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [r[i],r[j]]=[r[j],r[i]]; }
+  return r;
+}
+
+/* ══════════ TEMA 1: RODA SIKLUS TRANSAKSI ══════════ */
+const CYCLES = [
+  {key:'pendapatan', label:'Pendapatan',  emoji:'💰', color:'#1B7898'},
+  {key:'pengeluaran',label:'Pengeluaran', emoji:'🛒', color:'#D46020'},
+  {key:'produksi',   label:'Produksi',    emoji:'🏭', color:'#1F9060'},
+  {key:'sdm',        label:'Penggajian',  emoji:'👥', color:'#7040B0'},
+  {key:'pendanaan',  label:'Pendanaan',   emoji:'🏦', color:'#2A50B0'},
+  {key:'bukubesar',  label:'Buku Besar',  emoji:'📒', color:'#C03818'}
+];
+
+const G1_CASES = {
+  pendapatan:[
+    {s:'Nasabah Pak Hasan membayar angsuran ke-7 pembiayaan murabahah sepeda motor beserta porsi marginnya di teller BMT.',
+     m:'Angsuran Pokok Rp 575.000 + Margin Rp 75.000 · Bukti Kas Masuk #KM-1180',
+     why:'Penerimaan angsuran dan margin adalah arus kas masuk dari penyaluran dana — masuk <strong>Siklus Pendapatan</strong>. Pengakuan margin di sini adalah realisasi pendapatan BMT.'},
+    {s:'BMT menerbitkan tagihan sewa bulanan kepada penyewa ruko dalam akad ijarah dan mengirim invoice ke penyewa.',
+     m:'Sewa Rp 1.000.000/bulan · Invoice IJR-0244',
+     why:'Menagih dan menerima pendapatan sewa ijarah dari pelanggan adalah aktivitas <strong>Siklus Pendapatan</strong> — barang/jasa diserahkan, kas ditagih.'}
+  ],
+  pengeluaran:[
+    {s:'BMT membeli satu unit sepeda motor dari dealer rekanan untuk diserahkan kepada anggota dalam akad murabahah.',
+     m:'Harga Beli Rp 18.000.000 · Purchase Order PO-0312',
+     why:'Pengadaan barang dari pemasok dan kewajiban membayarnya adalah <strong>Siklus Pengeluaran</strong>. Barang ini dicatat dulu sebagai Persediaan Murabahah sebelum diakadkan.'},
+    {s:'Bagian umum membayar tagihan listrik dan internet kantor cabang BMT bulan ini melalui transfer bank.',
+     m:'Total Rp 3.450.000 · Voucher Kas Keluar #KK-0891',
+     why:'Membeli dan membayar barang/jasa dari pihak luar — termasuk utilitas — adalah <strong>Siklus Pengeluaran</strong> (beli–terima–bayar).'}
+  ],
+  produksi:[
+    {s:'Unit usaha riil BMT mengolah 200 kg kedelai mentah menjadi 1.400 bungkus tempe kemasan siap jual di dapur produksi.',
+     m:'Bahan Baku Rp 1.800.000 → Barang Jadi · Job Order JO-014',
+     why:'Mengubah bahan baku menjadi barang jadi adalah <strong>Siklus Produksi/Konversi</strong>. Di sini bahan baku, tenaga kerja, dan overhead diserap menjadi harga pokok produksi.'},
+    {s:'Manajer unit usaha menghitung pemakaian bahan baku dan jam tenaga kerja langsung untuk menentukan harga pokok produksi tempe bulan ini.',
+     m:'BB Rp 1.800.000 · TKL Rp 900.000 · BOP Rp 400.000',
+     why:'Perhitungan dan pembebanan biaya produksi ke barang jadi adalah inti <strong>Siklus Produksi</strong>, bukan siklus pengeluaran.'}
+  ],
+  sdm:[
+    {s:'BMT menghitung dan mentransfer gaji bulanan 14 karyawan beserta potongan zakat profesi dan iuran BPJS.',
+     m:'Gaji Bruto Rp 42.000.000 · Zakat 2,5% · Daftar Gaji PY-09',
+     why:'Perekrutan, absensi, penggajian, dan potongannya adalah <strong>Siklus Penggajian &amp; SDM</strong> — siklus yang khusus mengurus jasa tenaga kerja karyawan.'},
+    {s:'Bagian SDM merekap absensi dan lembur petugas lapangan selama satu bulan sebagai dasar perhitungan tunjangan.',
+     m:'14 Karyawan · 62 Jam Lembur · Rekap Absensi ABS-09',
+     why:'Pengumpulan data waktu kerja karyawan adalah input awal <strong>Siklus Penggajian &amp; SDM</strong> sebelum gaji dihitung.'}
+  ],
+  pendanaan:[
+    {s:'Yayasan Al-Falah membuka bilyet deposito mudharabah berjangka 12 bulan di BMT dengan nisbah 55:45.',
+     m:'Nominal Rp 50.000.000 · Bilyet DEP-0077',
+     why:'Menghimpun dana dari anggota/investor dan mengembalikannya beserta bagi hasil adalah <strong>Siklus Pendanaan</strong> — BMT memperoleh sumber dana, bukan menjual barang.'},
+    {s:'Anggota baru menyetor simpanan pokok dan simpanan wajib saat mendaftar menjadi anggota koperasi BMT.',
+     m:'Simpanan Pokok Rp 500.000 + Wajib Rp 50.000 · Slip SP-0421',
+     why:'Setoran modal anggota menambah ekuitas lembaga — ini <strong>Siklus Pendanaan</strong> (memperoleh modal dari pemilik/anggota).'}
+  ],
+  bukubesar:[
+    {s:'Akhir bulan, sistem BMT memposting seluruh jurnal khusus ke buku besar lalu menyusun neraca saldo dan laporan keuangan.',
+     m:'Batch Closing Bulanan · 1.284 Jurnal Diposting',
+     why:'Memposting, menyesuaikan, dan menyusun laporan adalah <strong>Siklus Buku Besar &amp; Pelaporan</strong> — siklus yang menerima ringkasan dari kelima siklus lain.'},
+    {s:'Bagian akuntansi membuat jurnal penyesuaian penyusutan aset tetap dan amortisasi margin tangguhan periode berjalan.',
+     m:'12 Jurnal Penyesuaian · Periode September',
+     why:'Jurnal penyesuaian dan penutup dikerjakan di <strong>Siklus Buku Besar &amp; Pelaporan</strong>, bukan di siklus operasional manapun.'}
+  ]
+};
+
+let g1Angle = 0, g1Spinning = false, g1Round = 0, g1Score = 0, g1Combo = 0;
+let g1State = [], g1Cur = null, g1Timer = null, g1Used = {};
+const G1_TOTAL = 6;
+
+function g1Draw(){
+  const cv = document.getElementById('wheelCanvas');
+  if(!cv) return;
+  const ctx = cv.getContext('2d'), N = CYCLES.length;
+  const cx = cv.width/2, cy = cv.height/2, R = cx - 8, seg = (Math.PI*2)/N;
+  ctx.clearRect(0,0,cv.width,cv.height);
+  for(let i=0;i<N;i++){
+    const a0 = g1Angle + i*seg, a1 = a0 + seg;
+    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,R,a0,a1); ctx.closePath();
+    ctx.fillStyle = CYCLES[i].color; ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,.55)'; ctx.lineWidth = 2; ctx.stroke();
+    const mid = a0 + seg/2;
+    const norm = ((mid % (Math.PI*2)) + Math.PI*2) % (Math.PI*2);
+    const upsideDown = norm > Math.PI/2 && norm < Math.PI*1.5;
+    ctx.save();
+    ctx.translate(cx,cy); ctx.rotate(mid);
+    if(upsideDown){ ctx.rotate(Math.PI); ctx.textAlign = 'left'; }
+    else ctx.textAlign = 'right';
+    const tx = upsideDown ? -(R-14) : (R-14);
+    ctx.fillStyle = '#fff';
+    ctx.font = '700 13px "Source Sans 3", sans-serif';
+    ctx.fillText(CYCLES[i].label, tx, 2);
+    ctx.font = '17px sans-serif';
+    ctx.fillText(CYCLES[i].emoji, tx, 22);
+    ctx.restore();
+  }
+  ctx.beginPath(); ctx.arc(cx,cy,R,0,Math.PI*2);
+  ctx.strokeStyle = '#0C1D30'; ctx.lineWidth = 5; ctx.stroke();
+}
+
+function g1Pick(){
+  const N = CYCLES.length, seg = (Math.PI*2)/N;
+  // pointer sits at top = -90deg
+  let a = (-Math.PI/2 - g1Angle) % (Math.PI*2);
+  if(a < 0) a += Math.PI*2;
+  return Math.floor(a/seg) % N;
+}
+
+function g1DoSpin(){
+  if(g1Spinning) return;
+  if(g1Round >= G1_TOTAL){ g1Restart(); return; }
+  g1Spinning = true;
+  document.getElementById('g1Spin').disabled = true;
+  document.getElementById('g1QuizBox').style.display = 'none';
+  fbHide('g1Fb');
+  document.getElementById('g1WheelTxt').textContent = 'Roda berputar…';
+
+  const dur = 3400 + Math.random()*700;
+  const target = g1Angle + Math.PI*2*(5 + Math.random()*3);
+  const start = g1Angle, t0 = performance.now();
+  let lastSeg = -1;
+
+  (function anim(now){
+    const p = Math.min(1,(now-t0)/dur);
+    const e = 1 - Math.pow(1-p, 3.2);
+    g1Angle = start + (target-start)*e;
+    g1Draw();
+    const s = g1Pick();
+    if(s !== lastSeg){ lastSeg = s; if(p < .96) playTone(420+s*40,'square',.03,.05); }
+    if(p < 1) requestAnimationFrame(anim);
+    else g1Landed();
+  })(t0);
+}
+
+function g1Landed(){
+  g1Spinning = false;
+  const idx = g1Pick(), cyc = CYCLES[idx];
+  playTone(660,'triangle',.22);
+  document.getElementById('g1WheelTxt').innerHTML =
+    `Roda berhenti di <span style="color:${cyc.color}">${cyc.emoji} Siklus ${cyc.label}</span>`;
+
+  // pick an unused case from that cycle
+  const pool = G1_CASES[cyc.key];
+  g1Used[cyc.key] = g1Used[cyc.key] || 0;
+  const c = pool[g1Used[cyc.key] % pool.length];
+  g1Used[cyc.key]++;
+  g1Cur = { cyc, c };
+
+  document.getElementById('g1Tag').textContent = 'BUSINESS EVENT #' + (g1Round+1) + ' · BMT BERKAH MANDIRI';
+  document.getElementById('g1Scenario').textContent = c.s;
+  document.getElementById('g1Meta').textContent = c.m;
+
+  // options: correct + 3 distractors
+  const others = shuffle(CYCLES.filter(x=>x.key!==cyc.key)).slice(0,3);
+  const opts = shuffle([cyc, ...others]);
+  const box = document.getElementById('g1Opts');
+  box.innerHTML = '';
+  opts.forEach((o,i)=>{
+    const b = document.createElement('button');
+    b.className = 'opt-btn';
+    b.innerHTML = `<span class="okey">${'ABCD'[i]}</span><span>${o.emoji} Siklus ${o.label}</span>`;
+    b.onclick = ()=>g1Answer(o.key, b);
+    box.appendChild(b);
+  });
+  document.getElementById('g1QuizBox').style.display = 'block';
+
+  if(g1Timer) g1Timer.stop();
+  g1Timer = mkTimer('g1Time', 25, null, ()=>g1Answer(null,null));
+  g1State[g1Round] = 'now';
+  dots('g1Dots', G1_TOTAL, g1State);
+}
+
+function g1Answer(key, btn){
+  if(g1Timer) g1Timer.stop();
+  const box = document.getElementById('g1Opts');
+  const right = g1Cur.cyc.key;
+  const ok = key === right;
+  const left = g1Timer ? Math.max(0,g1Timer.left()) : 0;
+
+  box.querySelectorAll('.opt-btn').forEach(b=>{
+    b.disabled = true;
+    const t = b.textContent;
+    if(t.indexOf('Siklus ' + g1Cur.cyc.label) >= 0) b.classList.add('correct');
+  });
+  if(btn && !ok) btn.classList.add('wrong');
+
+  if(ok){
+    g1Combo++;
+    const pts = 100 + left*2 + (g1Combo>1 ? (g1Combo-1)*20 : 0);
+    g1Score += pts; g1State[g1Round] = 'ok';
+    sGood(); confetti(45);
+    fb('g1Fb', true, `<strong>🎉 Tepat! +${pts} poin</strong><br>${g1Cur.c.why}`);
+  } else {
+    g1Combo = 0; g1State[g1Round] = 'no';
+    sBad();
+    const label = key ? '' : '<strong>⏱ Waktu habis!</strong> ';
+    fb('g1Fb', false, `${label}<strong>Jawaban benar: Siklus ${g1Cur.cyc.label}.</strong><br>${g1Cur.c.why}`);
+  }
+
+  document.getElementById('g1Combo').textContent = g1Combo>0 ? `🔥 x${g1Combo}` : '💤 x0';
+  setScore(0, g1Score);
+  g1Round++;
+  document.getElementById('g1Round').textContent = g1Round + '/' + G1_TOTAL;
+  dots('g1Dots', G1_TOTAL, g1State);
+
+  const sp = document.getElementById('g1Spin');
+  sp.disabled = false;
+  if(g1Round >= G1_TOTAL){
+    sp.textContent = '🔄 Main Lagi';
+    document.getElementById('g1Time').textContent = '—';
+    markDone(0); sWin(); confetti(110);
+    setTimeout(()=>{
+      const el = document.getElementById('g1Fb');
+      el.innerHTML += `<div style="margin-top:9px;padding-top:9px;border-top:1px solid currentColor"><strong>🏁 Ekspedisi Roda selesai — total ${g1Score} poin!</strong> Buka tab berikutnya: 🔄 Pipeline Data.</div>`;
+    }, 700);
+  } else {
+    sp.textContent = '🎡 Putar Lagi';
+  }
+}
+
+function g1Restart(){
+  g1Round = 0; g1Score = 0; g1Combo = 0; g1State = []; g1Used = {};
+  setScore(0,0);
+  document.getElementById('g1Round').textContent = '0/' + G1_TOTAL;
+  document.getElementById('g1Combo').textContent = '🔥 x1';
+  document.getElementById('g1Time').textContent = '—';
+  document.getElementById('g1QuizBox').style.display = 'none';
+  document.getElementById('g1WheelTxt').textContent = 'Putar roda untuk memulai ekspedisi!';
+  document.getElementById('g1Spin').textContent = '🎡 Putar Roda Siklus';
+  fbHide('g1Fb'); dots('g1Dots', G1_TOTAL, g1State);
+  g1DoSpin();
+}
+
+g1Draw();
+dots('g1Dots', G1_TOTAL, g1State);
+
+/* ══════════ TEMA 2: PIPELINE PEMROSESAN DATA ══════════ */
+const G2_STAGES = [
+  {id:0, icon:'📥', name:'Input Data', hint:'Menangkap data transaksi dari dokumen sumber'},
+  {id:1, icon:'⚙️', name:'Pemrosesan', hint:'CRUD: Create, Read, Update, Delete'},
+  {id:2, icon:'🗄️', name:'Penyimpanan', hint:'Menyimpan ke master file & database'},
+  {id:3, icon:'📊', name:'Output Informasi', hint:'Dokumen, laporan, & jawaban query'}
+];
+const G2_CASES = [
+  {s:'Teller memindai slip setoran tunai nasabah dan mengetikkan nomor rekening serta nominalnya ke layar aplikasi BMT.',
+   m:'Dokumen Sumber: Slip Setoran #0821', a:0,
+   why:'Menangkap data dari <strong>dokumen sumber</strong> ke dalam sistem adalah tahap <strong>Input Data</strong>.'},
+  {s:'Sistem menambah saldo tabungan nasabah dari Rp 2.000.000 menjadi Rp 3.500.000 setelah setoran divalidasi.',
+   m:'Operasi CRUD: UPDATE record saldo', a:1,
+   why:'Mengubah nilai data yang sudah ada adalah operasi <strong>Update</strong> — bagian dari tahap <strong>Pemrosesan (CRUD)</strong>.'},
+  {s:'Data angsuran hari ini dipindahkan dari file transaksi harian ke master file nasabah sebagai arsip permanen BMT.',
+   m:'Transaction File → Master File', a:2,
+   why:'Memindahkan dan mengarsipkan data ke master file/database adalah tahap <strong>Penyimpanan</strong>.'},
+  {s:'Manajer BMT mencetak Laporan Posisi Keuangan bulanan untuk dibawa ke rapat pengurus.',
+   m:'Jenis Output: Dokumen & Laporan', a:3,
+   why:'Menghasilkan laporan bagi pengguna adalah tahap <strong>Output Informasi</strong> (bentuknya: dokumen, laporan, atau jawaban query).'},
+  {s:'Petugas menghapus record duplikat pendaftaran anggota yang tidak sengaja ter-input dua kali pagi ini.',
+   m:'Operasi CRUD: DELETE record', a:1,
+   why:'Delete adalah salah satu dari empat operasi CRUD — masih di tahap <strong>Pemrosesan</strong>, bukan penyimpanan.'},
+  {s:'Pengawas syariah mengetik pertanyaan di sistem: "Berapa total pembiayaan murabahah macet bulan ini?" dan layar menampilkan jawabannya.',
+   m:'Jenis Output: Jawaban Query (Respon Pertanyaan)', a:3,
+   why:'Jawaban atas <em>query</em> adalah salah satu bentuk <strong>Output Informasi</strong>, selain dokumen dan laporan.'}
+];
+
+let g2Placed = [null,null,null,null], g2Err = 0, g2Score = 0, g2Sel = null;
+let g2Timer = null, g2Idx = 0, g2State = [], g2Order = [];
+
+function g2Init(){
+  g2Placed = [null,null,null,null]; g2Sel = null;
+  g2Order = shuffle(G2_STAGES);
+  const pool = document.getElementById('g2Pool'); pool.innerHTML = '';
+  g2Order.forEach(st=>{
+    const c = document.createElement('div');
+    c.className = 'dd-chip'; c.draggable = true; c.dataset.sid = st.id;
+    c.innerHTML = `<span>${st.icon}</span><span>${st.name}</span>`;
+    c.addEventListener('dragstart', e=>{ e.dataTransfer.setData('text/plain', st.id); c.classList.add('dragging'); });
+    c.addEventListener('dragend', ()=>c.classList.remove('dragging'));
+    c.addEventListener('click', ()=>{
+      if(c.classList.contains('locked')) return;
+      document.querySelectorAll('#g2Pool .dd-chip').forEach(x=>x.style.outline='');
+      if(g2Sel === st.id){ g2Sel = null; }
+      else { g2Sel = st.id; c.style.outline = '3px solid var(--acc)'; sFlip(); }
+    });
+    pool.appendChild(c);
+  });
+
+  const slots = document.getElementById('g2Slots'); slots.innerHTML = '';
+  for(let i=0;i<4;i++){
+    const s = document.createElement('div');
+    s.className = 'dd-slot'; s.dataset.pos = i;
+    s.innerHTML = `<div class="dd-num">TAHAP ${i+1}</div><div class="dd-hint">seret / ketuk kartu ke sini</div>`;
+    s.addEventListener('dragover', e=>{ e.preventDefault(); s.classList.add('over'); });
+    s.addEventListener('dragleave', ()=>s.classList.remove('over'));
+    s.addEventListener('drop', e=>{
+      e.preventDefault(); s.classList.remove('over');
+      g2Drop(i, parseInt(e.dataTransfer.getData('text/plain'),10));
+    });
+    s.addEventListener('click', ()=>{ if(g2Sel !== null){ g2Drop(i, g2Sel); g2Sel = null; } });
+    slots.appendChild(s);
+  }
+  document.getElementById('g2Check').disabled = true;
+  fbHide('g2Fb');
+}
+
+function g2Drop(pos, sid){
+  if(isNaN(sid)) return;
+  // remove sid from any other slot
+  g2Placed = g2Placed.map(v => v === sid ? null : v);
+  g2Placed[pos] = sid;
+  sFlip();
+  g2Paint();
+}
+
+function g2Paint(){
+  const slots = document.querySelectorAll('#g2Slots .dd-slot');
+  slots.forEach((s,i)=>{
+    s.classList.remove('ok','no');
+    const sid = g2Placed[i];
+    if(sid === null || sid === undefined){
+      s.className = 'dd-slot';
+      s.innerHTML = `<div class="dd-num">TAHAP ${i+1}</div><div class="dd-hint">seret / ketuk kartu ke sini</div>`;
+    } else {
+      const st = G2_STAGES[sid];
+      s.className = 'dd-slot filled';
+      s.innerHTML = `<div class="dd-num">TAHAP ${i+1}</div><div style="font-size:20px">${st.icon}</div><div style="font-size:12.5px;font-weight:700;color:var(--pri)">${st.name}</div>`;
+    }
+  });
+  document.querySelectorAll('#g2Pool .dd-chip').forEach(c=>{
+    const used = g2Placed.indexOf(parseInt(c.dataset.sid,10)) >= 0;
+    c.style.opacity = used ? '.32' : '1';
+    c.style.outline = '';
+  });
+  document.getElementById('g2Check').disabled = g2Placed.some(v=>v===null||v===undefined);
+}
+
+function g2Check(){
+  const slots = document.querySelectorAll('#g2Slots .dd-slot');
+  let right = 0;
+  g2Placed.forEach((sid,i)=>{
+    if(sid === i){ slots[i].classList.add('ok'); right++; }
+    else slots[i].classList.add('no');
+  });
+  if(right === 4){
+    const bonus = Math.max(0, 100 - g2Err*25);
+    g2Score += 200 + bonus;
+    setScore(1, g2Score);
+    sGood(); confetti(70);
+    fb('g2Fb', true, `<strong>✅ Urutan benar! +${200+bonus} poin</strong><br>Input → Pemrosesan → Penyimpanan → Output. Inilah <em>Data Processing Cycle</em>: data mentah masuk, diolah lewat CRUD, disimpan di master file, lalu keluar jadi informasi yang berguna.`);
+    document.getElementById('g2Check').disabled = true;
+    document.querySelectorAll('#g2Pool .dd-chip').forEach(c=>c.classList.add('locked'));
+    setTimeout(g2GoPart2, 2100);
+  } else {
+    g2Err++;
+    document.getElementById('g2Err').textContent = g2Err;
+    sBad();
+    fb('g2Fb', false, `<strong>Belum tepat — ${right} dari 4 kartu sudah di posisi benar.</strong><br>Petunjuk: mulai dari apa yang terjadi paling awal saat nasabah menyerahkan slip setoran di teller.`);
+    setTimeout(()=>slots.forEach(s=>s.classList.remove('no')), 900);
+  }
+}
+
+function g2Reset(){ g2Init(); g2Paint(); }
+
+function g2GoPart2(){
+  document.getElementById('g2Part1').style.display = 'none';
+  document.getElementById('g2Part2').style.display = 'block';
+  document.getElementById('g2Stage').textContent = '2/2';
+  g2Idx = 0; g2State = [];
+  g2Render();
+}
+
+function g2Render(){
+  const c = G2_CASES[g2Idx];
+  g2State[g2Idx] = 'now';
+  dots('g2Dots', G2_CASES.length, g2State);
+  document.getElementById('g2Tag').textContent = `SKENARIO ${g2Idx+1} DARI ${G2_CASES.length} · BMT BERKAH MANDIRI`;
+  document.getElementById('g2Scenario').textContent = c.s;
+  document.getElementById('g2Meta').textContent = c.m;
+  fbHide('g2Fb2');
+
+  const box = document.getElementById('g2Opts'); box.innerHTML = '';
+  G2_STAGES.forEach((st,i)=>{
+    const b = document.createElement('button');
+    b.className = 'opt-btn';
+    b.innerHTML = `<span class="okey">${'ABCD'[i]}</span><span><strong>${st.icon} ${st.name}</strong> <span style="color:var(--txl);font-weight:500">— ${st.hint}</span></span>`;
+    b.onclick = ()=>g2Answer(st.id, b);
+    box.appendChild(b);
+  });
+
+  if(g2Timer) g2Timer.stop();
+  g2Timer = mkTimer('g2Time', 20, null, ()=>g2Answer(-1,null));
+}
+
+function g2Answer(sid, btn){
+  if(g2Timer) g2Timer.stop();
+  const c = G2_CASES[g2Idx], left = g2Timer ? Math.max(0,g2Timer.left()) : 0;
+  const box = document.getElementById('g2Opts');
+  box.querySelectorAll('.opt-btn').forEach((b,i)=>{
+    b.disabled = true;
+    if(i === c.a) b.classList.add('correct');
+  });
+  if(btn && sid !== c.a) btn.classList.add('wrong');
+
+  if(sid === c.a){
+    const pts = 50 + left*2;
+    g2Score += pts; g2State[g2Idx] = 'ok';
+    setScore(1, g2Score); sGood(); confetti(35);
+    fb('g2Fb2', true, `<strong>🎉 Benar! +${pts} poin</strong><br>${c.why}`);
+  } else {
+    g2State[g2Idx] = 'no'; g2Err++;
+    document.getElementById('g2Err').textContent = g2Err;
+    sBad();
+    fb('g2Fb2', false, `<strong>${sid===-1?'⏱ Waktu habis! ':''}Jawaban benar: ${G2_STAGES[c.a].name}.</strong><br>${c.why}`);
+  }
+  dots('g2Dots', G2_CASES.length, g2State);
+
+  setTimeout(()=>{
+    g2Idx++;
+    if(g2Idx < G2_CASES.length) g2Render();
+    else {
+      document.getElementById('g2Time').textContent = '—';
+      markDone(1); sWin(); confetti(110);
+      fb('g2Fb2', true, `<strong>🏁 Pipeline Data tuntas — total ${g2Score} poin!</strong><br>Lanjut ke tab 🃏 Kartu Hierarki untuk membedah struktur penyimpanan datanya.`);
+      document.getElementById('g2Opts').innerHTML = '<button class="btn-ghost" onclick="g2Full()">🔄 Ulangi Game Tema 2</button>';
+    }
+  }, 2600);
+}
+
+function g2Full(){
+  g2Score = 0; g2Err = 0; setScore(1,0);
+  document.getElementById('g2Err').textContent = '0';
+  document.getElementById('g2Stage').textContent = '1/2';
+  document.getElementById('g2Part2').style.display = 'none';
+  document.getElementById('g2Part1').style.display = 'block';
+  g2Init(); g2Paint();
+}
+
+g2Init(); g2Paint();
+
+/* ══════════ TEMA 3: KARTU MEMORI HIERARKI DATA ══════════ */
+const G3_PAIRS = [
+  {t:'Bit',              d:'Satuan terkecil: angka 0 atau 1 di memori komputer'},
+  {t:'Byte',             d:'Gabungan 8 bit — mewakili satu karakter, misal huruf "A"'},
+  {t:'Field',            d:'Satu kolom data, misal kolom "Nama Nasabah" atau "Saldo"'},
+  {t:'Record',           d:'Satu baris lengkap data satu nasabah: NIK, nama, saldo'},
+  {t:'File Induk',       d:'Data permanen bersaldo terkini — setara Buku Besar'},
+  {t:'File Transaksi',   d:'Rekaman transaksi satu periode — setara Jurnal'},
+  {t:'Database',         d:'Kumpulan file yang saling terhubung dan terpusat'},
+  {t:'Bagan Akun (COA)', d:'Daftar kode akun terstruktur sebagai kerangka buku besar'}
+];
+let g3Deck = [], g3Open = [], g3Match = 0, g3Tries = 0, g3Score = 0, g3Timer = null, g3Lock = false;
+
+function g3Start(){
+  g3Match = 0; g3Tries = 0; g3Score = 0; g3Open = []; g3Lock = false;
+  setScore(2,0);
+  document.getElementById('g3Pairs').textContent = '0/8';
+  document.getElementById('g3Tries').textContent = '0';
+  document.getElementById('g3Start').textContent = '🔄 Kocok Ulang Kartu';
+  fbHide('g3Fb');
+
+  g3Deck = shuffle(G3_PAIRS.flatMap((p,i)=>[
+    {pid:i, kind:'term', txt:p.t}, {pid:i, kind:'def', txt:p.d}
+  ]));
+
+  const grid = document.getElementById('g3Grid'); grid.innerHTML = '';
+  g3Deck.forEach((c,i)=>{
+    const el = document.createElement('div');
+    el.className = 'mem-card ' + c.kind;
+    el.dataset.i = i;
+    el.innerHTML = `<div class="mem-inner">
+      <div class="mem-face mem-back">🕌</div>
+      <div class="mem-face mem-front">${c.txt}</div>
+    </div>`;
+    el.onclick = ()=>g3Flip(i, el);
+    grid.appendChild(el);
+  });
+
+  if(g3Timer) g3Timer.stop();
+  g3Timer = mkTimer('g3Time', 150, null, ()=>g3End(false));
+}
+
+function g3Flip(i, el){
+  if(g3Lock || el.classList.contains('flip') || el.classList.contains('matched')) return;
+  el.classList.add('flip'); sFlip();
+  g3Open.push({i, el});
+  if(g3Open.length < 2) return;
+
+  g3Lock = true;
+  g3Tries++;
+  document.getElementById('g3Tries').textContent = g3Tries;
+  const [a,b] = g3Open;
+  const ca = g3Deck[a.i], cb = g3Deck[b.i];
+
+  if(ca.pid === cb.pid && ca.kind !== cb.kind){
+    setTimeout(()=>{
+      a.el.classList.add('matched'); b.el.classList.add('matched');
+      g3Match++;
+      document.getElementById('g3Pairs').textContent = g3Match + '/8';
+      const pts = 70;
+      g3Score += pts; setScore(2, g3Score);
+      sGood(); confetti(28);
+      fb('g3Fb', true, `<strong>✅ Pasangan ke-${g3Match} terbuka! +${pts} poin</strong><br><strong>${G3_PAIRS[ca.pid].t}</strong> — ${G3_PAIRS[ca.pid].d}`);
+      g3Open = []; g3Lock = false;
+      if(g3Match === 8) g3End(true);
+    }, 420);
+  } else {
+    setTimeout(()=>{
+      a.el.classList.remove('flip'); b.el.classList.remove('flip');
+      g3Open = []; g3Lock = false;
+      sBad();
+    }, 900);
+  }
+}
+
+function g3End(won){
+  if(g3Timer) g3Timer.stop();
+  document.getElementById('g3Time').textContent = won ? '✓' : '0s';
+  if(won){
+    const left = g3Timer ? Math.max(0,g3Timer.left()) : 0;
+    const eff = Math.max(0, 140 - Math.max(0,(g3Tries-8))*10);
+    g3Score += eff + left;
+    setScore(2, g3Score);
+    markDone(2); sWin(); confetti(130);
+    fb('g3Fb', true, `<strong>🏁 Semua 8 pasangan terbuka — total ${g3Score} poin!</strong><br>Bonus efisiensi +${eff} (${g3Tries} percobaan) dan bonus waktu +${left}. Ingat urutannya: Bit → Byte → Field → Record → File → Database. Lanjut ke tab 🔐 Sandi COA.`);
+  } else {
+    fb('g3Fb', false, `<strong>⏱ Waktu habis!</strong> Baru ${g3Match} dari 8 pasangan terbuka. Klik "Kocok Ulang Kartu" untuk mencoba lagi.`);
+    sBad();
+  }
+}
+
+/* ══════════ TEMA 4: SANDI BAGAN AKUN (COA) ══════════ */
+const G4_ITEMS = [
+  {clue:'Aku bersaldo normal DEBET, kelompok Aset Lancar, dan bertambah setiap kali kasir menerima uang fisik dari nasabah sebelum disetor ke bank mitra.',
+   hints:['Digit 1 = Aset','Saldo Normal: Debet','Paling likuid'],
+   right:'1110.01 — Kas Teller Utama',
+   wrong:['2110.01 — Simpanan Wadiah','4110.01 — Pendapatan Margin','5110.01 — Beban Gaji'],
+   why:'Digit pertama <span class="coa-code">1</span> menandakan <strong>Aset</strong>, dan <span class="coa-code">11</span> adalah sub-kelompok Kas &amp; Setara Kas. Kas Teller paling likuid sehingga berada di urutan awal.'},
+  {clue:'Aku bersaldo normal DEBET, kelompok Aset Lancar, mencatat tagihan harga pokok ditambah margin yang belum dilunasi anggota dalam akad jual-beli.',
+   hints:['Digit 1 = Aset','Akad Jual-Beli','Belum dilunasi'],
+   right:'1130.01 — Piutang Murabahah',
+   wrong:['1110.01 — Kas Teller Utama','2120.01 — Tabungan Mudharabah','4130.01 — Pendapatan Ijarah'],
+   why:'Piutang Murabahah tetap kelompok <strong>Aset</strong> (<span class="coa-code">1</span>) karena merupakan hak tagih BMT kepada anggota atas barang yang sudah diserahkan.'},
+  {clue:'Aku bersaldo normal KREDIT, merupakan titipan murni nasabah yang wajib dikembalikan kapan saja diminta, dan BMT boleh memanfaatkannya dengan izin.',
+   hints:['Digit 2 = Liabilitas','Saldo Normal: Kredit','Akad Titipan'],
+   right:'2110.01 — Simpanan Wadiah Yad Dhamanah',
+   wrong:['1110.01 — Kas Teller Utama','3110.01 — Simpanan Pokok Anggota','4110.01 — Pendapatan Margin'],
+   why:'Titipan nasabah adalah <strong>kewajiban</strong> BMT untuk mengembalikan dana — digit pertama <span class="coa-code">2</span> (Liabilitas), bukan ekuitas.'},
+  {clue:'Aku bersaldo normal KREDIT, tapi aku BUKAN utang. Aku bertambah saat anggota baru mendaftar dan menyetor dana yang tidak bisa ditarik selama masih menjadi anggota.',
+   hints:['Digit 3 = Ekuitas','Saldo Normal: Kredit','Setoran Anggota'],
+   right:'3110.01 — Simpanan Pokok Anggota',
+   wrong:['2110.01 — Simpanan Wadiah','2120.01 — Tabungan Mudharabah','1120.01 — Giro pada Bank Syariah'],
+   why:'Inilah jebakan klasik: Simpanan Pokok bersifat <strong>modal anggota</strong>, bukan titipan — masuk <strong>Ekuitas</strong> (<span class="coa-code">3</span>). Bandingkan dengan Wadiah yang masuk Liabilitas.'},
+  {clue:'Aku bersaldo normal KREDIT, muncul di Laporan Laba Rugi, dan bertambah saat BMT mengakui selisih antara harga jual dan harga pokok barang murabahah.',
+   hints:['Digit 4 = Pendapatan','Laporan Laba Rugi','Selisih harga jual'],
+   right:'4110.01 — Pendapatan Margin Murabahah',
+   wrong:['1130.01 — Piutang Murabahah','5120.01 — Hak Bagi Hasil Nasabah','3110.01 — Simpanan Pokok'],
+   why:'Margin yang sudah direalisasi adalah <strong>Pendapatan</strong> (<span class="coa-code">4</span>). Hati-hati membedakannya dari Piutang Murabahah (aset) dan Margin Tangguhan (kontra-aset).'},
+  {clue:'Aku bersaldo normal DEBET, muncul di Laporan Laba Rugi, dan mencatat porsi keuntungan riil yang menjadi hak nasabah penyimpan sesuai nisbah yang disepakati.',
+   hints:['Digit 5 = Beban','Saldo Normal: Debet','Nisbah bagi hasil'],
+   right:'5120.01 — Hak Bagi Hasil Nasabah (Beban Bagi Hasil)',
+   wrong:['4110.01 — Pendapatan Margin Murabahah','2120.01 — Tabungan Mudharabah','1110.01 — Kas Teller Utama'],
+   why:'Dari sisi BMT sebagai <em>mudharib</em>, porsi nasabah adalah <strong>beban distribusi</strong> (<span class="coa-code">5</span>) yang mengurangi laba, bukan pengurang pendapatan langsung.'},
+  {clue:'Kode 4 digit + 2 digit anak. Digit pertamaku angka 4, digit keduaku 1 menandakan pendapatan operasional utama, dan aku khusus mencatat imbalan atas penyewaan ruko oleh BMT.',
+   hints:['Teknik: Group Coding','Digit 4 = Pendapatan','Akad Sewa'],
+   right:'4130.01 — Pendapatan Sewa Ijarah',
+   wrong:['4110.01 — Pendapatan Margin Murabahah','5130.01 — Beban Sewa Kantor','2130.01 — Utang Sewa'],
+   why:'Ini contoh <strong>group coding</strong>: setiap posisi digit punya makna sendiri. <span class="coa-code">4</span>=Pendapatan, <span class="coa-code">1</span>=Operasional Utama, <span class="coa-code">3</span>=Jenis Ijarah, <span class="coa-code">.01</span>=rincian objek sewa.'}
+];
+
+let g4Idx = 0, g4Score = 0, g4Combo = 0, g4State = [], g4Timer = null;
+
+function g4Start(){
+  g4Idx = 0; g4Score = 0; g4Combo = 0; g4State = [];
+  setScore(3,0);
+  document.getElementById('g4Combo').textContent = '🔥 x1';
+  document.getElementById('g4Box').style.display = 'block';
+  document.getElementById('g4Start').textContent = '🔄 Ulangi Sandi';
+  g4Render();
+}
+
+function g4Render(){
+  const it = G4_ITEMS[g4Idx];
+  g4State[g4Idx] = 'now';
+  dots('g4Dots', G4_ITEMS.length, g4State);
+  document.getElementById('g4Round').textContent = (g4Idx+1) + '/' + G4_ITEMS.length;
+  document.getElementById('g4Clue').textContent = '"' + it.clue + '"';
+  document.getElementById('g4Hints').innerHTML = it.hints.map(h=>`<span class="chint">${h}</span>`).join('');
+  fbHide('g4Fb');
+
+  const opts = shuffle([it.right, ...it.wrong]);
+  const box = document.getElementById('g4Opts'); box.innerHTML = '';
+  opts.forEach((o,i)=>{
+    const b = document.createElement('button');
+    b.className = 'opt-btn';
+    const parts = o.split(' — ');
+    b.innerHTML = `<span class="okey">${'ABCD'[i]}</span><span><span class="coa-code">${parts[0]}</span> — ${parts[1]}</span>`;
+    b.onclick = ()=>g4Answer(o, b);
+    box.appendChild(b);
+  });
+
+  if(g4Timer) g4Timer.stop();
+  g4Timer = mkTimer('g4Time', 30, null, ()=>g4Answer(null,null));
+}
+
+function g4Answer(pick, btn){
+  if(g4Timer) g4Timer.stop();
+  const it = G4_ITEMS[g4Idx], left = g4Timer ? Math.max(0,g4Timer.left()) : 0;
+  const ok = pick === it.right;
+  const box = document.getElementById('g4Opts');
+  box.querySelectorAll('.opt-btn').forEach(b=>{
+    b.disabled = true;
+    if(b.textContent.indexOf(it.right.split(' — ')[0]) >= 0) b.classList.add('correct');
+  });
+  if(btn && !ok) btn.classList.add('wrong');
+
+  if(ok){
+    g4Combo++;
+    const pts = 100 + left*2 + (g4Combo>1?(g4Combo-1)*15:0);
+    g4Score += pts; g4State[g4Idx] = 'ok';
+    setScore(3, g4Score); sGood(); confetti(45);
+    fb('g4Fb', true, `<strong>🔓 Sandi terpecahkan! +${pts} poin</strong><br>${it.why}`);
+  } else {
+    g4Combo = 0; g4State[g4Idx] = 'no'; sBad();
+    fb('g4Fb', false, `<strong>${pick===null?'⏱ Waktu habis! ':'🔒 Sandi belum terpecahkan. '}Jawaban: <span class="coa-code">${it.right}</span></strong><br>${it.why}`);
+  }
+  document.getElementById('g4Combo').textContent = g4Combo>0 ? `🔥 x${g4Combo}` : '💤 x0';
+  dots('g4Dots', G4_ITEMS.length, g4State);
+
+  setTimeout(()=>{
+    g4Idx++;
+    if(g4Idx < G4_ITEMS.length) g4Render();
+    else {
+      document.getElementById('g4Time').textContent = '—';
+      markDone(3); sWin(); confetti(120);
+      const benar = g4State.filter(s=>s==='ok').length;
+      fb('g4Fb', true, `<strong>🏁 Sandi COA tuntas — ${benar}/${G4_ITEMS.length} benar, total ${g4Score} poin!</strong><br>Kunci semua sandi ini: baca digit pertama untuk tahu kelompok akunnya, lalu cek saldo normalnya. Lanjut ke tab 🗺️ Rakit DFD.`);
+      document.getElementById('g4Opts').innerHTML = '';
+    }
+  }, 3200);
+}
+
+/* ══════════ TEMA 5: RAKIT DATA FLOW DIAGRAM ══════════ */
+const SVG_ENTITY = '<svg viewBox="0 0 44 32"><rect x="5" y="5" width="34" height="22" rx="2" fill="#D8EEF6" stroke="#1B7898" stroke-width="2.5"/></svg>';
+const SVG_PROCESS = '<svg viewBox="0 0 44 32"><circle cx="22" cy="16" r="12" fill="#FCEBD8" stroke="#D46020" stroke-width="2.5"/></svg>';
+const SVG_STORE = '<svg viewBox="0 0 44 32"><line x1="6" y1="8" x2="38" y2="8" stroke="#1F9060" stroke-width="2.5"/><line x1="6" y1="24" x2="38" y2="24" stroke="#1F9060" stroke-width="2.5"/><line x1="6" y1="8" x2="6" y2="24" stroke="#1F9060" stroke-width="2.5"/></svg>';
+const SVG_FLOW = '<svg viewBox="0 0 44 32"><line x1="6" y1="16" x2="32" y2="16" stroke="#7040B0" stroke-width="2.5"/><polygon points="32,10 40,16 32,22" fill="#7040B0"/></svg>';
+
+const G5_PAIRS = [
+  {sym:SVG_ENTITY, name:'Persegi Panjang', def:'<strong>Entitas Eksternal</strong> — sumber atau tujuan data di luar sistem. Contoh: Nasabah, Dealer, Pengawas Syariah.'},
+  {sym:SVG_PROCESS, name:'Lingkaran', def:'<strong>Proses</strong> — aktivitas yang mengubah data masukan menjadi keluaran. Contoh: 1.0 Verifikasi Setoran.'},
+  {sym:SVG_STORE, name:'Dua Garis Sejajar', def:'<strong>Data Store</strong> — tempat data diam/disimpan. Contoh: D1 Master Nasabah, D2 File Pembiayaan.'},
+  {sym:SVG_FLOW, name:'Anak Panah', def:'<strong>Arus Data</strong> — perpindahan data antar elemen. Contoh: data slip setoran mengalir dari Nasabah ke Proses 1.0.'}
+];
+const G5_CASES = [
+  {s:'"Nasabah Ahmad" yang menyerahkan slip setoran ke teller BMT', m:'Elemen berada di luar batas sistem', a:0,
+   why:'Nasabah berada <strong>di luar</strong> sistem AIS BMT namun memberi data ke dalamnya — inilah <strong>Entitas Eksternal</strong>.'},
+  {s:'"1.0 Validasi &amp; Posting Setoran" yang memeriksa saldo lalu memperbarui rekening', m:'Diberi nomor 1.0, mengubah input jadi output', a:1,
+   why:'Diberi nomor dan mengubah data masukan menjadi keluaran — ciri khas <strong>Proses</strong> dalam DFD.'},
+  {s:'"D1 Master Rekening Nasabah" tempat saldo terkini setiap nasabah tersimpan', m:'Diberi label D1, data berada dalam keadaan diam', a:2,
+   why:'Berlabel "D" dan menyimpan data dalam keadaan diam (bukan mengalir, bukan diproses) — ini <strong>Data Store</strong>.'},
+  {s:'Perpindahan "data nominal setoran Rp 1.500.000" dari teller menuju proses validasi', m:'Data sedang bergerak antar elemen', a:3,
+   why:'Data yang sedang <strong>bergerak</strong> antar elemen digambarkan sebagai <strong>Arus Data</strong> (anak panah berlabel).'},
+  {s:'"Dewan Pengawas Syariah" yang menerima laporan kepatuhan bulanan dari sistem BMT', m:'Menerima output, di luar sistem', a:0,
+   why:'Penerima keluaran yang berada di luar sistem juga tergolong <strong>Entitas Eksternal</strong> — entitas bisa jadi sumber maupun tujuan data.'},
+  {s:'"2.0 Hitung Bagi Hasil Mudharabah" yang membaca D2 lalu menghasilkan rincian nisbah', m:'Membaca data store, menghasilkan output baru', a:1,
+   why:'Membaca data store lalu menghasilkan informasi baru adalah pekerjaan sebuah <strong>Proses</strong>, bukan data store itu sendiri.'}
+];
+
+let g5Sel = null, g5Paired = 0, g5Score = 0, g5Err = 0, g5Idx = 0, g5State = [], g5Timer = null;
+
+function g5Start(){
+  g5Sel = null; g5Paired = 0; g5Score = 0; g5Err = 0;
+  setScore(4,0);
+  document.getElementById('g5Err').textContent = '0';
+  document.getElementById('g5Stage').textContent = '1/2';
+  document.getElementById('g5Part2').style.display = 'none';
+  document.getElementById('g5Part1').style.display = 'block';
+  document.getElementById('g5Start').textContent = '🔄 Ulangi Game Tema 5';
+  fbHide('g5Fb');
+
+  const symBox = document.getElementById('g5Syms'), defBox = document.getElementById('g5Defs');
+  symBox.innerHTML = ''; defBox.innerHTML = '';
+
+  G5_PAIRS.forEach((p,i)=>{
+    const s = document.createElement('div');
+    s.className = 'dfd-item'; s.dataset.pid = i;
+    s.innerHTML = `<div class="dfd-sym">${p.sym}</div><strong>${p.name}</strong>`;
+    s.onclick = ()=>g5PickSym(i, s);
+    symBox.appendChild(s);
+  });
+
+  shuffle(G5_PAIRS.map((p,i)=>({p,i}))).forEach(({p,i})=>{
+    const d = document.createElement('div');
+    d.className = 'dfd-item'; d.dataset.pid = i;
+    d.innerHTML = `<span style="font-size:12.5px;line-height:1.45">${p.def}</span>`;
+    d.onclick = ()=>g5PickDef(i, d);
+    defBox.appendChild(d);
+  });
+
+  if(g5Timer) g5Timer.stop();
+  g5Timer = mkTimer('g5Time', 75, null, ()=>{
+    fb('g5Fb', false, '<strong>⏱ Waktu Babak 1 habis!</strong> Klik "Ulangi Game Tema 5" untuk mencoba lagi.');
+  });
+}
+
+function g5PickSym(pid, el){
+  if(el.classList.contains('paired')) return;
+  document.querySelectorAll('#g5Syms .dfd-item').forEach(x=>x.classList.remove('sel'));
+  el.classList.add('sel'); g5Sel = pid; sFlip();
+}
+
+function g5PickDef(pid, el){
+  if(el.classList.contains('paired')) return;
+  if(g5Sel === null){
+    fb('g5Fb', false, 'Pilih dulu satu <strong>simbol di kolom kiri</strong>, baru klik definisi pasangannya di sini.');
+    return;
+  }
+  if(g5Sel === pid){
+    const symEl = document.querySelector(`#g5Syms .dfd-item[data-pid="${pid}"]`);
+    symEl.classList.remove('sel'); symEl.classList.add('paired');
+    el.classList.add('paired');
+    g5Paired++; g5Score += 80; setScore(4, g5Score);
+    sGood(); confetti(30);
+    fb('g5Fb', true, `<strong>✅ Cocok! +80 poin (${g5Paired}/4)</strong><br>${G5_PAIRS[pid].def}`);
+    g5Sel = null;
+    if(g5Paired === 4){
+      if(g5Timer) g5Timer.stop();
+      setTimeout(g5GoPart2, 1700);
+    }
+  } else {
+    g5Err++; document.getElementById('g5Err').textContent = g5Err;
+    sBad();
+    el.classList.add('sel');
+    setTimeout(()=>el.classList.remove('sel'), 450);
+    fb('g5Fb', false, '<strong>Belum cocok.</strong> Perhatikan bentuk simbolnya: kotak untuk pihak luar, lingkaran untuk aktivitas, dua garis untuk penyimpanan, panah untuk perpindahan.');
+  }
+}
+
+function g5GoPart2(){
+  document.getElementById('g5Part1').style.display = 'none';
+  document.getElementById('g5Part2').style.display = 'block';
+  document.getElementById('g5Stage').textContent = '2/2';
+  g5Idx = 0; g5State = [];
+  g5Render();
+}
+
+function g5Render(){
+  const c = G5_CASES[g5Idx];
+  g5State[g5Idx] = 'now';
+  dots('g5Dots', G5_CASES.length, g5State);
+  document.getElementById('g5Tag').textContent = `ELEMEN ${g5Idx+1} DARI ${G5_CASES.length} · DFD SIKLUS SIMPANAN BMT`;
+  document.getElementById('g5Scenario').innerHTML = c.s;
+  document.getElementById('g5Meta').textContent = c.m;
+  fbHide('g5Fb2');
+
+  const box = document.getElementById('g5Opts'); box.innerHTML = '';
+  G5_PAIRS.forEach((p,i)=>{
+    const b = document.createElement('button');
+    b.className = 'opt-btn';
+    b.innerHTML = `<span class="okey">${'ABCD'[i]}</span><div class="dfd-sym" style="width:34px;height:24px">${p.sym}</div><span>${p.def.split('—')[0]}</span>`;
+    b.onclick = ()=>g5Answer(i, b);
+    box.appendChild(b);
+  });
+
+  if(g5Timer) g5Timer.stop();
+  g5Timer = mkTimer('g5Time', 20, null, ()=>g5Answer(-1,null));
+}
+
+function g5Answer(pid, btn){
+  if(g5Timer) g5Timer.stop();
+  const c = G5_CASES[g5Idx], left = g5Timer ? Math.max(0,g5Timer.left()) : 0;
+  const box = document.getElementById('g5Opts');
+  box.querySelectorAll('.opt-btn').forEach((b,i)=>{
+    b.disabled = true;
+    if(i === c.a) b.classList.add('correct');
+  });
+  if(btn && pid !== c.a) btn.classList.add('wrong');
+
+  if(pid === c.a){
+    const pts = 50 + left*2;
+    g5Score += pts; g5State[g5Idx] = 'ok';
+    setScore(4, g5Score); sGood(); confetti(32);
+    fb('g5Fb2', true, `<strong>🎉 Benar! +${pts} poin</strong><br>${c.why}`);
+  } else {
+    g5State[g5Idx] = 'no'; g5Err++;
+    document.getElementById('g5Err').textContent = g5Err;
+    sBad();
+    fb('g5Fb2', false, `<strong>${pid===-1?'⏱ Waktu habis! ':''}Jawaban benar: ${G5_PAIRS[c.a].def.split('—')[0]}</strong><br>${c.why}`);
+  }
+  dots('g5Dots', G5_CASES.length, g5State);
+
+  setTimeout(()=>{
+    g5Idx++;
+    if(g5Idx < G5_CASES.length) g5Render();
+    else {
+      document.getElementById('g5Time').textContent = '—';
+      markDone(4); sWin(); confetti(120);
+      fb('g5Fb2', true, `<strong>🏁 DFD terakit — total ${g5Score} poin!</strong><br>Kini Anda bisa membaca DFD level 0 siklus simpanan BMT. Lanjut ke tab terakhir: ⚖️ Detektif Tadlis.`);
+      document.getElementById('g5Opts').innerHTML = '';
+    }
+  }, 2800);
+}
+
+/* ══════════ TEMA 6: DETEKTIF TADLIS ══════════ */
+const G6_CASES = [
+  {s:'Nasabah Ahmad menyetor tunai Rp 1.500.000 ke Tabungan Wadiah Yad Dhamanah. Teller mencatat sesuai slip, memberi bukti setor, dan saldo diperbarui hari itu juga.',
+   m:'Slip Setoran #0821 · Dr Kas 1110.01 | Cr Wadiah 2110.01', tadlis:false,
+   why:'Transaksi <strong>sah</strong>. Akad titipan jelas, nominal sesuai bukti fisik, dan pencatatan dilakukan tepat waktu — memenuhi prinsip amanah dan <em>halalan thayyiban</em>.'},
+  {s:'BMT memberi pinjaman qardh Rp 5.000.000 dan mensyaratkan pengembalian Rp 5.600.000, dengan selisih dicatat sebagai "biaya administrasi" berbasis persentase pinjaman.',
+   m:'Selisih Rp 600.000 = 12% dari pokok · Akad Qardh', tadlis:true,
+   why:'<strong>Riba terselubung.</strong> Qardh adalah pinjaman kebajikan — tambahan apa pun yang disyaratkan di muka dan dihitung sebagai persentase pokok adalah riba, sekalipun dinamai "biaya administrasi". Biaya admin hanya boleh sebesar biaya riil.'},
+  {s:'BMT membeli sepeda motor Rp 18.000.000 dari dealer, lalu menjualnya kepada anggota seharga Rp 20.700.000 dengan margin yang disepakati dan diketahui kedua pihak sejak awal akad.',
+   m:'Margin Rp 2.700.000 (15%) diungkap terbuka · Akad Murabahah', tadlis:false,
+   why:'Transaksi <strong>sah</strong>. Murabahah adalah jual-beli dengan margin yang <em>diungkapkan secara transparan</em>. Karena harga pokok dan margin diketahui bersama, tidak ada unsur tadlis maupun gharar.'},
+  {s:'Menjelang audit, petugas mengubah tanggal input 12 transaksi pembiayaan macet agar tampak masih lancar di laporan kolektibilitas bulan ini.',
+   m:'12 record dimodifikasi · Tidak ada jejak audit', tadlis:true,
+   why:'<strong>Tadlis (penyembunyian informasi).</strong> Memanipulasi data agar laporan tampak lebih baik melanggar QS Al-Baqarah 282 tentang kewajiban mencatat transaksi dengan benar, sekaligus merusak integritas <em>audit trail</em>.'},
+  {s:'BMT mengenakan denda keterlambatan kepada nasabah yang mampu tapi menunda bayar, lalu menyalurkan seluruh denda itu ke rekening Dana Kebajikan (Qardhul Hasan), bukan ke pendapatan.',
+   m:'Denda Rp 250.000 → Akun Dana Kebajikan', tadlis:false,
+   why:'Transaksi <strong>sah</strong>. Denda <em>ta\'zir</em> boleh dikenakan untuk mendidik nasabah mampu yang menunda bayar, dengan syarat tidak diakui sebagai pendapatan BMT melainkan disalurkan ke dana sosial.'},
+  {s:'Seorang petugas mencatat setoran nasabah Rp 2.000.000 di buku, tetapi hanya menyetorkan Rp 1.700.000 ke kas dan menahan sisanya untuk keperluan pribadi sampai akhir bulan.',
+   m:'Selisih Rp 300.000 · Kas fisik ≠ catatan sistem', tadlis:true,
+   why:'<strong>Tadlis sekaligus khianat amanah.</strong> Ini adalah <em>lapping</em> — bentuk kecurangan kas klasik. Selisih antara kas fisik dan catatan sistem adalah sinyal utama yang harus ditangkap kontrol rekonsiliasi harian.'},
+  {s:'BMT menghitung bagi hasil deposito mudharabah berdasarkan pendapatan riil yang benar-benar diterima bulan ini, sesuai nisbah 55:45 yang tertulis di akad.',
+   m:'Pendapatan riil Rp 45.000.000 · Nisbah 55:45', tadlis:false,
+   why:'Transaksi <strong>sah</strong>. Bagi hasil dihitung dari <em>pendapatan riil</em>, bukan dari persentase pasti atas pokok simpanan. Inilah pembeda utama mudharabah dari bunga deposito konvensional.'},
+  {s:'Dalam brosur, BMT menjanjikan "return pasti 8% per tahun, dijamin tanpa risiko" untuk produk deposito mudharabah yang ditawarkan ke nasabah baru.',
+   m:'Klaim: return pasti 8% · Produk Mudharabah', tadlis:true,
+   why:'<strong>Tadlis dalam pemasaran.</strong> Mudharabah adalah akad bagi hasil yang secara hakikat mengandung kemungkinan untung-rugi. Menjanjikan return pasti tanpa risiko mengubahnya menjadi riba dan menyesatkan nasabah.'}
+];
+
+let g6Idx = 0, g6Score = 0, g6Right = 0, g6State = [], g6Timer = null;
+
+function g6Start(){
+  g6Idx = 0; g6Score = 0; g6Right = 0; g6State = [];
+  setScore(5,0);
+  document.getElementById('g6Acc').textContent = '—';
+  document.getElementById('g6Box').style.display = 'block';
+  document.getElementById('g6Start').textContent = '🔄 Patroli Ulang';
+  g6Render();
+}
+
+function g6Render(){
+  const c = G6_CASES[g6Idx];
+  g6State[g6Idx] = 'now';
+  dots('g6Dots', G6_CASES.length, g6State);
+  document.getElementById('g6Round').textContent = (g6Idx+1) + '/' + G6_CASES.length;
+  document.getElementById('g6Tag').textContent = `TRANSAKSI MASUK #${g6Idx+1} · MENUNGGU KEPUTUSAN ANDA`;
+  document.getElementById('g6Scenario').textContent = c.s;
+  document.getElementById('g6Meta').textContent = c.m;
+  document.getElementById('g6BtnH').disabled = false;
+  document.getElementById('g6BtnT').disabled = false;
+  fbHide('g6Fb');
+
+  if(g6Timer) g6Timer.stop();
+  g6Timer = mkTimer('g6Time', 18, null, ()=>g6Judge(null));
+}
+
+function g6Judge(saysTadlis){
+  if(g6Timer) g6Timer.stop();
+  const c = G6_CASES[g6Idx], left = g6Timer ? Math.max(0,g6Timer.left()) : 0;
+  document.getElementById('g6BtnH').disabled = true;
+  document.getElementById('g6BtnT').disabled = true;
+
+  const ok = saysTadlis !== null && saysTadlis === c.tadlis;
+  if(ok){
+    const pts = 80 + left*2;
+    g6Score += pts; g6Right++; g6State[g6Idx] = 'ok';
+    setScore(5, g6Score); sGood(); confetti(40);
+    fb('g6Fb', true, `<strong>🎯 Keputusan tepat! +${pts} poin</strong><br>${c.why}`);
+  } else {
+    g6State[g6Idx] = 'no'; sBad();
+    const head = saysTadlis === null ? '⏱ Waktu habis — transaksi lolos tanpa diperiksa!'
+      : (c.tadlis ? '⚠️ Transaksi bermasalah ini lolos pemeriksaan Anda!' : '❌ Transaksi yang sah justru Anda tahan.');
+    fb('g6Fb', false, `<strong>${head}</strong><br>${c.why}`);
+  }
+  document.getElementById('g6Acc').textContent = `${g6Right}/${g6Idx+1}`;
+  dots('g6Dots', G6_CASES.length, g6State);
+
+  setTimeout(()=>{
+    g6Idx++;
+    if(g6Idx < G6_CASES.length) g6Render();
+    else {
+      document.getElementById('g6Time').textContent = '—';
+      const pct = Math.round(g6Right/G6_CASES.length*100);
+      if(g6Right === G6_CASES.length){ g6Score += 150; setScore(5, g6Score); }
+      markDone(5); sWin(); confetti(140);
+      const gelar = pct===100 ? '🥇 Auditor Syariah Bersertifikat' : pct>=75 ? '🥈 Detektif Forensik Madya' : pct>=50 ? '🥉 Petugas Kepatuhan Junior' : '📚 Perlu Tadarus Ulang Materi';
+      fb('g6Fb', true, `<strong>🏁 Patroli selesai — akurasi ${g6Right}/${G6_CASES.length} (${pct}%), total ${g6Score} poin!</strong><br>Gelar Anda: <strong>${gelar}</strong>${g6Right===G6_CASES.length?' <em>(+150 bonus sempurna)</em>':''}<br>Buka tab 🏆 Papan Skor untuk melihat rekap keenam game.`);
+      document.getElementById('g6BtnH').disabled = true;
+      document.getElementById('g6BtnT').disabled = true;
+    }
+  }, 3400);
+}
+
+/* ══════════ PAPAN SKOR ══════════ */
+function sbRender(){
+  const grid = document.getElementById('sbGrid');
+  if(!grid) return;
+  grid.innerHTML = GAMES.map(g=>`
+    <div class="sb-item" style="border-left-color:${g.color}">
+      <div class="sb-name">${finished[g.id]?'✅':'⬜'} ${g.name}</div>
+      <div class="sb-val">${scores[g.id]}</div>
+      <div class="sb-max">dari target ${g.max} poin</div>
+    </div>`).join('');
+
+  const total = scores.reduce((a,b)=>a+b,0);
+  const done = finished.filter(Boolean).length;
+  document.getElementById('sbTotal').textContent = total;
+  document.getElementById('grandTotal').textContent = total;
+
+  let rank;
+  if(done < 6) rank = `${done} dari 6 game selesai — lanjutkan ekspedisi untuk membuka gelar!`;
+  else if(total >= 3800) rank = '🥇 Arsitek Sistem Informasi Akuntansi Syariah';
+  else if(total >= 2800) rank = '🥈 Analis Proses Bisnis BMT';
+  else if(total >= 1800) rank = '🥉 Petugas Pemrosesan Data Bersertifikat';
+  else rank = '📚 Magang AIS — ulangi game favorit untuk menaikkan skor!';
+  document.getElementById('sbRank').textContent = rank;
+}
+
+function sbSubmit(){
+  const total = scores.reduce((a,b)=>a+b,0);
+  const done = finished.filter(Boolean).length;
+  if(total === 0){ alert('Mainkan minimal satu game dulu sebelum mengirim skor!'); return; }
+  if(window.saveScoreToCloud){
+    saveScoreToCloud('Pertemuan 02', 'Ekspedisi Transaksi BMT (6 Game per Tema)', total, 5210, {
+      gamesSelesai: done,
+      rincian: GAMES.map(g=>`${g.name}: ${scores[g.id]}`).join(' | ')
+    });
+  }
+  if(window.RealtimeGameEngine){
+    RealtimeGameEngine.submitPlayerScore(total, done, 6);
+  }
+  sWin(); confetti(150);
+  alert(`☁️ Skor terkirim!\n\nTotal: ${total} poin\nGame selesai: ${done} dari 6\n\nSkor Anda kini tampil di Papan Peringkat Kelas.`);
+}
+
+/* ══════════ TIM KELAS & CLOUD SYNC ══════════ */
+let teamScores = [0,0,0,0];
+const TEAM_NAMES = ['Tim 1: Wadiah','Tim 2: Murabahah','Tim 3: Mudharabah','Tim 4: Ijarah'];
+
+function addTeamScore(i, pts){
+  teamScores[i] = Math.max(0, teamScores[i] + pts);
+  document.getElementById('scoreTeam'+i).textContent = teamScores[i];
+  if(pts > 0) sGood(); else sBad();
+  if(window.RealtimeGameEngine && TEAM_NAMES[i]){
+    RealtimeGameEngine.updateTeamScoreRealtime(TEAM_NAMES[i], pts);
+  }
+}
+
+function renderLiveLeaderboard(players){
+  const box = document.getElementById('liveLeaderboardList');
+  if(!box) return;
+  if(!players || players.length === 0){
+    box.innerHTML = '<div style="color:var(--txl);font-style:italic;font-size:12.5px;padding:5px 0">Belum ada skor hari ini. Jadilah yang pertama!</div>';
+    return;
+  }
+  const medals = ['🥇','🥈','🥉'];
+  box.innerHTML = players.map((p,i)=>`
+    <div class="lb-row">
+      <div style="display:flex;align-items:center;gap:9px;min-width:0">
+        <span style="font-size:15px;font-weight:700;width:24px;text-align:center;flex-shrink:0">${medals[i] || (i+1)+'.'}</span>
+        <div style="min-width:0">
+          <strong style="color:var(--pri)">${p.nama || 'Mahasiswa'}</strong>
+          <span style="color:var(--txm);font-size:11.5px">(${p.nim || '-'})</span>
+          <div style="font-size:10.5px;color:var(--txl)">Game selesai: ${p.combo || 0}/6 · ${p.updatedAt || '-'}</div>
+        </div>
+      </div>
+      <div style="font-family:'Source Code Pro',monospace;font-weight:700;font-size:15px;color:var(--acc);flex-shrink:0">${p.score} pts</div>
+    </div>`).join('');
+}
+
+function initCloudGameSync(){
+  if(window.RealtimeGameEngine){
+    RealtimeGameEngine.listenLeaderboard(renderLiveLeaderboard);
+    RealtimeGameEngine.joinRoom('BMT-ARENA-02', null, data=>{
+      if(data && data.teams){
+        TEAM_NAMES.forEach((k,i)=>{
+          if(data.teams[k] && data.teams[k].score !== undefined){
+            teamScores[i] = data.teams[k].score;
+            const el = document.getElementById('scoreTeam'+i);
+            if(el) el.textContent = teamScores[i];
+          }
+        });
+      }
+    });
+  }
+}
+
+sbRender();
+if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initCloudGameSync);
+else initCloudGameSync();
+</script>
+
+</body>
+</html>
