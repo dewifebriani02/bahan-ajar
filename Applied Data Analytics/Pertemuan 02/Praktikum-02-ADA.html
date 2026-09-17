@@ -619,11 +619,79 @@ dtype: int64</div>
       <code style="font-size:12px">df.query('npf_persen &lt; @mean_npf and roe_persen &gt; @mean_roe and ...')</code>
     </div>
 
+    <h3 class="sh" style="margin-top:24px">🏢 Studi Kasus Kelompok — Dataset Skala Besar (55.000+ Baris)</h3>
+    <p style="font-size:13.5px;color:var(--txm)">Selain dataset BPRS di atas, dosen menyediakan <strong>7 Dataset Skala Besar</strong> dari studi kasus bisnis nyata (data sintetis dummy anonim) di folder <code>datasets/</code>. Setiap kelompok wajib melakukan eksplorasi <em>loc/iloc, filtering, groupby, dan merge</em> pada dataset kelompoknya:</p>
+
+    <div style="overflow-x:auto;margin:14px 0">
+      <table style="width:100%;border-collapse:collapse;font-size:12.5px;background:var(--sf2);border:1px solid var(--bs);border-radius:var(--rs)">
+        <thead>
+          <tr style="background:var(--meet-mid);color:#fff;text-align:left">
+            <th style="padding:8px 12px">Kel.</th>
+            <th style="padding:8px 12px">Studi Kasus / Industri</th>
+            <th style="padding:8px 12px">Nama Berkas CSV</th>
+            <th style="padding:8px 12px">Jumlah Data</th>
+            <th style="padding:8px 12px">Fokus Analisis</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--bs)">
+            <td style="padding:8px 12px;font-weight:700;color:var(--meet-acc)">Kel 1</td>
+            <td style="padding:8px 12px"><strong>RS Islam As-Syifa</strong> (Medis &amp; RS Syariah)</td>
+            <td style="padding:8px 12px;font-family:'Source Code Pro',monospace;font-size:11.5px">kel1_rs_transaksi_layanan.csv<br>kel1_rs_master_poli.csv</td>
+            <td style="padding:8px 12px">8.500 Baris</td>
+            <td style="padding:8px 12px">Merge tarif poli, klaim BPJS vs asuransi, utilisasi rawat inap.</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--bs);background:var(--sf3)">
+            <td style="padding:8px 12px;font-weight:700;color:var(--meet-acc)">Kel 2</td>
+            <td style="padding:8px 12px"><strong>Barakah Bakery &amp; Cafe</strong> (F&amp;B Halal)</td>
+            <td style="padding:8px 12px;font-family:'Source Code Pro',monospace;font-size:11.5px">kel2_fnb_transaksi_kasir.csv<br>kel2_fnb_master_menu.csv</td>
+            <td style="padding:8px 12px">10.000 Baris</td>
+            <td style="padding:8px 12px">Margin profit varian cake, omset per outlet, pola diskon.</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--bs)">
+            <td style="padding:8px 12px;font-weight:700;color:var(--meet-acc)">Kel 3</td>
+            <td style="padding:8px 12px"><strong>Amanah Griya Property</strong> (Developer Syariah)</td>
+            <td style="padding:8px 12px;font-family:'Source Code Pro',monospace;font-size:11.5px">kel3_property_kontrak_unit.csv</td>
+            <td style="padding:8px 12px">5.500 Baris</td>
+            <td style="padding:8px 12px">Margin tipe rumah, kelancaran angsuran, akad Murabahah vs Istishna.</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--bs);background:var(--sf3)">
+            <td style="padding:8px 12px;font-weight:700;color:var(--meet-acc)">Kel 4</td>
+            <td style="padding:8px 12px"><strong>Pesantren Al-Fatih</strong> (Boarding &amp; IT)</td>
+            <td style="padding:8px 12px;font-family:'Source Code Pro',monospace;font-size:11.5px">kel4_pesantren_keuangan_santri.csv</td>
+            <td style="padding:8px 12px">8.000 Baris</td>
+            <td style="padding:8px 12px">Penerimaan SPP &amp; katering per jurusan, rasio santri beasiswa.</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--bs)">
+            <td style="padding:8px 12px;font-weight:700;color:var(--meet-acc)">Kel 5</td>
+            <td style="padding:8px 12px"><strong>Lembaga Tahfizh Al-Bayan</strong> (Halaqah Qur'an)</td>
+            <td style="padding:8px 12px;font-family:'Source Code Pro',monospace;font-size:11.5px">kel5_tahfizh_setoran_halaqah.csv</td>
+            <td style="padding:8px 12px">7.500 Baris</td>
+            <td style="padding:8px 12px">Rata-rata skor kelancaran per musyrif, tingkat kelulusan mutqin.</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--bs);background:var(--sf3)">
+            <td style="padding:8px 12px;font-weight:700;color:var(--meet-acc)">Kel 6</td>
+            <td style="padding:8px 12px"><strong>Koperasi Santri Berkah</strong> (Kopontren Retail)</td>
+            <td style="padding:8px 12px;font-family:'Source Code Pro',monospace;font-size:11.5px">kel6_kopontren_transaksi_retail.csv</td>
+            <td style="padding:8px 12px">9.500 Baris</td>
+            <td style="padding:8px 12px">Omset &amp; laba per kategori produk, poin keaktifan belanja SHU.</td>
+          </tr>
+          <tr>
+            <td style="padding:8px 12px;font-weight:700;color:var(--meet-acc)">Kel 7</td>
+            <td style="padding:8px 12px"><strong>Mawaddah Financial Advisory</strong> (Konsultan Keuangan)</td>
+            <td style="padding:8px 12px;font-family:'Source Code Pro',monospace;font-size:11.5px">kel7_konsultan_keuangan_syariah.csv</td>
+            <td style="padding:8px 12px">6.000 Baris</td>
+            <td style="padding:8px 12px">Revenue per konsultan, rating kepuasan CSAT, segmentasi kota.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
     <h3 class="sh">Lab Report — Wajib Dikumpulkan</h3>
     <ul class="lst">
       <li><strong>Format:</strong> Google Colab notebook (.ipynb) — rename menjadi <code>Lab1_[NIM]_[Nama].ipynb</code></li>
-      <li><strong>Isi:</strong> Semua sel dari Langkah 1–5 + jawaban 3 tantangan mandiri + interpretasi tekstual di sel Markdown</li>
-      <li><strong>Interpretasi wajib:</strong> Setiap output harus diikuti sel Markdown yang menjelaskan <em>apa artinya</em> bagi bisnis BPRS — bukan hanya deskripsi kode</li>
+      <li><strong>Isi:</strong> Semua sel dari Langkah 1–5 + jawaban 3 tantangan mandiri + analisis pada dataset kelompok Anda</li>
+      <li><strong>Interpretasi wajib:</strong> Setiap output harus diikuti sel Markdown yang menjelaskan <em>apa artinya</em> bagi keputusan bisnis — bukan hanya deskripsi kode</li>
       <li><strong>Nilai Syariah:</strong> Tambahkan paragraf singkat di akhir notebook: bagaimana prinsip <em>Iqra'</em> relevan dengan pekerjaan analisis data yang kamu lakukan hari ini?</li>
       <li><strong>Kumpulkan ke:</strong> Folder Lab Reports / Pertemuan 02 di Google Drive kelas</li>
     </ul>

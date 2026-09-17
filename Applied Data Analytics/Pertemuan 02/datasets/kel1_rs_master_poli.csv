@@ -1,0 +1,9 @@
+kode_poli,nama_poli,dokter_spesialis,tarif_konsultasi_dasar
+POL-01,Poli Penyakit Dalam,"dr. Ahmad Fauzi, Sp.PD",150000
+POL-02,Poli Anak,"dr. Fatimah Zahra, Sp.A",140000
+POL-03,Poli Kebidanan & Kandungan,"dr. Siti Maryam, Sp.OG",175000
+POL-04,Poli Jantung & Pembuluh Darah,"dr. Bambang Irawan, Sp.JP",250000
+POL-05,Poli Gigi & Mulut,drg. Rizky Pratama,120000
+POL-06,Poli Mata,"dr. Nurul Hidayah, Sp.M",135000
+POL-07,Instalasi Gawat Darurat (IGD),dr. Hendra Setiawan,180000
+POL-08,Rawat Inap VIP / VVIP,dr. Konsultan Spesialis,500000
