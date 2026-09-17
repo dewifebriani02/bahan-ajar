@@ -869,7 +869,7 @@ window.RealtimeGameEngine = {
   },
 
   // Submit Skor Individu / Pasangan ke Live Leaderboard
-  submitPlayerScore: function (playerScore, comboCount, roundCompleted) {
+  submitPlayerScore: function (playerScore, comboCount, roundCompleted, gameScoresBreakdown, activeGameIndex) {
     if (!currentStudent.nim) {
       showIdentityModal();
       return;
@@ -883,6 +883,8 @@ window.RealtimeGameEngine = {
         score: playerScore,
         combo: comboCount,
         round: roundCompleted,
+        gameScores: gameScoresBreakdown || null,
+        activeGameIndex: activeGameIndex !== undefined ? activeGameIndex : null,
         updatedAt: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
         timestamp: firebase.firestore.FieldValue.serverTimestamp()
       };

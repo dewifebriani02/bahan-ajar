@@ -382,23 +382,115 @@ ul.bullet li{margin-bottom:5px;color:var(--txm);font-size:14px;line-height:1.5}
 .tbtn.halal{background:var(--syal);border-color:var(--sya);color:var(--sya)}
 .tbtn.tadlis{background:var(--warnl);border-color:var(--warn);color:var(--warn)}
 
-/* ── SCOREBOARD ── */
-.sb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;margin-bottom:16px}
-.sb-item{background:var(--sf3);border:1.5px solid var(--bs);border-radius:var(--rs);padding:12px 14px;border-left-width:4px}
-.sb-name{font-size:12px;font-weight:700;color:var(--txm);margin-bottom:3px;line-height:1.3}
-.sb-val{font-family:'Source Code Pro',monospace;font-size:22px;font-weight:700;color:var(--pri)}
-.sb-max{font-size:11px;color:var(--txl);font-weight:600}
-.teams-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}
-@media(max-width:640px){.teams-grid{grid-template-columns:1fr 1fr}}
-.team-card{background:var(--sf);border:1.5px solid var(--bs);border-radius:var(--rs);padding:12px;text-align:center;border-top-width:4px}
-.team-name{font-weight:700;font-size:13px;color:var(--pri)}
-.team-role{font-size:10.5px;color:var(--txl);margin-bottom:5px}
-.team-pts{font-family:'Source Code Pro',monospace;font-size:23px;font-weight:700;color:var(--acc);margin:3px 0}
-.point-btns{display:flex;justify-content:center;gap:5px}
-.pts-add,.pts-sub{width:30px;height:28px;border-radius:7px;font-weight:700;cursor:pointer;font-size:11.5px;font-family:inherit}
-.pts-add{background:var(--okl);border:1px solid var(--ok);color:var(--ok)}
-.pts-sub{background:var(--warnl);border:1px solid var(--warn);color:var(--warn)}
-.lb-row{display:flex;align-items:center;justify-content:space-between;background:var(--sf);border:1px solid var(--bs);border-radius:var(--rs);padding:8px 12px;font-size:12.5px}
+/* ── REALTIME LEADERBOARD & FLOATING RANK ── */
+.float-lb-btn{
+  position:fixed;bottom:22px;right:22px;z-index:99;
+  background:linear-gradient(135deg,var(--meet-mid),var(--meet-acc));
+  color:#fff;border:2px solid rgba(240,168,48,.7);border-radius:30px;
+  padding:9px 17px;display:flex;align-items:center;gap:9px;
+  font-family:'Source Sans 3',sans-serif;font-size:13px;font-weight:700;
+  cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.35);
+  transition:all .2s;animation:pulseLb 3s infinite;
+}
+@keyframes pulseLb{
+  0%,100%{transform:scale(1);box-shadow:0 6px 20px rgba(0,0,0,.35)}
+  50%{transform:scale(1.04);box-shadow:0 8px 26px rgba(212,96,32,.55)}
+}
+.float-lb-btn:hover{transform:translateY(-3px) scale(1.05)}
+.rank-badge{background:#F0A830;color:#0C1D30;font-weight:800;font-size:11.5px;padding:2px 8px;border-radius:12px}
+
+.game-lb-ticker{
+  display:flex;align-items:center;justify-content:space-between;
+  background:linear-gradient(90deg,rgba(12,29,48,.07),rgba(212,96,32,.1));
+  border:1px solid rgba(212,96,32,.25);border-radius:var(--rs);
+  padding:6px 12px;margin-bottom:12px;font-size:12px;cursor:pointer;
+  transition:background .2s;color:var(--tx);
+}
+.game-lb-ticker:hover{background:rgba(212,96,32,.18)}
+.ticker-highlight{font-weight:700;color:var(--acc)}
+.ticker-btn{font-size:11px;font-weight:700;color:var(--pmid);display:flex;align-items:center;gap:3px}
+
+/* LEADERBOARD MODAL */
+.lb-modal-overlay{
+  position:fixed;inset:0;background:rgba(7,15,28,.75);backdrop-filter:blur(4px);
+  z-index:200;display:none;align-items:center;justify-content:center;padding:16px;
+  animation:fadeIn .2s ease;
+}
+.lb-modal-overlay.show{display:flex}
+.lb-modal{
+  background:var(--sf);border:1.5px solid var(--bs);border-radius:var(--r);
+  width:100%;max-width:540px;max-height:90vh;display:flex;flex-direction:column;
+  box-shadow:0 16px 40px rgba(0,0,0,.45);overflow:hidden;
+}
+.lb-modal-hd{
+  background:linear-gradient(135deg,var(--meet-from),var(--meet-mid));color:#fff;
+  padding:16px 20px;display:flex;align-items:center;justify-content:space-between;
+}
+.lb-modal-title{font-family:'Amiri',serif;font-size:20px;font-weight:700;margin:0;display:flex;align-items:center;gap:8px}
+.lb-modal-close{background:none;border:none;color:#fff;font-size:22px;cursor:pointer;opacity:.7;transition:opacity .15s}
+.lb-modal-close:hover{opacity:1}
+.lb-modal-body{padding:16px 20px;overflow-y:auto;flex:1}
+.my-rank-banner{
+  background:linear-gradient(135deg,#0C1D30,#162C46);color:#fff;
+  border:1.5px solid rgba(240,168,48,.4);border-radius:var(--rs);
+  padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;
+}
+.lb-row-me{
+  background:rgba(212,96,32,.12) !important;border:1.5px solid var(--acc) !important;
+}
+
+/* LEADERBOARD PER-GAME TABS */
+.lb-tabs{
+  display:flex;gap:5px;overflow-x:auto;padding:2px 0 10px;margin-bottom:10px;
+  scrollbar-width:thin;
+}
+.lb-tabs::-webkit-scrollbar{height:4px}
+.lb-tabs::-webkit-scrollbar-thumb{background:rgba(212,96,32,.3);border-radius:4px}
+.lb-tab{
+  background:var(--sf2);border:1px solid var(--bs);border-radius:18px;
+  padding:5px 11px;font-size:11px;font-weight:700;color:var(--txm);
+  white-space:nowrap;cursor:pointer;transition:all .15s;flex-shrink:0;
+  display:inline-flex;align-items:center;gap:4px;
+}
+.lb-tab:hover{background:var(--accl);color:var(--acc);border-color:var(--acc)}
+.lb-tab.active{background:var(--acc);color:#fff;border-color:var(--acc);box-shadow:0 2px 8px rgba(212,96,32,.3)}
+
+/* FORFEIT / PUNISHMENT MODAL */
+.btn-forfeit-trigger{
+  width:100%;background:linear-gradient(135deg,#C03818,#E05030);color:#fff;
+  border:none;border-radius:var(--rs);padding:10px 14px;font-family:inherit;
+  font-size:12.5px;font-weight:700;cursor:pointer;margin-top:12px;
+  display:flex;align-items:center;justify-content:center;gap:7px;transition:opacity .15s;
+}
+.btn-forfeit-trigger:hover{opacity:.92}
+
+.forfeit-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px;
+}
+@media(max-width:540px){.forfeit-grid{grid-template-columns:1fr}}
+.forfeit-card{
+  background:var(--sf3);border:1.5px solid var(--bs);border-radius:var(--rs);
+  padding:12px 14px;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;
+}
+.forfeit-card:hover{
+  border-color:var(--warn);background:var(--warnl);transform:translateY(-2px);
+  box-shadow:0 4px 14px rgba(192,56,24,.15);
+}
+.forfeit-card.selected{
+  border-color:var(--warn);background:var(--warnl);box-shadow:0 0 0 3px rgba(192,56,24,.25);
+}
+.forfeit-ico{font-size:24px;margin-bottom:4px}
+.forfeit-title{font-weight:700;font-size:13px;color:var(--pri);margin-bottom:3px}
+.forfeit-desc{font-size:11.5px;color:var(--txm);line-height:1.4;flex:1}
+
+.forfeit-action-box{
+  background:linear-gradient(135deg,#0C1D30,#1E1428);color:#fff;
+  border-radius:var(--rs);padding:16px;margin-top:14px;border:1.5px solid var(--warn);
+}
+.forfeit-timer-val{
+  font-family:'Source Code Pro',monospace;font-size:32px;font-weight:700;
+  color:#FF7B54;line-height:1;
+}
 
 #confettiCanvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:999}
 
@@ -409,12 +501,107 @@ ul.bullet li{margin-bottom:5px;color:var(--txm);font-size:14px;line-height:1.5}
   .hud{padding:10px 11px;gap:7px}
   .hud-cell{min-width:52px}
   .hud-val{font-size:17px}
+  .float-lb-btn{bottom:14px;right:14px;padding:7px 13px;font-size:12px}
 }
 </style>
 </head>
 <body>
 
 <canvas id="confettiCanvas"></canvas>
+
+<!-- FLOATING LIVE LEADERBOARD BUTTON -->
+<button id="floatLeaderboardBtn" onclick="toggleLiveLeaderboardModal(true)" class="float-lb-btn" title="Klik untuk melihat klasemen real-time kelas">
+  <span>🏆 Klasemen Live</span>
+  <span id="floatMyRank" class="rank-badge">Memuat...</span>
+</button>
+
+<!-- LIVE LEADERBOARD MODAL -->
+<div id="modalLiveLeaderboard" class="lb-modal-overlay" onclick="if(event.target===this) toggleLiveLeaderboardModal(false)">
+  <div class="lb-modal">
+    <div class="lb-modal-hd">
+      <div>
+        <h3 class="lb-modal-title" id="lbModalMainTitle">🏆 Klasemen Realtime Kelas</h3>
+        <div style="font-size:11.5px;color:rgba(255,255,255,.75);margin-top:2px" id="lbModalSubtitle">SIA P02 · Pilih Tab Game untuk melihat skor per-game</div>
+      </div>
+      <button class="lb-modal-close" onclick="toggleLiveLeaderboardModal(false)">✕</button>
+    </div>
+    <div class="lb-modal-body">
+      <!-- PER-GAME FILTER TABS -->
+      <div class="lb-tabs" id="modalLbTabs"></div>
+
+      <div class="my-rank-banner">
+        <div>
+          <div style="font-size:10.5px;color:rgba(255,255,255,.65);text-transform:uppercase;font-weight:700" id="modalMyTitle">Posisi Anda di Game Terpilih</div>
+          <div style="font-size:15px;font-weight:700;color:#fff;margin-top:2px" id="modalMyName">Mahasiswa</div>
+          <div style="font-size:11.5px;color:#70E0A0" id="modalMyDone">0/6 Game Selesai</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-family:'Source Code Pro',monospace;font-size:24px;font-weight:700;color:var(--meet-gold)" id="modalMyScore">0 pts</div>
+          <div style="font-size:12px;font-weight:700;color:rgba(255,255,255,.85)" id="modalMyRankBadge">Peringkat —</div>
+        </div>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <span style="font-size:12px;font-weight:700;color:var(--txm);text-transform:uppercase;letter-spacing:.06em" id="modalLbListTitle">Top 10 Klasemen</span>
+        <span style="font-size:10.5px;background:var(--okl);color:var(--ok);padding:2px 8px;border-radius:10px;font-weight:700">● LIVE SYNC FIRESTORE</span>
+      </div>
+
+      <div id="modalLeaderboardList" style="display:grid;gap:6px">
+        <div style="color:var(--txl);font-style:italic;font-size:12.5px;text-align:center;padding:12px 0">Memuat klasemen real-time...</div>
+      </div>
+
+      <button class="btn-forfeit-trigger" onclick="toggleLiveLeaderboardModal(false); openForfeitModal();">
+        <span>🎪 Zona Tantangan &amp; Hukuman Bagi yang Kalah 🤡</span>
+      </button>
+    </div>
+    <div style="padding:12px 20px;border-top:1px solid var(--bs);background:var(--sf3);display:flex;justify-content:space-between;align-items:center">
+      <span style="font-size:11.5px;color:var(--txl)">Skor bertambah setiap kamu menjawab benar!</span>
+      <button class="btn-main" style="padding:6px 14px;font-size:12px" onclick="triggerManualSync()">☁️ Refresh Sync</button>
+    </div>
+  </div>
+</div>
+
+<!-- FORFEIT / PUNISHMENT MODAL (RODA HUKUMAN EDUKATIF) -->
+<div id="modalPunishment" class="lb-modal-overlay" onclick="if(event.target===this) closeForfeitModal()">
+  <div class="lb-modal" style="max-width:520px">
+    <div class="lb-modal-hd" style="background:linear-gradient(135deg,#5A0A10,#1B0C18)">
+      <div>
+        <h3 class="lb-modal-title">🎪 Roda Konsekuensi &amp; Hukuman Seru</h3>
+        <div style="font-size:11.5px;color:rgba(255,255,255,.75);margin-top:2px">Putar roda untuk menentukan tantangan edukatif di kelas &amp; raih +50 Poin Sportivitas!</div>
+      </div>
+      <button class="lb-modal-close" onclick="closeForfeitModal()">✕</button>
+    </div>
+    <div class="lb-modal-body" style="text-align:center">
+      <div class="wheel-stage" style="padding:6px 0 12px">
+        <div class="wheel-holder">
+          <div class="wheel-ptr">🔻</div>
+          <canvas id="forfeitWheelCanvas" width="290" height="290"></canvas>
+          <div class="wheel-hub">🤡</div>
+        </div>
+        <div class="wheel-result" id="forfeitWheelTxt" style="font-size:14px;margin:12px 0 10px;font-weight:700">Putar roda untuk mengacak hukuman!</div>
+        <button class="btn-main" id="btnSpinForfeit" onclick="spinForfeitWheel()" style="background:linear-gradient(135deg,#C03818,#E05030);padding:10px 24px;font-size:14px">🎡 Putar Roda Hukuman</button>
+      </div>
+
+      <!-- ACTIVE FORFEIT ACTION BOX -->
+      <div id="activeForfeitBox" style="display:none;text-align:left" class="forfeit-action-box">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <span style="font-size:11px;font-weight:700;color:#FFB885;text-transform:uppercase;letter-spacing:.08em" id="activeForfeitCategory">TANTANGAN TERPILIH</span>
+          <span class="forfeit-timer-val" id="forfeitTimerTxt">30s</span>
+        </div>
+        <div style="font-family:'Amiri',serif;font-size:18px;font-weight:700;color:#fff;line-height:1.3" id="activeForfeitTitle">—</div>
+        <p style="font-size:13px;color:rgba(255,255,255,.85);margin:6px 0 14px" id="activeForfeitDetail">—</p>
+        <div style="display:flex;gap:8px;justify-content:flex-end">
+          <button class="btn-ghost" style="color:#fff;border-color:rgba(255,255,255,.3);font-size:12px;padding:7px 14px" onclick="startForfeitTimer(30)">⏱️ Mulai 30 Detik</button>
+          <button class="btn-main" style="background:#1F9060;border-color:#1F9060;font-size:12.5px;padding:7px 18px" onclick="completeForfeit()">✅ Selesai Dijalankan (+50 Pts)</button>
+        </div>
+      </div>
+    </div>
+    <div style="padding:10px 20px;border-top:1px solid var(--bs);background:var(--sf3);display:flex;justify-content:space-between;align-items:center">
+      <span style="font-size:11.5px;color:var(--txl)">Sportifitas kelas dihargai bonus +50 poin!</span>
+      <button class="btn-ghost" style="padding:4px 12px;font-size:11.5px" onclick="closeForfeitModal()">Tutup</button>
+    </div>
+  </div>
+</div>
 
 <!-- TOPBAR -->
 <div class="topbar">
@@ -428,6 +615,7 @@ ul.bullet li{margin-bottom:5px;color:var(--txm);font-size:14px;line-height:1.5}
   </div>
   <div class="topbar-right">
     <span class="top-badge">CPMK-1 · Romney Ch. 2</span>
+    <button class="top-badge" onclick="toggleLiveLeaderboardModal(true)" style="background:rgba(240,168,48,.18);border-color:rgba(240,168,48,.5);color:#F0A830;cursor:pointer;font-weight:700;font-family:inherit">🏆 Klasemen <span id="topLeaderRank">#—</span></button>
     <span class="top-badge" style="background:rgba(240,168,48,.18);border-color:rgba(240,168,48,.45);color:#F0A830;font-family:'Source Code Pro',monospace">🏅 <span id="grandTotal">0</span> pts</span>
     <button class="top-badge" onclick="toggleSound()" id="soundBtn" style="cursor:pointer;font-family:inherit">🔊 ON</button>
     <div class="prog-wrap"><div class="prog-bar" id="topProg" style="width:14%"></div></div>
@@ -590,9 +778,14 @@ ul.bullet li{margin-bottom:5px;color:var(--txm);font-size:14px;line-height:1.5}
     <div class="ghead">
       <div class="gicon" style="background:#D8EEF6">🎡</div>
       <div style="flex:1">
-        <div class="gtitle">Roda Siklus Transaksi</div>
-        <div class="gsub">Tema 1 · Putar roda → dapat skenario BMT → tentukan siklus transaksinya</div>
+        <div class="gtitle">Roda Skenario &amp; Multiplier Siklus</div>
+        <div class="gsub">Tema 1 · Putar roda untuk multiplier &amp; divisi kasus → analisis peristiwa bisnis BMT → tentukan siklus transaksinya</div>
       </div>
+    </div>
+
+    <div class="game-lb-ticker" onclick="toggleLiveLeaderboardModal(true, 0)">
+      <span>🏆 <span class="ticker-highlight">Klasemen Game 1:</span> <span class="my-rank-txt" id="myRankTxt0">Memuat skor Game 1...</span></span>
+      <span class="ticker-btn">Papan Skor G1 ↗</span>
     </div>
 
     <div class="hud">
@@ -610,8 +803,8 @@ ul.bullet li{margin-bottom:5px;color:var(--txm);font-size:14px;line-height:1.5}
         <canvas id="wheelCanvas" width="320" height="320"></canvas>
         <div class="wheel-hub">🕌</div>
       </div>
-      <div class="wheel-result" id="g1WheelTxt">Putar roda untuk memulai ekspedisi!</div>
-      <button class="btn-main" id="g1Spin" onclick="g1DoSpin()">🎡 Putar Roda Siklus</button>
+      <div class="wheel-result" id="g1WheelTxt">Putar roda untuk menentukan multiplier poin &amp; divisi kasus!</div>
+      <button class="btn-main" id="g1Spin" onclick="g1DoSpin()">🎡 Putar Roda Multiplier</button>
     </div>
 
     <div id="g1QuizBox" style="display:none;margin-top:16px">
@@ -790,6 +983,11 @@ ul.bullet li{margin-bottom:5px;color:var(--txm);font-size:14px;line-height:1.5}
       </div>
     </div>
 
+    <div class="game-lb-ticker" onclick="toggleLiveLeaderboardModal(true, 1)">
+      <span>🏆 <span class="ticker-highlight">Klasemen Game 2:</span> <span class="my-rank-txt" id="myRankTxt1">Memuat skor Game 2...</span></span>
+      <span class="ticker-btn">Papan Skor G2 ↗</span>
+    </div>
+
     <div class="hud">
       <div class="hud-cell"><div class="hud-lbl">Skor</div><div class="hud-val" id="g2Score">0</div></div>
       <div class="hud-cell"><div class="hud-lbl">Waktu</div><div class="hud-val time" id="g2Time">—</div></div>
@@ -913,6 +1111,11 @@ ul.bullet li{margin-bottom:5px;color:var(--txm);font-size:14px;line-height:1.5}
       </div>
     </div>
 
+    <div class="game-lb-ticker" onclick="toggleLiveLeaderboardModal(true, 2)">
+      <span>🏆 <span class="ticker-highlight">Klasemen Game 3:</span> <span class="my-rank-txt" id="myRankTxt2">Memuat skor Game 3...</span></span>
+      <span class="ticker-btn">Papan Skor G3 ↗</span>
+    </div>
+
     <div class="hud">
       <div class="hud-cell"><div class="hud-lbl">Skor</div><div class="hud-val" id="g3Score">0</div></div>
       <div class="hud-cell"><div class="hud-lbl">Waktu</div><div class="hud-val time" id="g3Time">—</div></div>
@@ -941,6 +1144,11 @@ ul.bullet li{margin-bottom:5px;color:var(--txm);font-size:14px;line-height:1.5}
         <div class="gtitle">Sandi Bagan Akun (COA Cipher)</div>
         <div class="gsub">Tema 4 · Baca petunjuk akuntan forensik, pecahkan kode akun yang dimaksud</div>
       </div>
+    </div>
+
+    <div class="game-lb-ticker" onclick="toggleLiveLeaderboardModal(true, 3)">
+      <span>🏆 <span class="ticker-highlight">Klasemen Game 4:</span> <span class="my-rank-txt" id="myRankTxt3">Memuat skor Game 4...</span></span>
+      <span class="ticker-btn">Papan Skor G4 ↗</span>
     </div>
 
     <div class="hud">
@@ -1082,6 +1290,11 @@ ul.bullet li{margin-bottom:5px;color:var(--txm);font-size:14px;line-height:1.5}
       </div>
     </div>
 
+    <div class="game-lb-ticker" onclick="toggleLiveLeaderboardModal(true, 4)">
+      <span>🏆 <span class="ticker-highlight">Klasemen Game 5:</span> <span class="my-rank-txt" id="myRankTxt4">Memuat skor Game 5...</span></span>
+      <span class="ticker-btn">Papan Skor G5 ↗</span>
+    </div>
+
     <div class="hud">
       <div class="hud-cell"><div class="hud-lbl">Skor</div><div class="hud-val" id="g5Score">0</div></div>
       <div class="hud-cell"><div class="hud-lbl">Waktu</div><div class="hud-val time" id="g5Time">—</div></div>
@@ -1180,6 +1393,11 @@ ul.bullet li{margin-bottom:5px;color:var(--txm);font-size:14px;line-height:1.5}
       </div>
     </div>
 
+    <div class="game-lb-ticker" onclick="toggleLiveLeaderboardModal(true, 5)">
+      <span>🏆 <span class="ticker-highlight">Klasemen Game 6:</span> <span class="my-rank-txt" id="myRankTxt5">Memuat skor Game 6...</span></span>
+      <span class="ticker-btn">Papan Skor G6 ↗</span>
+    </div>
+
     <div class="hud">
       <div class="hud-cell"><div class="hud-lbl">Skor</div><div class="hud-val" id="g6Score">0</div></div>
       <div class="hud-cell"><div class="hud-lbl">Waktu</div><div class="hud-val time" id="g6Time">—</div></div>
@@ -1236,7 +1454,7 @@ ul.bullet li{margin-bottom:5px;color:var(--txm);font-size:14px;line-height:1.5}
       <div class="gicon" style="background:#FCEBD8">🏆</div>
       <div style="flex:1">
         <div class="gtitle">Papan Skor Ekspedisi</div>
-        <div class="gsub">Rekap 6 game, skor tim kelas, dan peringkat realtime</div>
+        <div class="gsub">Rekap 6 game — skor tiap tema otomatis terkirim ke portal dosen saat game selesai</div>
       </div>
     </div>
 
@@ -1249,7 +1467,7 @@ ul.bullet li{margin-bottom:5px;color:var(--txm);font-size:14px;line-height:1.5}
     <div class="sb-grid" id="sbGrid"></div>
 
     <div style="text-align:center;margin-bottom:18px">
-      <button class="btn-main" onclick="sbSubmit()">☁️ Kirim Skor ke Papan Kelas</button>
+      <button class="btn-main" onclick="sbSubmit()">☁️ Cek &amp; Kirim Ulang Skor</button>
     </div>
 
     <h4 style="font-family:'Amiri',serif;font-size:17px;color:var(--pri);margin-bottom:8px">👥 Skor Tim Kelas (Mode Proyektor)</h4>
@@ -1278,12 +1496,26 @@ ul.bullet li{margin-bottom:5px;color:var(--txm);font-size:14px;line-height:1.5}
 
     <div style="margin-top:18px;background:var(--sf3);border:1.5px solid var(--bs);border-radius:var(--rs);padding:14px 16px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px;flex-wrap:wrap">
-        <h4 style="font-family:'Amiri',serif;font-size:17px;color:var(--pri);margin:0">🏅 Peringkat Kelas Realtime</h4>
+        <h4 style="font-family:'Amiri',serif;font-size:17px;color:var(--pri);margin:0" id="secLbMainTitle">🏅 Peringkat Kelas Realtime</h4>
         <span style="font-size:10.5px;background:var(--okl);color:var(--ok);padding:2px 9px;border-radius:10px;font-weight:700">● LIVE SYNC</span>
       </div>
+      <!-- SECTION 7 PER-GAME FILTER TABS -->
+      <div class="lb-tabs" id="secLbTabs"></div>
       <div id="liveLeaderboardList" style="display:grid;gap:6px">
         <div style="color:var(--txl);font-style:italic;font-size:12.5px">Memuat peringkat kelas dari cloud...</div>
       </div>
+    </div>
+
+    <div style="margin-top:16px;background:linear-gradient(135deg,#200C10,#38141C);border:1.5px dashed #E05030;border-radius:var(--rs);padding:14px 18px;color:#fff;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+      <div>
+        <div style="font-weight:700;font-size:14px;color:#FFB885;display:flex;align-items:center;gap:6px">
+          <span>🎪</span> <span>Zona Tantangan &amp; Hukuman Sportifitas</span>
+        </div>
+        <div style="font-size:12px;color:rgba(255,255,255,.8);margin-top:2px">
+          Peringkat bawah atau ingin menghibur kelas? Pilih tantangan edukatif atau putar roda hukuman untuk dapatkan <strong>+50 Poin Sportivitas</strong>!
+        </div>
+      </div>
+      <button class="btn-main" style="background:#C03818;border-color:#E05030;white-space:nowrap;font-size:12.5px" onclick="openForfeitModal()">🤡 Buka Zona Hukuman</button>
     </div>
   </div>
 
@@ -1638,12 +1870,12 @@ function confetti(n){
 
 /* ═══ SHARED SCORE ENGINE ═══ */
 const GAMES = [
-  {id:0,name:'Roda Siklus Transaksi',max:900,color:'#1B7898'},
-  {id:1,name:'Pipeline Pemrosesan Data',max:700,color:'#D46020'},
-  {id:2,name:'Kartu Memori Hierarki',max:800,color:'#1F9060'},
-  {id:3,name:'Sandi Bagan Akun (COA)',max:1050,color:'#7040B0'},
-  {id:4,name:'Rakit Data Flow Diagram',max:800,color:'#2A50B0'},
-  {id:5,name:'Detektif Tadlis',max:960,color:'#C03818'}
+  {id:0,name:'Roda Siklus Transaksi',max:900,color:'#1B7898',tema:'Siklus Transaksi Bisnis'},
+  {id:1,name:'Pipeline Pemrosesan Data',max:700,color:'#D46020',tema:'Siklus Pemrosesan Data'},
+  {id:2,name:'Kartu Memori Hierarki',max:800,color:'#1F9060',tema:'Hierarki Data'},
+  {id:3,name:'Sandi Bagan Akun (COA)',max:1050,color:'#7040B0',tema:'Bagan Akun (COA)'},
+  {id:4,name:'Rakit Data Flow Diagram',max:800,color:'#2A50B0',tema:'Data Flow Diagram'},
+  {id:5,name:'Detektif Tadlis',max:960,color:'#C03818',tema:'Nilai Syariah & Anti-Tadlis'}
 ];
 const scores = [0,0,0,0,0,0], finished = [false,false,false,false,false,false];
 
@@ -1651,12 +1883,48 @@ function setScore(g,val){
   scores[g] = val;
   const el = document.getElementById('g'+(g+1)+'Score');
   if(el) el.textContent = val;
-  document.getElementById('grandTotal').textContent = scores.reduce((a,b)=>a+b,0);
+  const total = scores.reduce((a,b)=>a+b,0);
+  const gt = document.getElementById('grandTotal');
+  if(gt) gt.textContent = total;
+
+  const doneCount = finished.filter(Boolean).length;
+  if(window.RealtimeGameEngine){
+    RealtimeGameEngine.submitPlayerScore(total, 1, doneCount, [...scores], g);
+  }
+  if(typeof updateLocalPlayerInLeaderboard === 'function'){
+    updateLocalPlayerInLeaderboard(total, doneCount);
+  }
 }
+const submitted = [false,false,false,false,false,false];
+
+/* Kirim skor satu game ke Cloud Firestore sebagai catatan tersendiri,
+   supaya dosen bisa melihat capaian per tema, bukan hanya totalnya. */
+function pushGameScore(g){
+  if(submitted[g]) return false;
+  submitted[g] = true;
+  const info = GAMES[g];
+  const total = scores.reduce((a,b)=>a+b,0);
+  const doneCount = finished.filter(Boolean).length;
+  if(window.saveScoreToCloud){
+    saveScoreToCloud('Pertemuan 02', 'Game ' + (g+1) + ' — ' + info.name, scores[g], info.max, {
+      tema: info.tema,
+      persen: Math.round(scores[g] / info.max * 100)
+    });
+  }
+  if(window.RealtimeGameEngine){
+    RealtimeGameEngine.submitPlayerScore(total, 1, doneCount, [...scores], g);
+  }
+  if(typeof updateLocalPlayerInLeaderboard === 'function'){
+    updateLocalPlayerInLeaderboard(total, doneCount);
+  }
+  return true;
+}
+
 function markDone(g){
   finished[g] = true;
   const d = document.getElementById('dn'+g);
   if(d) d.textContent = '✓';
+  pushGameScore(g);
   sbRender();
 }
 
@@ -1701,6 +1969,17 @@ function shuffle(a){
 }
 
 /* ══════════ TEMA 1: RODA SIKLUS TRANSAKSI ══════════ */
+const WHEEL_SECTORS = [
+  { label:'Layanan Kasir', emoji:'🏢', color:'#1B7898', bonusType:'1x Poin', mult:1, add:0, desc:'Divisi Pelayanan & Kasir BMT' },
+  { label:'Logistik Kantor', emoji:'🛒', color:'#D46020', bonusType:'+50 Pts 🎁', mult:1, add:50, desc:'Divisi Pengadaan & Logistik' },
+  { label:'Unit Usaha Riil', emoji:'🏭', color:'#1F9060', bonusType:'2x Poin 🔥', mult:2, add:0, desc:'Unit Usaha Produktif BMT' },
+  { label:'SDM & Payroll', emoji:'👥', color:'#7040B0', bonusType:'+75 Pts ⚡', mult:1, add:75, desc:'Divisi SDM & Ketenagakerjaan' },
+  { label:'Funding Anggota', emoji:'🏦', color:'#2A50B0', bonusType:'3x Jackpot 💎', mult:3, add:0, desc:'Divisi Penghimpunan Modal & Dana' },
+  { label:'Pembukuan GL', emoji:'📊', color:'#C03818', bonusType:'+100 Pts 🎯', mult:1, add:100, desc:'Bagian Akuntansi & Buku Besar' },
+  { label:'Audit Kepatuhan', emoji:'⚖️', color:'#0F766E', bonusType:'2.5x Booster 🚀', mult:2.5, add:0, desc:'Divisi Audit & Kepatuhan Syariah' },
+  { label:'Operasional Lapangan', emoji:'💼', color:'#D97706', bonusType:'+80 Pts 🌟', mult:1, add:80, desc:'Operasional Lapangan & Cabang' }
+];
+
 const CYCLES = [
   {key:'pendapatan', label:'Pendapatan',  emoji:'💰', color:'#1B7898'},
   {key:'pengeluaran',label:'Pengeluaran', emoji:'🛒', color:'#D46020'},
@@ -1710,72 +1989,111 @@ const CYCLES = [
   {key:'bukubesar',  label:'Buku Besar',  emoji:'📒', color:'#C03818'}
 ];
 
-const G1_CASES = {
-  pendapatan:[
-    {s:'Nasabah Pak Hasan membayar angsuran ke-7 pembiayaan murabahah sepeda motor beserta porsi marginnya di teller BMT.',
-     m:'Angsuran Pokok Rp 575.000 + Margin Rp 75.000 · Bukti Kas Masuk #KM-1180',
-     why:'Penerimaan angsuran dan margin adalah arus kas masuk dari penyaluran dana — masuk <strong>Siklus Pendapatan</strong>. Pengakuan margin di sini adalah realisasi pendapatan BMT.'},
-    {s:'BMT menerbitkan tagihan sewa bulanan kepada penyewa ruko dalam akad ijarah dan mengirim invoice ke penyewa.',
-     m:'Sewa Rp 1.000.000/bulan · Invoice IJR-0244',
-     why:'Menagih dan menerima pendapatan sewa ijarah dari pelanggan adalah aktivitas <strong>Siklus Pendapatan</strong> — barang/jasa diserahkan, kas ditagih.'}
-  ],
-  pengeluaran:[
-    {s:'BMT membeli satu unit sepeda motor dari dealer rekanan untuk diserahkan kepada anggota dalam akad murabahah.',
-     m:'Harga Beli Rp 18.000.000 · Purchase Order PO-0312',
-     why:'Pengadaan barang dari pemasok dan kewajiban membayarnya adalah <strong>Siklus Pengeluaran</strong>. Barang ini dicatat dulu sebagai Persediaan Murabahah sebelum diakadkan.'},
-    {s:'Bagian umum membayar tagihan listrik dan internet kantor cabang BMT bulan ini melalui transfer bank.',
-     m:'Total Rp 3.450.000 · Voucher Kas Keluar #KK-0891',
-     why:'Membeli dan membayar barang/jasa dari pihak luar — termasuk utilitas — adalah <strong>Siklus Pengeluaran</strong> (beli–terima–bayar).'}
-  ],
-  produksi:[
-    {s:'Unit usaha riil BMT mengolah 200 kg kedelai mentah menjadi 1.400 bungkus tempe kemasan siap jual di dapur produksi.',
-     m:'Bahan Baku Rp 1.800.000 → Barang Jadi · Job Order JO-014',
-     why:'Mengubah bahan baku menjadi barang jadi adalah <strong>Siklus Produksi/Konversi</strong>. Di sini bahan baku, tenaga kerja, dan overhead diserap menjadi harga pokok produksi.'},
-    {s:'Manajer unit usaha menghitung pemakaian bahan baku dan jam tenaga kerja langsung untuk menentukan harga pokok produksi tempe bulan ini.',
-     m:'BB Rp 1.800.000 · TKL Rp 900.000 · BOP Rp 400.000',
-     why:'Perhitungan dan pembebanan biaya produksi ke barang jadi adalah inti <strong>Siklus Produksi</strong>, bukan siklus pengeluaran.'}
-  ],
-  sdm:[
-    {s:'BMT menghitung dan mentransfer gaji bulanan 14 karyawan beserta potongan zakat profesi dan iuran BPJS.',
-     m:'Gaji Bruto Rp 42.000.000 · Zakat 2,5% · Daftar Gaji PY-09',
-     why:'Perekrutan, absensi, penggajian, dan potongannya adalah <strong>Siklus Penggajian &amp; SDM</strong> — siklus yang khusus mengurus jasa tenaga kerja karyawan.'},
-    {s:'Bagian SDM merekap absensi dan lembur petugas lapangan selama satu bulan sebagai dasar perhitungan tunjangan.',
-     m:'14 Karyawan · 62 Jam Lembur · Rekap Absensi ABS-09',
-     why:'Pengumpulan data waktu kerja karyawan adalah input awal <strong>Siklus Penggajian &amp; SDM</strong> sebelum gaji dihitung.'}
-  ],
-  pendanaan:[
-    {s:'Yayasan Al-Falah membuka bilyet deposito mudharabah berjangka 12 bulan di BMT dengan nisbah 55:45.',
-     m:'Nominal Rp 50.000.000 · Bilyet DEP-0077',
-     why:'Menghimpun dana dari anggota/investor dan mengembalikannya beserta bagi hasil adalah <strong>Siklus Pendanaan</strong> — BMT memperoleh sumber dana, bukan menjual barang.'},
-    {s:'Anggota baru menyetor simpanan pokok dan simpanan wajib saat mendaftar menjadi anggota koperasi BMT.',
-     m:'Simpanan Pokok Rp 500.000 + Wajib Rp 50.000 · Slip SP-0421',
-     why:'Setoran modal anggota menambah ekuitas lembaga — ini <strong>Siklus Pendanaan</strong> (memperoleh modal dari pemilik/anggota).'}
-  ],
-  bukubesar:[
-    {s:'Akhir bulan, sistem BMT memposting seluruh jurnal khusus ke buku besar lalu menyusun neraca saldo dan laporan keuangan.',
-     m:'Batch Closing Bulanan · 1.284 Jurnal Diposting',
-     why:'Memposting, menyesuaikan, dan menyusun laporan adalah <strong>Siklus Buku Besar &amp; Pelaporan</strong> — siklus yang menerima ringkasan dari kelima siklus lain.'},
-    {s:'Bagian akuntansi membuat jurnal penyesuaian penyusutan aset tetap dan amortisasi margin tangguhan periode berjalan.',
-     m:'12 Jurnal Penyesuaian · Periode September',
-     why:'Jurnal penyesuaian dan penutup dikerjakan di <strong>Siklus Buku Besar &amp; Pelaporan</strong>, bukan di siklus operasional manapun.'}
-  ]
-};
+const G1_CASE_POOL = [
+  {
+    cycleKey:'pendapatan',
+    s:'Nasabah Pak Hasan membayar angsuran ke-7 pembiayaan murabahah sepeda motor beserta porsi marginnya di teller BMT.',
+    m:'Angsuran Pokok Rp 575.000 + Margin Rp 75.000 · Bukti Kas Masuk #KM-1180',
+    why:'Penerimaan angsuran dan margin adalah arus kas masuk dari penyaluran dana — masuk <strong>Siklus Pendapatan</strong>. Pengakuan margin di sini adalah realisasi pendapatan BMT.'
+  },
+  {
+    cycleKey:'pendapatan',
+    s:'BMT menerbitkan tagihan sewa bulanan kepada penyewa ruko dalam akad ijarah dan mengirim invoice ke penyewa.',
+    m:'Sewa Rp 1.000.000/bulan · Invoice IJR-0244',
+    why:'Menagih dan menerima pendapatan sewa ijarah dari pelanggan adalah aktivitas <strong>Siklus Pendapatan</strong> — barang/jasa diserahkan, kas ditagih.'
+  },
+  {
+    cycleKey:'pengeluaran',
+    s:'BMT membeli satu unit sepeda motor dari dealer rekanan untuk diserahkan kepada anggota dalam akad murabahah.',
+    m:'Harga Beli Rp 18.000.000 · Purchase Order PO-0312',
+    why:'Pengadaan barang dari pemasok dan kewajiban membayarnya adalah <strong>Siklus Pengeluaran</strong>. Barang ini dicatat dulu sebagai Persediaan Murabahah sebelum diakadkan.'
+  },
+  {
+    cycleKey:'pengeluaran',
+    s:'Bagian umum membayar tagihan listrik dan internet kantor cabang BMT bulan ini melalui transfer bank.',
+    m:'Total Rp 3.450.000 · Voucher Kas Keluar #KK-0891',
+    why:'Membeli dan membayar barang/jasa dari pihak luar — termasuk utilitas — adalah <strong>Siklus Pengeluaran</strong> (beli–terima–bayar).'
+  },
+  {
+    cycleKey:'produksi',
+    s:'Unit usaha riil BMT mengolah 200 kg kedelai mentah menjadi 1.400 bungkus tempe kemasan siap jual di dapur produksi.',
+    m:'Bahan Baku Rp 1.800.000 → Barang Jadi · Job Order JO-014',
+    why:'Mengubah bahan baku menjadi barang jadi adalah <strong>Siklus Produksi/Konversi</strong>. Di sini bahan baku, tenaga kerja, dan overhead diserap menjadi harga pokok produksi.'
+  },
+  {
+    cycleKey:'produksi',
+    s:'Manajer unit usaha menghitung pemakaian bahan baku dan jam tenaga kerja langsung untuk menentukan harga pokok produksi tempe bulan ini.',
+    m:'BB Rp 1.800.000 · TKL Rp 900.000 · BOP Rp 400.000',
+    why:'Perhitungan dan pembebanan biaya produksi ke barang jadi adalah inti <strong>Siklus Produksi</strong>, bukan siklus pengeluaran.'
+  },
+  {
+    cycleKey:'sdm',
+    s:'BMT menghitung dan mentransfer gaji bulanan 14 karyawan beserta potongan zakat profesi dan iuran BPJS.',
+    m:'Gaji Bruto Rp 42.000.000 · Zakat 2,5% · Daftar Gaji PY-09',
+    why:'Perekrutan, absensi, penggajian, dan potongannya adalah <strong>Siklus Penggajian &amp; SDM</strong> — siklus yang khusus mengurus jasa tenaga kerja karyawan.'
+  },
+  {
+    cycleKey:'sdm',
+    s:'Bagian SDM merekap absensi dan lembur petugas lapangan selama satu bulan sebagai dasar perhitungan tunjangan.',
+    m:'14 Karyawan · 62 Jam Lembur · Rekap Absensi ABS-09',
+    why:'Pengumpulan data waktu kerja karyawan adalah input awal <strong>Siklus Penggajian &amp; SDM</strong> sebelum gaji dihitung.'
+  },
+  {
+    cycleKey:'pendanaan',
+    s:'Yayasan Al-Falah membuka bilyet deposito mudharabah berjangka 12 bulan di BMT dengan nisbah 55:45.',
+    m:'Nominal Rp 50.000.000 · Bilyet DEP-0077',
+    why:'Menghimpun dana dari anggota/investor dan mengembalikannya beserta bagi hasil adalah <strong>Siklus Pendanaan</strong> — BMT memperoleh sumber dana, bukan menjual barang.'
+  },
+  {
+    cycleKey:'pendanaan',
+    s:'Anggota baru menyetor simpanan pokok dan simpanan wajib saat mendaftar menjadi anggota koperasi BMT.',
+    m:'Simpanan Pokok Rp 500.000 + Wajib Rp 50.000 · Slip SP-0421',
+    why:'Setoran modal anggota menambah ekuitas lembaga — ini <strong>Siklus Pendanaan</strong> (memperoleh modal dari pemilik/anggota).'
+  },
+  {
+    cycleKey:'bukubesar',
+    s:'Akhir bulan, sistem BMT memposting seluruh jurnal khusus ke buku besar lalu menyusun neraca saldo dan laporan keuangan.',
+    m:'Batch Closing Bulanan · 1.284 Jurnal Diposting',
+    why:'Memposting, menyesuaikan, dan menyusun laporan adalah <strong>Siklus Buku Besar &amp; Pelaporan</strong> — siklus yang menerima ringkasan dari kelima siklus lain.'
+  },
+  {
+    cycleKey:'bukubesar',
+    s:'Bagian akuntansi membuat jurnal penyesuaian penyusutan aset tetap dan amortisasi margin tangguhan periode berjalan.',
+    m:'12 Jurnal Penyesuaian · Periode September',
+    why:'Jurnal penyesuaian dan penutup dikerjakan di <strong>Siklus Buku Besar &amp; Pelaporan</strong>, bukan di siklus operasional manapun.'
+  }
+];
 
 let g1Angle = 0, g1Spinning = false, g1Round = 0, g1Score = 0, g1Combo = 0;
-let g1State = [], g1Cur = null, g1Timer = null, g1Used = {};
+let g1State = [], g1Cur = null, g1Timer = null;
+let g1RoundCases = [];
 const G1_TOTAL = 6;
+
+function g1InitCases(){
+  // Ensure each session presents 6 unique cycles in random order
+  const byCycle = {};
+  G1_CASE_POOL.forEach(c => {
+    if(!byCycle[c.cycleKey]) byCycle[c.cycleKey] = [];
+    byCycle[c.cycleKey].push(c);
+  });
+  const cyclesShuffled = shuffle(CYCLES.map(c => c.key));
+  g1RoundCases = cyclesShuffled.map(k => {
+    const list = byCycle[k] || [];
+    return list[Math.floor(Math.random() * list.length)];
+  });
+}
 
 function g1Draw(){
   const cv = document.getElementById('wheelCanvas');
   if(!cv) return;
-  const ctx = cv.getContext('2d'), N = CYCLES.length;
+  const ctx = cv.getContext('2d'), N = WHEEL_SECTORS.length;
   const cx = cv.width/2, cy = cv.height/2, R = cx - 8, seg = (Math.PI*2)/N;
   ctx.clearRect(0,0,cv.width,cv.height);
   for(let i=0;i<N;i++){
     const a0 = g1Angle + i*seg, a1 = a0 + seg;
     ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,R,a0,a1); ctx.closePath();
-    ctx.fillStyle = CYCLES[i].color; ctx.fill();
-    ctx.strokeStyle = 'rgba(255,255,255,.55)'; ctx.lineWidth = 2; ctx.stroke();
+    ctx.fillStyle = WHEEL_SECTORS[i].color; ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,.65)'; ctx.lineWidth = 2; ctx.stroke();
     const mid = a0 + seg/2;
     const norm = ((mid % (Math.PI*2)) + Math.PI*2) % (Math.PI*2);
     const upsideDown = norm > Math.PI/2 && norm < Math.PI*1.5;
@@ -1785,10 +2103,13 @@ function g1Draw(){
     else ctx.textAlign = 'right';
     const tx = upsideDown ? -(R-14) : (R-14);
     ctx.fillStyle = '#fff';
-    ctx.font = '700 13px "Source Sans 3", sans-serif';
-    ctx.fillText(CYCLES[i].label, tx, 2);
-    ctx.font = '17px sans-serif';
-    ctx.fillText(CYCLES[i].emoji, tx, 22);
+    ctx.font = '700 11.5px "Source Sans 3", sans-serif';
+    ctx.fillText(WHEEL_SECTORS[i].label, tx, 0);
+    ctx.font = '10px "Source Sans 3", sans-serif';
+    ctx.fillStyle = 'rgba(255,255,255,.9)';
+    ctx.fillText(WHEEL_SECTORS[i].bonusType, tx, 14);
+    ctx.font = '15px sans-serif';
+    ctx.fillText(WHEEL_SECTORS[i].emoji, tx, 30);
     ctx.restore();
   }
   ctx.beginPath(); ctx.arc(cx,cy,R,0,Math.PI*2);
@@ -1796,7 +2117,7 @@ function g1Draw(){
 }
 
 function g1Pick(){
-  const N = CYCLES.length, seg = (Math.PI*2)/N;
+  const N = WHEEL_SECTORS.length, seg = (Math.PI*2)/N;
   // pointer sits at top = -90deg
   let a = (-Math.PI/2 - g1Angle) % (Math.PI*2);
   if(a < 0) a += Math.PI*2;
@@ -1810,9 +2131,9 @@ function g1DoSpin(){
   document.getElementById('g1Spin').disabled = true;
   document.getElementById('g1QuizBox').style.display = 'none';
   fbHide('g1Fb');
-  document.getElementById('g1WheelTxt').textContent = 'Roda berputar…';
+  document.getElementById('g1WheelTxt').textContent = 'Roda berputar menentukan multiplier & divisi…';
 
-  const dur = 3400 + Math.random()*700;
+  const dur = 3200 + Math.random()*700;
   const target = g1Angle + Math.PI*2*(5 + Math.random()*3);
   const start = g1Angle, t0 = performance.now();
   let lastSeg = -1;
@@ -1831,25 +2152,25 @@ function g1DoSpin(){
 
 function g1Landed(){
   g1Spinning = false;
-  const idx = g1Pick(), cyc = CYCLES[idx];
+  const idx = g1Pick(), sector = WHEEL_SECTORS[idx];
   playTone(660,'triangle',.22);
   document.getElementById('g1WheelTxt').innerHTML =
-    `Roda berhenti di <span style="color:${cyc.color}">${cyc.emoji} Siklus ${cyc.label}</span>`;
+    `🎯 Roda berhenti di: <strong style="color:${sector.color}">${sector.emoji} ${sector.label}</strong> <span style="background:var(--accl);color:var(--acc);font-weight:700;font-size:11.5px;padding:2px 8px;border-radius:10px;margin-left:4px;border:1px solid rgba(212,96,32,.3)">${sector.bonusType}</span>`;
 
-  // pick an unused case from that cycle
-  const pool = G1_CASES[cyc.key];
-  g1Used[cyc.key] = g1Used[cyc.key] || 0;
-  const c = pool[g1Used[cyc.key] % pool.length];
-  g1Used[cyc.key]++;
-  g1Cur = { cyc, c };
+  if(!g1RoundCases || g1RoundCases.length < G1_TOTAL){
+    g1InitCases();
+  }
+  const caseObj = g1RoundCases[g1Round % g1RoundCases.length];
+  const rightCycle = CYCLES.find(x => x.key === caseObj.cycleKey) || CYCLES[0];
+  g1Cur = { sector, caseObj, rightCycle };
 
-  document.getElementById('g1Tag').textContent = 'BUSINESS EVENT #' + (g1Round+1) + ' · BMT BERKAH MANDIRI';
-  document.getElementById('g1Scenario').textContent = c.s;
-  document.getElementById('g1Meta').textContent = c.m;
+  document.getElementById('g1Tag').textContent = 'BUSINESS EVENT #' + (g1Round+1) + ' · ' + sector.desc.toUpperCase();
+  document.getElementById('g1Scenario').textContent = caseObj.s;
+  document.getElementById('g1Meta').textContent = caseObj.m;
 
   // options: correct + 3 distractors
-  const others = shuffle(CYCLES.filter(x=>x.key!==cyc.key)).slice(0,3);
-  const opts = shuffle([cyc, ...others]);
+  const others = shuffle(CYCLES.filter(x=>x.key!==rightCycle.key)).slice(0,3);
+  const opts = shuffle([rightCycle, ...others]);
   const box = document.getElementById('g1Opts');
   box.innerHTML = '';
   opts.forEach((o,i)=>{
@@ -1870,28 +2191,30 @@ function g1Landed(){
 function g1Answer(key, btn){
   if(g1Timer) g1Timer.stop();
   const box = document.getElementById('g1Opts');
-  const right = g1Cur.cyc.key;
-  const ok = key === right;
+  const rightKey = g1Cur.rightCycle.key;
+  const ok = key === rightKey;
   const left = g1Timer ? Math.max(0,g1Timer.left()) : 0;
 
   box.querySelectorAll('.opt-btn').forEach(b=>{
     b.disabled = true;
     const t = b.textContent;
-    if(t.indexOf('Siklus ' + g1Cur.cyc.label) >= 0) b.classList.add('correct');
+    if(t.indexOf('Siklus ' + g1Cur.rightCycle.label) >= 0) b.classList.add('correct');
   });
   if(btn && !ok) btn.classList.add('wrong');
 
   if(ok){
     g1Combo++;
-    const pts = 100 + left*2 + (g1Combo>1 ? (g1Combo-1)*20 : 0);
-    g1Score += pts; g1State[g1Round] = 'ok';
+    const basePts = 100 + left*2 + (g1Combo>1 ? (g1Combo-1)*20 : 0);
+    const bonusPts = Math.round(basePts * (g1Cur.sector.mult || 1)) + (g1Cur.sector.add || 0);
+    g1Score += bonusPts; g1State[g1Round] = 'ok';
     sGood(); confetti(45);
-    fb('g1Fb', true, `<strong>🎉 Tepat! +${pts} poin</strong><br>${g1Cur.c.why}`);
+    const multNote = g1Cur.sector.mult > 1 ? ` (Termasuk multiplier ${g1Cur.sector.mult}x!)` : (g1Cur.sector.add > 0 ? ` (Termasuk bonus +${g1Cur.sector.add}!)` : '');
+    fb('g1Fb', true, `<strong>🎉 Tepat! +${bonusPts} poin${multNote}</strong><br>${g1Cur.caseObj.why}`);
   } else {
     g1Combo = 0; g1State[g1Round] = 'no';
     sBad();
     const label = key ? '' : '<strong>⏱ Waktu habis!</strong> ';
-    fb('g1Fb', false, `${label}<strong>Jawaban benar: Siklus ${g1Cur.cyc.label}.</strong><br>${g1Cur.c.why}`);
+    fb('g1Fb', false, `${label}<strong>Jawaban benar: Siklus ${g1Cur.rightCycle.label}.</strong><br>${g1Cur.caseObj.why}`);
   }
 
   document.getElementById('g1Combo').textContent = g1Combo>0 ? `🔥 x${g1Combo}` : '💤 x0';
@@ -1908,7 +2231,7 @@ function g1Answer(key, btn){
     markDone(0); sWin(); confetti(110);
     setTimeout(()=>{
       const el = document.getElementById('g1Fb');
-      el.innerHTML += `<div style="margin-top:9px;padding-top:9px;border-top:1px solid currentColor"><strong>🏁 Ekspedisi Roda selesai — total ${g1Score} poin!</strong> Buka tab berikutnya: 🔄 Pipeline Data.</div>`;
+      el.innerHTML += `<div style="margin-top:9px;padding-top:9px;border-top:1px solid currentColor"><strong>🏁 Ekspedisi Roda selesai — total ${g1Score} poin!</strong> Lanjut ke game berikutnya: 🔄 Pipeline Data.</div>`;
     }, 700);
   } else {
     sp.textContent = '🎡 Putar Lagi';
@@ -1916,18 +2239,20 @@ function g1Answer(key, btn){
 }
 
 function g1Restart(){
-  g1Round = 0; g1Score = 0; g1Combo = 0; g1State = []; g1Used = {};
+  g1Round = 0; g1Score = 0; g1Combo = 0; g1State = [];
+  g1InitCases();
   setScore(0,0);
   document.getElementById('g1Round').textContent = '0/' + G1_TOTAL;
   document.getElementById('g1Combo').textContent = '🔥 x1';
   document.getElementById('g1Time').textContent = '—';
   document.getElementById('g1QuizBox').style.display = 'none';
-  document.getElementById('g1WheelTxt').textContent = 'Putar roda untuk memulai ekspedisi!';
+  document.getElementById('g1WheelTxt').textContent = 'Putar roda untuk menentukan multiplier & divisi kasus!';
   document.getElementById('g1Spin').textContent = '🎡 Putar Roda Siklus';
   fbHide('g1Fb'); dots('g1Dots', G1_TOTAL, g1State);
   g1DoSpin();
 }
 
+g1InitCases();
 g1Draw();
 dots('g1Dots', G1_TOTAL, g1State);
 
@@ -2614,21 +2939,20 @@ function sbRender(){
   document.getElementById('sbRank').textContent = rank;
 }
 
+/* Skor tiap game sudah terkirim otomatis saat game selesai.
+   Tombol ini hanya jaring pengaman bila ada yang belum tersinkron (mis. koneksi putus). */
 function sbSubmit(){
-  const total = scores.reduce((a,b)=>a+b,0);
   const done = finished.filter(Boolean).length;
-  if(total === 0){ alert('Mainkan minimal satu game dulu sebelum mengirim skor!'); return; }
-  if(window.saveScoreToCloud){
-    saveScoreToCloud('Pertemuan 02', 'Ekspedisi Transaksi BMT (6 Game per Tema)', total, 5210, {
-      gamesSelesai: done,
-      rincian: GAMES.map(g=>`${g.name}: ${scores[g.id]}`).join(' | ')
-    });
-  }
-  if(window.RealtimeGameEngine){
-    RealtimeGameEngine.submitPlayerScore(total, done, 6);
+  if(done === 0){ alert('Selesaikan minimal satu game dulu sebelum mengirim skor!'); return; }
+  let terkirim = 0;
+  GAMES.forEach(g=>{ if(finished[g.id] && pushGameScore(g.id)) terkirim++; });
+  const total = scores.reduce((a,b)=>a+b,0);
+  if(terkirim === 0){
+    alert(`✅ Semua skor sudah tersinkron.\n\nGame selesai: ${done} dari 6\nTotal: ${total} poin\n\nSkor tiap tema otomatis terkirim begitu game-nya selesai.`);
+    return;
   }
   sWin(); confetti(150);
-  alert(`☁️ Skor terkirim!\n\nTotal: ${total} poin\nGame selesai: ${done} dari 6\n\nSkor Anda kini tampil di Papan Peringkat Kelas.`);
+  alert(`☁️ ${terkirim} skor game berhasil dikirim ulang!\n\nGame selesai: ${done} dari 6\nTotal: ${total} poin`);
 }
 
 /* ══════════ TIM KELAS & CLOUD SYNC ══════════ */
@@ -2644,31 +2968,248 @@ function addTeamScore(i, pts){
   }
 }
 
-function renderLiveLeaderboard(players){
-  const box = document.getElementById('liveLeaderboardList');
-  if(!box) return;
-  if(!players || players.length === 0){
-    box.innerHTML = '<div style="color:var(--txl);font-style:italic;font-size:12.5px;padding:5px 0">Belum ada skor hari ini. Jadilah yang pertama!</div>';
-    return;
+/* ══════════ REALTIME LEADERBOARD & PER-GAME FILTER CONTROLS ══════════ */
+let latestLeaderboardData = [];
+let activeLeaderboardFilter = 0; // 0..5 untuk game spesifik, atau 'all' untuk total ekspedisi
+
+const AIS_LB_GAMES = [
+  { id: 0, code: 'G1', icon: '🎡', name: 'Roda Siklus Transaksi', short: 'G1: Roda', max: 900 },
+  { id: 1, code: 'G2', icon: '🔄', name: 'Pipeline Pemrosesan Data', short: 'G2: Pipeline', max: 700 },
+  { id: 2, code: 'G3', icon: '🃏', name: 'Kartu Memori Hierarki', short: 'G3: Memori', max: 800 },
+  { id: 3, code: 'G4', icon: '🔐', name: 'Sandi Bagan Akun COA', short: 'G4: COA', max: 1050 },
+  { id: 4, code: 'G5', icon: '🗺️', name: 'Rakit DFD BMT', short: 'G5: DFD', max: 800 },
+  { id: 5, code: 'G6', icon: '⚖️', name: 'Detektif Tadlis', short: 'G6: Tadlis', max: 960 },
+  { id: 'all', code: 'ALL', icon: '🏆', name: 'Total Ekspedisi (Semua Game)', short: '🏆 Total Ekspedisi', max: 5210 }
+];
+
+const DEFAULT_AIS_LEADERBOARD = [
+  { nim: '2510102006', nama: 'Nurjanah', gameScores: [0, 0, 0, 0, 0, 0], score: 0, combo: 0, updatedAt: '-' },
+  { nim: '2510102001', nama: 'Zahra Qatrun Nada', gameScores: [0, 0, 0, 0, 0, 0], score: 0, combo: 0, updatedAt: '-' },
+  { nim: '2510102033', nama: 'RAGIL ADITIYA', gameScores: [0, 0, 0, 0, 0, 0], score: 0, combo: 0, updatedAt: '-' },
+  { nim: '2510102024', nama: 'Muhammad Ibrahim', gameScores: [0, 0, 0, 0, 0, 0], score: 0, combo: 0, updatedAt: '-' },
+  { nim: '2510102012', nama: 'Parvez Athaya Rifa Adrian', gameScores: [0, 0, 0, 0, 0, 0], score: 0, combo: 0, updatedAt: '-' },
+  { nim: '2510102011', nama: 'Era Firda Fajriah', gameScores: [0, 0, 0, 0, 0, 0], score: 0, combo: 0, updatedAt: '-' },
+  { nim: '2510102005', nama: 'Muhammad Isnan Azuhri', gameScores: [0, 0, 0, 0, 0, 0], score: 0, combo: 0, updatedAt: '-' }
+];
+
+function setLeaderboardFilter(filterKey){
+  activeLeaderboardFilter = filterKey;
+  renderLiveLeaderboard(latestLeaderboardData);
+}
+
+function toggleLiveLeaderboardModal(show, gameFilterIndex){
+  const modal = document.getElementById('modalLiveLeaderboard');
+  if(!modal) return;
+  if(gameFilterIndex !== undefined){
+    activeLeaderboardFilter = gameFilterIndex;
   }
+  const isCurrentlyShow = modal.classList.contains('show');
+  const targetState = (show !== undefined) ? show : !isCurrentlyShow;
+  if(targetState){
+    modal.classList.add('show');
+    renderLiveLeaderboard(latestLeaderboardData);
+  } else {
+    modal.classList.remove('show');
+  }
+}
+
+function updateLocalPlayerInLeaderboard(currentScore, gamesDone){
+  const myNim = (window.currentStudent && window.currentStudent.nim) || localStorage.getItem('tazkia_student_nim') || 'MHS-ANDA';
+  const myName = (window.currentStudent && window.currentStudent.nama) || localStorage.getItem('tazkia_student_nama') || 'Anda (Mahasiswa)';
+  const nowTime = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+
+  let list = latestLeaderboardData.length > 0 ? [...latestLeaderboardData] : [...DEFAULT_AIS_LEADERBOARD];
+  const myIdx = list.findIndex(p => p.nim === myNim);
+
+  if(myIdx >= 0){
+    list[myIdx].score = Math.max(list[myIdx].score || 0, currentScore || scores.reduce((a,b)=>a+b,0));
+    list[myIdx].combo = Math.max(list[myIdx].combo || 0, gamesDone || finished.filter(Boolean).length);
+    list[myIdx].gameScores = [...scores];
+    list[myIdx].updatedAt = nowTime;
+  } else {
+    list.push({
+      nim: myNim,
+      nama: myName,
+      score: currentScore || scores.reduce((a,b)=>a+b,0),
+      combo: gamesDone || finished.filter(Boolean).length,
+      gameScores: [...scores],
+      updatedAt: nowTime
+    });
+  }
+
+  latestLeaderboardData = list;
+  renderLiveLeaderboard(list);
+}
+
+function renderLiveLeaderboard(rawPlayers){
+  let players = (rawPlayers && rawPlayers.length > 0) ? [...rawPlayers] : [...DEFAULT_AIS_LEADERBOARD];
+  const myNim = (window.currentStudent && window.currentStudent.nim) || localStorage.getItem('tazkia_student_nim') || '';
+  const myName = (window.currentStudent && window.currentStudent.nama) || localStorage.getItem('tazkia_student_nama') || 'Anda';
+  const myTotalScore = scores.reduce((a,b)=>a+b,0);
+  const myDoneCount = finished.filter(Boolean).length;
+
+  // Normalise gameScores array for all players — JANGAN estimasi dari total score!
+  // Mahasiswa yang belum memainkan game tersebut harus murni 0 poin.
+  players = players.map(p => {
+    let gs = p.gameScores;
+    if(!Array.isArray(gs)){
+      gs = [0, 0, 0, 0, 0, 0];
+    } else {
+      gs = [0, 1, 2, 3, 4, 5].map(i => (typeof gs[i] === 'number' ? gs[i] : 0));
+    }
+    return { ...p, gameScores: gs };
+  });
+
+  // Ensure current local player is updated
+  const myIdx = players.findIndex(p => (myNim && p.nim === myNim) || p.nama === myName);
+  if(myIdx >= 0){
+    players[myIdx].score = Math.max(players[myIdx].score || 0, myTotalScore);
+    players[myIdx].combo = Math.max(players[myIdx].combo || 0, myDoneCount);
+    players[myIdx].gameScores = [...scores];
+  } else if(myNim || myName){
+    players.push({
+      nim: myNim || 'MHS-01',
+      nama: myName,
+      score: myTotalScore,
+      combo: myDoneCount,
+      gameScores: [...scores],
+      updatedAt: 'Baru saja'
+    });
+  }
+  latestLeaderboardData = players;
+
+  // 1. UPDATE ALL 6 IN-GAME TICKERS WITH SPECIFIC GAME SCORE & RANK
+  for(let g = 0; g < 6; g++){
+    const sortedForG = [...players].sort((a,b) => (b.gameScores[g] || 0) - (a.gameScores[g] || 0));
+    const gRank = sortedForG.findIndex(p => (myNim && p.nim === myNim) || p.nama === myName) + 1;
+    const gRankStr = gRank > 0 ? `#${gRank}` : '#—';
+    const leader = sortedForG[0] ? `${sortedForG[0].nama} (${sortedForG[0].gameScores[g]} pts)` : '—';
+    const gMax = AIS_LB_GAMES[g].max;
+    const tickerEl = document.getElementById(`myRankTxt${g}`);
+    if(tickerEl){
+      tickerEl.innerHTML = `Peringkat <strong>${gRankStr}</strong> · Skor: <strong>${scores[g]}/${gMax} pts</strong> · Memimpin: <em>${leader}</em>`;
+    }
+  }
+
+  // 2. RENDER TABS IN MODAL & SECTION 7
+  const renderTabsHtml = (currentFilter) => {
+    return AIS_LB_GAMES.map(g => {
+      const isAct = String(currentFilter) === String(g.id);
+      const arg = typeof g.id === 'number' ? g.id : `'${g.id}'`;
+      return `<button class="lb-tab ${isAct ? 'active' : ''}" onclick="setLeaderboardFilter(${arg})">
+        <span>${g.icon}</span> <span>${g.short}</span>
+      </button>`;
+    }).join('');
+  };
+
+  const modalTabs = document.getElementById('modalLbTabs');
+  if(modalTabs) modalTabs.innerHTML = renderTabsHtml(activeLeaderboardFilter);
+  const secTabs = document.getElementById('secLbTabs');
+  if(secTabs) secTabs.innerHTML = renderTabsHtml(activeLeaderboardFilter);
+
+  // 3. SORT PLAYERS ACCORDING TO ACTIVE FILTER
+  const isSpecificGame = (typeof activeLeaderboardFilter === 'number' && activeLeaderboardFilter >= 0 && activeLeaderboardFilter < 6);
+  const activeGameMeta = isSpecificGame ? AIS_LB_GAMES[activeLeaderboardFilter] : AIS_LB_GAMES[6];
+
+  let displayPlayers = [...players];
+  if(isSpecificGame){
+    const gId = activeLeaderboardFilter;
+    displayPlayers.sort((a,b) => (b.gameScores[gId] || 0) - (a.gameScores[gId] || 0));
+  } else {
+    displayPlayers.sort((a,b) => (b.score || 0) - (a.score || 0));
+  }
+
+  // Calculate my rank for the active filter
+  let myActiveRank = displayPlayers.findIndex(p => (myNim && p.nim === myNim) || p.nama === myName) + 1;
+  const myActiveRankStr = myActiveRank > 0 ? `#${myActiveRank}` : '#—';
+  const myActiveScore = isSpecificGame ? scores[activeLeaderboardFilter] : myTotalScore;
+  const myActiveMax = activeGameMeta.max;
+
+  // 4. UPDATE TOPBAR & FLOATING BUTTON
+  const floatBadge = document.getElementById('floatMyRank');
+  if(floatBadge){
+    const totalRank = [...players].sort((a,b)=>(b.score||0)-(a.score||0)).findIndex(p=>(myNim && p.nim === myNim)||p.nama === myName) + 1;
+    floatBadge.textContent = `#${totalRank > 0 ? totalRank : '—'} (${myTotalScore} pts)`;
+  }
+  const topRankEl = document.getElementById('topLeaderRank');
+  if(topRankEl){
+    const totalRank = [...players].sort((a,b)=>(b.score||0)-(a.score||0)).findIndex(p=>(myNim && p.nim === myNim)||p.nama === myName) + 1;
+    topRankEl.textContent = totalRank > 0 ? `#${totalRank}` : '#—';
+  }
+
+  // 5. UPDATE MODAL HEADER & USER CARD
+  const mTitle = document.getElementById('lbModalMainTitle');
+  if(mTitle) mTitle.textContent = `${activeGameMeta.icon} Klasemen ${activeGameMeta.name}`;
+  const mSub = document.getElementById('lbModalSubtitle');
+  if(mSub) mSub.textContent = isSpecificGame ? `Skor khusus ${activeGameMeta.name} (Maks. ${activeGameMeta.max} Pts)` : `Skor Akumulasi Seluruh Game (Maks. 5210 Pts)`;
+
+  const mMyTitle = document.getElementById('modalMyTitle');
+  if(mMyTitle) mMyTitle.textContent = isSpecificGame ? `Posisi Anda di ${activeGameMeta.name}` : `Posisi Anda di Ekspedisi Lengkap`;
+  const mName = document.getElementById('modalMyName');
+  if(mName) mName.textContent = myName + (myNim ? ` (${myNim})` : '');
+  const mScore = document.getElementById('modalMyScore');
+  if(mScore) mScore.textContent = `${myActiveScore} / ${myActiveMax} pts`;
+  const mDone = document.getElementById('modalMyDone');
+  if(mDone) mDone.textContent = isSpecificGame ? (finished[activeLeaderboardFilter] ? '✅ Game Selesai' : '⏳ Sedang Berjalan') : `${myDoneCount}/6 Game Selesai`;
+  const mBadge = document.getElementById('modalMyRankBadge');
+  if(mBadge) mBadge.textContent = myActiveRank > 0 ? `Peringkat ${myActiveRankStr} dari ${displayPlayers.length} Mahasiswa` : `Peringkat ${myActiveRankStr}`;
+
+  const lbListTitle = document.getElementById('modalLbListTitle');
+  if(lbListTitle) lbListTitle.textContent = `Top 10 ${activeGameMeta.short}`;
+
+  // 6. RENDER LIST ROWS
   const medals = ['🥇','🥈','🥉'];
-  box.innerHTML = players.map((p,i)=>`
-    <div class="lb-row">
-      <div style="display:flex;align-items:center;gap:9px;min-width:0">
-        <span style="font-size:15px;font-weight:700;width:24px;text-align:center;flex-shrink:0">${medals[i] || (i+1)+'.'}</span>
-        <div style="min-width:0">
-          <strong style="color:var(--pri)">${p.nama || 'Mahasiswa'}</strong>
-          <span style="color:var(--txm);font-size:11.5px">(${p.nim || '-'})</span>
-          <div style="font-size:10.5px;color:var(--txl)">Game selesai: ${p.combo || 0}/6 · ${p.updatedAt || '-'}</div>
+  const htmlRows = displayPlayers.slice(0, 10).map((p, i) => {
+    const isMe = (p.nim === myNim) || (p.nama === myName);
+    const medalOrNum = medals[i] || `${i+1}.`;
+    const pScoreVal = isSpecificGame ? (p.gameScores[activeLeaderboardFilter] || 0) : (p.score || 0);
+    const isPlayed = pScoreVal > 0;
+    const pSubText = isSpecificGame 
+      ? `NIM: ${p.nim || '-'} · ${isPlayed ? 'Skor Riil Game' : 'Belum Main Game Ini'}` 
+      : `NIM: ${p.nim || '-'} · ${p.combo || 0}/6 Game · ${p.updatedAt || '-'}`;
+
+    return `
+      <div class="lb-row ${isMe ? 'lb-row-me' : ''}" style="${!isPlayed && isSpecificGame ? 'opacity:.65' : ''}">
+        <div style="display:flex;align-items:center;gap:10px;min-width:0">
+          <span style="font-size:16px;font-weight:800;width:24px;text-align:center;flex-shrink:0">${medalOrNum}</span>
+          <div style="min-width:0">
+            <div style="display:flex;align-items:center;gap:6px">
+              <strong style="color:var(--pri);font-size:13px">${p.nama || 'Mahasiswa'}</strong>
+              ${isMe ? '<span style="background:var(--acc);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:6px">ANDA</span>' : ''}
+            </div>
+            <div style="font-size:11px;color:var(--txm)">${pSubText}</div>
+          </div>
+        </div>
+        <div style="font-family:'Source Code Pro',monospace;font-weight:700;font-size:15px;color:${isPlayed ? 'var(--acc)' : 'var(--txl)'};flex-shrink:0;margin-left:8px">
+          ${pScoreVal} pts
         </div>
       </div>
-      <div style="font-family:'Source Code Pro',monospace;font-weight:700;font-size:15px;color:var(--acc);flex-shrink:0">${p.score} pts</div>
-    </div>`).join('');
+    `;
+  }).join('');
+
+  const secBox = document.getElementById('liveLeaderboardList');
+  if(secBox) secBox.innerHTML = htmlRows;
+
+  const modalBox = document.getElementById('modalLeaderboardList');
+  if(modalBox) modalBox.innerHTML = htmlRows;
+}
+
+function triggerManualSync(){
+  const total = scores.reduce((a,b)=>a+b,0);
+  const doneCount = finished.filter(Boolean).length;
+  if(window.RealtimeGameEngine){
+    RealtimeGameEngine.submitPlayerScore(total, 1, doneCount, [...scores], activeLeaderboardFilter);
+    sGood();
+    alert(`☁️ Skor (${total} pts) berhasil disinkronkan ke Cloud Firestore!`);
+  }
+  updateLocalPlayerInLeaderboard(total, doneCount);
 }
 
 function initCloudGameSync(){
   if(window.RealtimeGameEngine){
-    RealtimeGameEngine.listenLeaderboard(renderLiveLeaderboard);
+    RealtimeGameEngine.listenLeaderboard(players => {
+      renderLiveLeaderboard(players);
+    });
     RealtimeGameEngine.joinRoom('BMT-ARENA-02', null, data=>{
       if(data && data.teams){
         TEAM_NAMES.forEach((k,i)=>{
@@ -2681,6 +3222,187 @@ function initCloudGameSync(){
       }
     });
   }
+  renderLiveLeaderboard(DEFAULT_AIS_LEADERBOARD);
+}
+
+/* ══════════ ZONA TANTANGAN / HUKUMAN EDUKATIF ══════════ */
+const FORFEIT_LIST = [
+  {
+    id: 0,
+    icon: '🎤',
+    title: 'Presenter Berita TV Kilat (30 Detik)',
+    desc: 'Jelaskan salah satu siklus transaksi AIS (misal: Siklus Penggajian) dengan gaya Pembaca Berita TV / Host Kuis heboh di depan kelas!'
+  },
+  {
+    id: 1,
+    icon: '📜',
+    title: 'Murottal & Tadabbur Transaksi',
+    desc: 'Bacakan potongan QS. Al-Baqarah: 282 (Ayat Mudayanah) atau QS. Al-Baqarah: 168 (Halalan Thayyiban) beserta intisari artinya.'
+  },
+  {
+    id: 2,
+    icon: '🎭',
+    title: 'Pantomim Simbol DFD',
+    desc: 'Peragakan salah satu simbol DFD (Entitas Luar, Proses, atau Data Store) hanya dengan gerakan tubuh tanpa suara sampai teman sekelas menebak!'
+  },
+  {
+    id: 3,
+    icon: '🤝',
+    title: 'Pidato Apresiasi Juara 1',
+    desc: 'Berikan 3 kalimat pujian dan penghormatan formal/puitis kepada teman yang saat ini menempati Peringkat 1 di klasemen kelas!'
+  },
+  {
+    id: 4,
+    icon: '💡',
+    title: 'Duta Rangkuman Kuliah',
+    desc: 'Sebutkan 3 poin kesimpulan materi Pertemuan 02 (Siklus Bisnis & Data) secara lantang sebelum dosen menutup kuliah.'
+  },
+  {
+    id: 5,
+    icon: '🔍',
+    title: 'Tebak Dokumen Sumber BMT',
+    desc: 'Sebutkan 3 contoh dokumen sumber nyata dalam operasional BMT (misal: Bukti Kas Masuk, Bilyet Deposito, Purchase Order) tanpa melihat catatan!'
+  },
+  {
+    id: 6,
+    icon: '⚡',
+    title: 'Pantun Spontan Akuntansi',
+    desc: 'Buat 1 bait pantun jenaka 4 baris bertema Akuntansi Syariah / Debit Kredit secara spontan untuk menghibur kelas!'
+  },
+  {
+    id: 7,
+    icon: '🧋',
+    title: 'Traktir / Infaq Baitul Maal',
+    desc: 'Masukkan infaq sukarela ke kotak Baitul Maal kelas atau traktir air mineral/es teh untuk teman sebangkumu!'
+  }
+];
+
+let selectedForfeit = null;
+let forfeitTimerHandle = null;
+let forfeitWheelAngle = 0;
+let forfeitWheelSpinning = false;
+
+function openForfeitModal(){
+  const modal = document.getElementById('modalPunishment');
+  if(!modal) return;
+  modal.classList.add('show');
+  const box = document.getElementById('activeForfeitBox');
+  if(box && !selectedForfeit) box.style.display = 'none';
+  document.getElementById('forfeitWheelTxt').textContent = 'Putar roda untuk mengacak hukuman!';
+  setTimeout(drawForfeitWheel, 60);
+}
+
+function closeForfeitModal(){
+  const modal = document.getElementById('modalPunishment');
+  if(modal) modal.classList.remove('show');
+  if(forfeitTimerHandle) clearInterval(forfeitTimerHandle);
+}
+
+function selectForfeit(id){
+  const f = FORFEIT_LIST.find(x => x.id === id);
+  if(!f) return;
+  selectedForfeit = f;
+
+  const box = document.getElementById('activeForfeitBox');
+  if(box) box.style.display = 'block';
+  document.getElementById('activeForfeitCategory').textContent = 'TANTANGAN TERPILIH DARI RODA';
+  document.getElementById('activeForfeitTitle').textContent = `${f.icon} ${f.title}`;
+  document.getElementById('activeForfeitDetail').textContent = f.desc;
+  document.getElementById('forfeitTimerTxt').textContent = '30s';
+  playTone(580, 'sine', 0.15);
+  box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function startForfeitTimer(sec){
+  if(forfeitTimerHandle) clearInterval(forfeitTimerHandle);
+  let left = sec || 30;
+  const el = document.getElementById('forfeitTimerTxt');
+  if(el) el.textContent = left + 's';
+  forfeitTimerHandle = setInterval(()=>{
+    left--;
+    if(el) el.textContent = Math.max(0, left) + 's';
+    if(left <= 5 && left > 0) playTone(760, 'square', 0.04, 0.08);
+    if(left <= 0){
+      clearInterval(forfeitTimerHandle);
+      playTone(880, 'triangle', 0.3);
+      if(el) el.textContent = '⏱️ Waktu Habis!';
+    }
+  }, 1000);
+}
+
+function completeForfeit(){
+  if(forfeitTimerHandle) clearInterval(forfeitTimerHandle);
+  // Add +50 sportsmanship score
+  scores[0] = (scores[0] || 0) + 50;
+  const total = scores.reduce((a,b)=>a+b,0);
+  document.getElementById('grandTotal').textContent = total;
+  const doneCount = finished.filter(Boolean).length;
+  if(window.RealtimeGameEngine){
+    RealtimeGameEngine.submitPlayerScore(total, 1, doneCount);
+  }
+  updateLocalPlayerInLeaderboard(total, doneCount);
+  sWin(); confetti(140);
+  alert('🎉 LUAR BIASA! Kamu telah menyelesaikan tantangan dengan sportif!\n\nBonus +50 Poin Sportivitas berhasil ditambahkan ke total skormu.');
+  closeForfeitModal();
+}
+
+function drawForfeitWheel(){
+  const cv = document.getElementById('forfeitWheelCanvas');
+  if(!cv) return;
+  const ctx = cv.getContext('2d'), N = FORFEIT_LIST.length;
+  const cx = cv.width/2, cy = cv.height/2, R = cx - 8, seg = (Math.PI*2)/N;
+  const cols = ['#C03818','#1B7898','#7040B0','#1F9060','#D46020','#2A50B0','#0F766E','#B45309'];
+  ctx.clearRect(0,0,cv.width,cv.height);
+  for(let i=0;i<N;i++){
+    const a0 = forfeitWheelAngle + i*seg, a1 = a0 + seg;
+    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,R,a0,a1); ctx.closePath();
+    ctx.fillStyle = cols[i % cols.length]; ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,.6)'; ctx.lineWidth = 2; ctx.stroke();
+    const mid = a0 + seg/2;
+    ctx.save();
+    ctx.translate(cx,cy); ctx.rotate(mid);
+    ctx.textAlign = 'right';
+    ctx.fillStyle = '#fff';
+    ctx.font = '700 10.5px "Source Sans 3", sans-serif';
+    ctx.fillText(FORFEIT_LIST[i].title.split(' ')[0], R-22, 0);
+    ctx.font = '15px sans-serif';
+    ctx.fillText(FORFEIT_LIST[i].icon, R-8, 0);
+    ctx.restore();
+  }
+  ctx.beginPath(); ctx.arc(cx,cy,R,0,Math.PI*2);
+  ctx.strokeStyle = '#0C1D30'; ctx.lineWidth = 4; ctx.stroke();
+}
+
+function spinForfeitWheel(){
+  if(forfeitWheelSpinning) return;
+  forfeitWheelSpinning = true;
+  document.getElementById('btnSpinForfeit').disabled = true;
+  document.getElementById('forfeitWheelTxt').textContent = 'Roda berputar menentukan hukuman…';
+
+  const dur = 3200 + Math.random()*600;
+  const target = forfeitWheelAngle + Math.PI*2*(5 + Math.random()*3);
+  const start = forfeitWheelAngle, t0 = performance.now();
+  let lastSeg = -1;
+
+  (function anim(now){
+    const p = Math.min(1,(now-t0)/dur);
+    const e = 1 - Math.pow(1-p, 3.2);
+    forfeitWheelAngle = start + (target-start)*e;
+    drawForfeitWheel();
+    const N = FORFEIT_LIST.length, seg = (Math.PI*2)/N;
+    let a = (-Math.PI/2 - forfeitWheelAngle) % (Math.PI*2);
+    if(a < 0) a += Math.PI*2;
+    const s = Math.floor(a/seg) % N;
+    if(s !== lastSeg){ lastSeg = s; if(p < .95) playTone(460+s*30,'square',.03,.05); }
+    if(p < 1) requestAnimationFrame(anim);
+    else {
+      forfeitWheelSpinning = false;
+      document.getElementById('btnSpinForfeit').disabled = false;
+      const f = FORFEIT_LIST[s];
+      document.getElementById('forfeitWheelTxt').innerHTML = `🎯 Terpilih: <strong>${f.icon} ${f.title}</strong>`;
+      selectForfeit(f.id);
+    }
+  })(t0);
 }
 
 sbRender();

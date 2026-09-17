@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kuis Interaktif &amp; Roda Hukuman — ADA P02 (pandas Essentials)</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600;700&family=Source+Code+Pro:wght@600;700;800&display=swap">
+<script src="../../cloud-sync.js?v=20260912b"></script>
+<style>
+/* ── THEME PALETTE: TEAL DATA SCIENCE & CYBER GLOW ── */
+:root{
+  --meet-from:#041820; --meet-mid:#082840; --meet-to:#104060;
+  --meet-acc:#20C8D0;  --meet-acc2:#30D8E0; --meet-gold:#F0A830;
+  --bg:#030E18; --sf:#071828; --sf2:#0B2338; --sf3:#0E2D48;
+  --bd:#153B5C; --bs:#0E2840;
+  --tx:#E0F4FC; --txm:#7EB0D0; --txl:#487498;
+  --pri:#20C8D0; --pmid:#189AA4; --pril:#041F30;
+  --acc:#20C8D0; --accl:#042830;
+  --ok:#22C55E;  --okl:#042818;
+  --warn:#EF4444;--warnl:#380C0C;
+  --gold:#F59E0B;--goldl:#382404;
+  --r:12px; --rs:8px;
+  --shadow:0 12px 36px rgba(0,0,0,.55);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Source Sans 3',system-ui,sans-serif;
+  background:var(--bg);color:var(--tx);
+  min-height:100vh;display:flex;flex-direction:column;
+  line-height:1.6;
+}
+
+/* ── TOPBAR ── */
+.topbar{
+  background:linear-gradient(135deg,#020B14,#082840);
+  border-bottom:1px solid var(--bd);
+  padding:0 20px;height:58px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:100;
+  box-shadow:0 4px 20px rgba(0,0,0,.45);
+}
+.topbar-left{display:flex;align-items:center;gap:12px}
+.back-link{
+  color:var(--txm);font-size:13px;font-weight:600;
+  text-decoration:none;display:flex;align-items:center;gap:5px;
+  background:rgba(32,200,208,.08);border:1px solid rgba(32,200,208,.2);
+  padding:6px 12px;border-radius:6px;transition:all .15s;
+}
+.back-link:hover{background:rgba(32,200,208,.2);color:#fff}
+.top-title{font-size:14px;font-weight:700;color:#fff;display:flex;align-items:center;gap:6px}
+.top-pill{
+  background:rgba(32,200,208,.15);border:1px solid var(--meet-acc);
+  color:var(--meet-acc);font-size:10.5px;font-weight:700;
+  padding:2px 8px;border-radius:12px;
+}
+
+.topbar-right{display:flex;align-items:center;gap:10px}
+.btn-forfeit-top{
+  background:linear-gradient(135deg,#C03818,#E05030);color:#fff;
+  border:none;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;
+  cursor:pointer;display:flex;align-items:center;gap:5px;
+  box-shadow:0 2px 10px rgba(224,80,48,.35);
+  transition:transform .15s, opacity .15s;
+}
+.btn-forfeit-top:hover{transform:scale(1.03);opacity:.95}
+.btn-lb-top{
+  background:rgba(240,168,48,.15);border:1px solid var(--meet-gold);
+  color:var(--meet-gold);padding:6px 13px;border-radius:20px;
+  font-size:12px;font-weight:700;cursor:pointer;
+  display:flex;align-items:center;gap:5px;transition:all .15s;
+}
+.btn-lb-top:hover{background:var(--meet-gold);color:#030E18}
+
+/* ── LAYOUT ── */
+.container{max-width:960px;margin:0 auto;padding:24px 16px;flex:1;width:100%}
+
+/* ── HERO BANNER ── */
+.hero{
+  background:linear-gradient(135deg,#061E2E 0%,#0A2A44 55%,#1A1830 100%);
+  border:1.5px solid var(--bd);border-radius:var(--r);
+  padding:24px 28px;margin-bottom:20px;position:relative;overflow:hidden;
+  box-shadow:var(--shadow);
+}
+.hero::after{
+  content:'';position:absolute;top:-50px;right:-50px;width:160px;height:160px;
+  background:radial-gradient(circle,rgba(32,200,208,.25),transparent 70%);
+  pointer-events:none;
+}
+.hero-tag{
+  font-size:11.5px;font-weight:800;color:var(--meet-acc);
+  text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;
+}
+.hero-h1{font-family:'Amiri',serif;font-size:26px;font-weight:700;color:#fff;margin:0 0 8px}
+.hero-desc{color:var(--txm);font-size:14px;max-width:680px;margin:0}
+
+/* ── LIVE SCORE HUD (LANGSUNG MUNCUL DI LAYAR MAHASISWA) ── */
+.hud-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;
+}
+@media(max-width:640px){.hud-grid{grid-template-columns:repeat(2,1fr);gap:8px}}
+.hud-card{
+  background:var(--sf);border:1.5px solid var(--bd);border-radius:var(--rs);
+  padding:12px 14px;text-align:center;position:relative;
+}
+.hud-lbl{font-size:11px;font-weight:700;color:var(--txm);text-transform:uppercase;letter-spacing:.05em}
+.hud-num{font-family:'Source Code Pro',monospace;font-size:26px;font-weight:800;color:#fff;margin-top:2px}
+.hud-num.score{color:var(--meet-gold)}
+.hud-num.timer{color:#38BDF8}
+.hud-num.combo{color:#F97316}
+.hud-num.rank{color:#34D399}
+
+/* ── QUIZ CARD ── */
+.quiz-box{
+  background:var(--sf);border:1.5px solid var(--bd);border-radius:var(--r);
+  padding:28px 24px;box-shadow:var(--shadow);position:relative;
+}
+.q-header{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--bs);
+}
+.q-topic{
+  font-size:11.5px;font-weight:700;color:var(--meet-acc);
+  background:rgba(32,200,208,.12);border:1px solid rgba(32,200,208,.3);
+  padding:3px 10px;border-radius:12px;
+}
+.q-time-bar{
+  width:100%;height:6px;background:var(--bs);border-radius:3px;
+  margin-bottom:20px;overflow:hidden;
+}
+.q-time-fill{
+  height:100%;background:linear-gradient(90deg,#22C55E,#F59E0B,#EF4444);
+  width:100%;transition:width 1s linear;
+}
+.q-title{font-size:16.5px;font-weight:700;color:#fff;margin-bottom:14px;line-height:1.55}
+
+/* CODE SNIPPET IN QUESTION */
+.code-snippet{
+  background:#020E18;border:1px solid var(--bd);border-radius:var(--rs);
+  padding:12px 16px;margin-bottom:16px;font-family:'Source Code Pro',monospace;
+  font-size:13px;line-height:1.6;color:#C8EEFC;overflow-x:auto;
+}
+.kw{color:#20C8D0;font-weight:700}.fn{color:#79D0FF}.st{color:#A5E6FF}.cm{color:#4A7A9C;font-style:italic}.nm{color:#F8C555}
+
+.q-clue{
+  background:rgba(32,200,208,.08);border-left:3px solid var(--meet-acc);
+  padding:10px 14px;border-radius:0 var(--rs) var(--rs) 0;
+  font-size:13px;color:#9BE8EE;margin-bottom:18px;
+}
+
+/* ── OPTIONS ── */
+.options-grid{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:20px}
+.opt-btn{
+  background:var(--sf2);border:1.5px solid var(--bd);border-radius:var(--rs);
+  padding:14px 18px;color:var(--tx);font-size:14px;font-family:inherit;
+  cursor:pointer;text-align:left;display:flex;align-items:flex-start;gap:12px;
+  transition:all .18s;outline:none;
+}
+.opt-btn:hover:not(:disabled){
+  background:var(--sf3);border-color:var(--meet-acc);transform:translateY(-2px);
+  box-shadow:0 4px 14px rgba(0,0,0,.3);
+}
+.opt-badge{
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);
+  width:26px;height:26px;border-radius:6px;font-weight:800;font-size:12.5px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;
+}
+.opt-btn.correct{
+  background:var(--okl) !important;border-color:var(--ok) !important;color:#4ADE80 !important;
+}
+.opt-btn.correct .opt-badge{background:var(--ok);color:#fff;border-color:var(--ok)}
+.opt-btn.wrong{
+  background:var(--warnl) !important;border-color:var(--warn) !important;color:#F87171 !important;
+}
+.opt-btn.wrong .opt-badge{background:var(--warn);color:#fff;border-color:var(--warn)}
+
+/* ── EXPLANATION BOX ── */
+.explain-box{
+  background:var(--sf2);border:1.5px solid var(--bd);border-radius:var(--rs);
+  padding:16px 18px;margin-top:16px;display:none;animation:fadeIn .25s ease;
+}
+.explain-hd{font-weight:700;font-size:13.5px;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.explain-txt{font-size:13px;color:var(--txm);line-height:1.55}
+
+/* ── BOTTOM ACTIONS ── */
+.quiz-actions{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-top:20px;padding-top:16px;border-top:1px solid var(--bs);
+}
+.btn-next{
+  background:linear-gradient(135deg,var(--meet-acc),#189AA4);color:#041820;
+  border:none;border-radius:var(--rs);padding:10px 22px;font-size:14px;font-weight:800;
+  cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:opacity .15s, transform .15s;
+}
+.btn-next:hover{opacity:.92;transform:scale(1.02)}
+.btn-next:disabled{background:#1A3850;color:#507898;cursor:not-allowed;transform:none}
+
+/* ── MODALS (LEADERBOARD & FORFEIT WHEEL) ── */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(2,8,14,.85);backdrop-filter:blur(5px);
+  z-index:200;display:none;align-items:center;justify-content:center;padding:16px;
+  animation:fadeIn .2s ease;
+}
+.modal-overlay.show{display:flex}
+.modal-win{
+  background:var(--sf);border:1.5px solid var(--bd);border-radius:var(--r);
+  width:100%;max-width:540px;max-height:92vh;display:flex;flex-direction:column;
+  box-shadow:0 20px 50px rgba(0,0,0,.65);overflow:hidden;
+}
+.modal-hd{
+  padding:16px 20px;display:flex;align-items:center;justify-content:space-between;
+}
+.modal-hd.lb{background:linear-gradient(135deg,#071E30,#0D3352);color:#fff}
+.modal-hd.wheel{background:linear-gradient(135deg,#5A0A10,#220C18);color:#fff}
+.modal-title{font-family:'Amiri',serif;font-size:20px;font-weight:700;margin:0;display:flex;align-items:center;gap:8px}
+.modal-close{background:none;border:none;color:#fff;font-size:22px;cursor:pointer;opacity:.7;transition:opacity .15s}
+.modal-close:hover{opacity:1}
+.modal-body{padding:18px 20px;overflow-y:auto;flex:1}
+
+/* USER STATS CARD */
+.user-stat-card{
+  background:linear-gradient(135deg,#051522,#0D2940);
+  border:1.5px solid rgba(240,168,48,.4);border-radius:var(--rs);
+  padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;
+}
+
+/* LEADERBOARD ROWS */
+.lb-row{
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--sf2);border:1px solid var(--bd);border-radius:var(--rs);
+  padding:10px 14px;margin-bottom:6px;transition:background .15s;
+}
+.lb-row-me{
+  background:rgba(32,200,208,.15) !important;border:1.5px solid var(--meet-acc) !important;
+}
+
+/* FORFEIT WHEEL CANVAS STYLES */
+.wheel-stage{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 0}
+.wheel-holder{position:relative;width:290px;height:290px;margin:0 auto}
+.wheel-ptr{
+  position:absolute;top:-10px;left:50%;transform:translateX(-50%);
+  font-size:26px;z-index:10;filter:drop-shadow(0 2px 4px rgba(0,0,0,.6));
+}
+.wheel-hub{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:44px;height:44px;border-radius:50%;background:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+  box-shadow:0 2px 10px rgba(0,0,0,.5);z-index:5;
+}
+.forfeit-box{
+  background:linear-gradient(135deg,#081C2A,#1E0C18);
+  border:1.5px solid var(--warn);border-radius:var(--rs);
+  padding:16px;margin-top:16px;text-align:left;
+}
+
+#confettiCanvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:999}
+@keyframes fadeIn{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:scale(1)}}
+</style>
+</head>
+<body>
+
+<canvas id="confettiCanvas"></canvas>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="topbar-left">
+    <a href="Pertemuan-02-ADA.html" class="back-link">← Materi ADA P02</a>
+    <div class="top-title">
+      <span>🎯 Arena Kuis &amp; Roda Konsekuensi</span>
+      <span class="top-pill">ADA P02 · pandas Essentials</span>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <button class="btn-forfeit-top" onclick="openForfeitModal()">
+      <span>🎪 Roda Hukuman</span>
+    </button>
+    <button class="btn-lb-top" onclick="toggleLeaderboardModal(true)">
+      <span>🏆 Klasemen Live</span>
+      <span id="topRankBadge">#—</span>
+    </button>
+  </div>
+</header>
+
+<main class="container">
+  <!-- HERO BANNER -->
+  <section class="hero">
+    <div class="hero-tag">⚡ LIVE QUIZ ARENA · APPLIED DATA ANALYTICS (ADA P02)</div>
+    <h1 class="hero-h1">Uji Pemahaman pandas: Filtering, Groupby, &amp; Merge</h1>
+    <p class="hero-desc">
+      Jawab 10 studi kasus kode pandas Python, manipulasi DataFrame bisnis, aggregasi statistik, dan integritas data syariah. Raih skor tertinggi dan hindari putaran <strong>Roda Hukuman Edukatif</strong>!
+    </p>
+  </section>
+
+  <!-- LIVE SCORE HUD (TAMPIL LANGSUNG DI LAYAR MAHASISWA) -->
+  <section class="hud-grid">
+    <div class="hud-card">
+      <div class="hud-lbl">Skor Kuis Anda</div>
+      <div class="hud-num score" id="hudScore">0 pts</div>
+    </div>
+    <div class="hud-card">
+      <div class="hud-lbl">Waktu Sisa</div>
+      <div class="hud-num timer" id="hudTimer">20s</div>
+    </div>
+    <div class="hud-card">
+      <div class="hud-lbl">Streak / Kombo</div>
+      <div class="hud-num combo" id="hudCombo">🔥 x1</div>
+    </div>
+    <div class="hud-card">
+      <div class="hud-lbl">Peringkat Kelas</div>
+      <div class="hud-num rank" id="hudRank">#—</div>
+    </div>
+  </section>
+
+  <!-- QUIZ CARD -->
+  <section class="quiz-box" id="quizBox">
+    <div class="q-header">
+      <div style="font-size:13px;color:var(--txm);font-weight:700">
+        SOAL <span id="qIndexTxt">1</span> DARI <span id="qTotalTxt">10</span>
+      </div>
+      <div class="q-topic" id="qTopicTxt">Indexing loc vs iloc</div>
+    </div>
+
+    <div class="q-time-bar">
+      <div class="q-time-fill" id="qTimeBar"></div>
+    </div>
+
+    <div class="q-title" id="qTitleTxt">Memuat pertanyaan kuis...</div>
+    <div class="code-snippet" id="qCodeSnippet" style="display:none"></div>
+    <div class="q-clue" id="qClueBox" style="display:none"></div>
+
+    <div class="options-grid" id="qOptions"></div>
+
+    <div class="explain-box" id="explainBox">
+      <div class="explain-hd" id="explainHd">💡 Pembahasan Analisis</div>
+      <div class="explain-txt" id="explainTxt"></div>
+    </div>
+
+    <div class="quiz-actions">
+      <div style="font-size:12px;color:var(--txm)" id="quizHintTxt">
+        Pilih salah satu jawaban sebelum waktu habis.
+      </div>
+      <button class="btn-next" id="btnNext" onclick="nextQuestion()" disabled>
+        <span>Lanjut Soal Berikutnya ➔</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- RESULT SCREEN -->
+  <section class="quiz-box" id="resultBox" style="display:none;text-align:center;padding:36px 24px">
+    <div style="font-size:52px;margin-bottom:8px" id="resMedal">🏆</div>
+    <h2 style="font-family:'Amiri',serif;font-size:28px;color:#fff;margin:0 0 6px" id="resTitle">Kuis ADA P02 Selesai!</h2>
+    <p style="color:var(--txm);font-size:14px;max-width:500px;margin:0 auto 20px" id="resSub">
+      Hasil evaluasi kemampuan analisis data pandas Anda telah tersinkronkan ke Cloud Firestore.
+    </p>
+
+    <div style="display:inline-flex;gap:20px;background:var(--sf2);padding:16px 28px;border-radius:var(--r);border:1.5px solid var(--bd);margin-bottom:24px">
+      <div>
+        <div style="font-size:11px;color:var(--txm);text-transform:uppercase;font-weight:700">Skor Akhir</div>
+        <div style="font-family:'Source Code Pro',monospace;font-size:32px;font-weight:800;color:var(--meet-gold)" id="resFinalScore">0 pts</div>
+      </div>
+      <div style="width:1px;background:var(--bd)"></div>
+      <div>
+        <div style="font-size:11px;color:var(--txm);text-transform:uppercase;font-weight:700">Akurasi</div>
+        <div style="font-family:'Source Code Pro',monospace;font-size:32px;font-weight:800;color:var(--meet-acc)" id="resFinalAcc">0%</div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <button class="btn-next" onclick="restartQuiz()">🔄 Ulangi Kuis</button>
+      <button class="btn-forfeit-top" style="padding:10px 20px;font-size:14px" onclick="openForfeitModal()">🎪 Putar Roda Hukuman</button>
+      <button class="btn-lb-top" style="padding:10px 20px;font-size:14px" onclick="toggleLeaderboardModal(true)">🏆 Cek Klasemen Akhir</button>
+    </div>
+  </section>
+</main>
+
+<!-- LEADERBOARD MODAL -->
+<div id="modalLeaderboard" class="modal-overlay" onclick="if(event.target===this) toggleLeaderboardModal(false)">
+  <div class="modal-win">
+    <div class="modal-hd lb">
+      <div>
+        <h3 class="modal-title">🏆 Klasemen Kuis ADA P02</h3>
+        <div style="font-size:11.5px;color:rgba(255,255,255,.7);margin-top:2px">Skor Khusus Kuis pandas Essentials (Maks. 1.500 pts)</div>
+      </div>
+      <button class="modal-close" onclick="toggleLeaderboardModal(false)">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="user-stat-card">
+        <div>
+          <div style="font-size:10.5px;color:rgba(255,255,255,.6);text-transform:uppercase;font-weight:700">Posisi Anda di Kuis Ini</div>
+          <div style="font-size:15px;font-weight:700;color:#fff;margin-top:2px" id="lbMyName">Mahasiswa</div>
+          <div style="font-size:11.5px;color:#4ADE80" id="lbMyStatus">Kuis Sedang Berlangsung</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-family:'Source Code Pro',monospace;font-size:24px;font-weight:800;color:var(--meet-gold)" id="lbMyScore">0 pts</div>
+          <div style="font-size:12px;font-weight:700;color:rgba(255,255,255,.85)" id="lbMyRank">Peringkat #—</div>
+        </div>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <span style="font-size:12px;font-weight:700;color:var(--txm);text-transform:uppercase;letter-spacing:.05em">Top 10 Klasemen Kuis ADA P02</span>
+        <span style="font-size:10px;background:var(--okl);color:var(--ok);padding:2px 8px;border-radius:10px;font-weight:700">● LIVE SYNC FIRESTORE</span>
+      </div>
+
+      <div id="lbListContainer" style="display:grid;gap:6px">
+        <div style="color:var(--txl);font-style:italic;font-size:12.5px;text-align:center;padding:12px 0">Memuat klasemen kuis...</div>
+      </div>
+    </div>
+    <div style="padding:12px 20px;border-top:1px solid var(--bd);background:var(--sf2);display:flex;justify-content:space-between;align-items:center">
+      <span style="font-size:11.5px;color:var(--txm)">Skor kuis bertambah otomatis saat menjawab benar!</span>
+      <button class="btn-next" style="padding:6px 14px;font-size:12px" onclick="syncManualScore()">☁️ Refresh Sync</button>
+    </div>
+  </div>
+</div>
+
+<!-- RODA HUKUMAN / FORFEIT MODAL -->
+<div id="modalForfeit" class="modal-overlay" onclick="if(event.target===this) closeForfeitModal()">
+  <div class="modal-win" style="max-width:520px">
+    <div class="modal-hd wheel">
+      <div>
+        <h3 class="modal-title">🎪 Roda Konsekuensi &amp; Hukuman Seru</h3>
+        <div style="font-size:11.5px;color:rgba(255,255,255,.75);margin-top:2px">Putar roda untuk tantangan edukatif data science di kelas &amp; raih +50 Poin Sportivitas!</div>
+      </div>
+      <button class="modal-close" onclick="closeForfeitModal()">✕</button>
+    </div>
+    <div class="modal-body" style="text-align:center">
+      <div class="wheel-stage">
+        <div class="wheel-holder">
+          <div class="wheel-ptr">🔻</div>
+          <canvas id="wheelCanvas" width="290" height="290"></canvas>
+          <div class="wheel-hub">🐼</div>
+        </div>
+      </div>
+
+      <div id="wheelStatusTxt" style="font-size:13.5px;font-weight:700;color:var(--meet-gold);margin-top:6px">
+        🎯 Tekan tombol di bawah untuk memutar roda!
+      </div>
+
+      <div style="margin-top:12px">
+        <button class="btn-forfeit-top" id="btnSpinWheel" style="padding:10px 24px;font-size:14px;margin:0 auto" onclick="spinForfeitWheel()">
+          🎡 Putar Roda Hukuman
+        </button>
+      </div>
+
+      <div class="forfeit-box" id="forfeitResultBox">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <span style="font-size:11px;font-weight:700;color:#FCA5A5;text-transform:uppercase">Tantangan Terpilih Dari Roda</span>
+          <span style="font-family:'Source Code Pro',monospace;font-size:24px;font-weight:800;color:#FF7B54" id="forfeitTimerTxt">30s</span>
+        </div>
+        <div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:4px" id="forfeitTitle">💡 Duta Sintaks pandas</div>
+        <div style="font-size:12.5px;color:var(--txm);line-height:1.45" id="forfeitDesc">
+          Jelaskan secara lisan perbedaan mendasar antara .loc dan .iloc dengan contoh kasus nyata di depan kelas dalam 30 detik!
+        </div>
+        <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">
+          <button style="background:#fff;color:#041820;border:none;border-radius:6px;padding:8px 14px;font-weight:700;font-size:12px;cursor:pointer" id="btnStart30s" onclick="startForfeitTimer()">
+            ⏱️ Mulai 30 Detik
+          </button>
+          <button style="background:#16A34A;color:#fff;border:none;border-radius:6px;padding:8px 14px;font-weight:700;font-size:12px;cursor:pointer" onclick="claimForfeitReward()">
+            ✅ Selesai Dijalankan (+50 Pts)
+          </button>
+        </div>
+      </div>
+    </div>
+    <div style="padding:10px 20px;border-top:1px solid var(--bd);background:var(--sf2);display:flex;justify-content:space-between;align-items:center">
+      <span style="font-size:11px;color:var(--txm)">Sportivitas kelas dihargai bonus +50 poin!</span>
+      <button style="background:none;border:1px solid var(--bd);color:var(--txm);padding:4px 12px;border-radius:6px;cursor:pointer;font-size:11.5px" onclick="closeForfeitModal()">Tutup</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══════════ DATA SOAL KUIS ADA P02 (10 KASUS PANDAS) ══════════ */
+const QUIZ_QUESTIONS = [
+  {
+    topic: 'Indexing: loc vs iloc',
+    q: 'Diberikan DataFrame df_transaksi. Sintaks manakah yang benar untuk mengambil baris ke-0 sampai ke-4 (5 baris pertama) dan kolom ke-1 sampai ke-3 berdasarkan posisi indeks integer?',
+    code: '<span class="kw">import</span> pandas <span class="kw">as</span> pd\ndf_transaksi = pd.DataFrame(...)',
+    clue: '🔎 Petunjuk: iloc menggunakan integer positional indexing [start:stop) eksklusif pada batas akhir.',
+    opts: [
+      'df_transaksi.loc[0:4, 1:3]',
+      'df_transaksi.iloc[0:5, 1:4]',
+      'df_transaksi.iloc[0:4, 1:3]',
+      'df_transaksi.loc[0:5, 1:4]'
+    ],
+    ans: 1,
+    exp: '<strong>Benar!</strong> <code>.iloc[0:5, 1:4]</code> mengambil baris posisi 0,1,2,3,4 (5 baris) dan kolom posisi 1,2,3 (3 kolom). Pada <code>iloc</code>, batas akhir bersifat <em>eksklusif</em>.'
+  },
+  {
+    topic: 'Boolean Filtering Majemuk',
+    q: 'Bagaimana sintaks yang tepat untuk menyaring transaksi nasabah yang berada di cabang "Bogor" DAN memiliki nominal saldo lebih dari 10.000.000?',
+    code: '<span class="cm"># df memiliki kolom "Cabang" dan "Saldo"</span>',
+    clue: '🔎 Petunjuk: Pada pandas gunakan operator bitwise (&) dan setiap kondisi wajib dibungkus tanda kurung ().',
+    opts: [
+      'df[(df["Cabang"] == "Bogor") and (df["Saldo"] > 10000000)]',
+      'df[(df["Cabang"] == "Bogor") & (df["Saldo"] > 10000000)]',
+      'df[df["Cabang"] == "Bogor" & df["Saldo"] > 10000000]',
+      'df.filter(Cabang == "Bogor" and Saldo > 10000000)'
+    ],
+    ans: 1,
+    exp: '<strong>Tepat!</strong> Dalam pandas, operator boolean majemuk harus menggunakan operator bitwise <code>&</code> (bukan kata kunci <code>and</code>), dan setiap kondisi wajib diapit tanda kurung <code>()</code> karena prioritas operator.'
+  },
+  {
+    topic: 'Query Method (.query)',
+    q: 'Jika kita menggunakan metode string expression <code>.query()</code> pada DataFrame, manakah penulisan yang benar untuk menyaring akad "Murabahah" atau "Mudharabah"?',
+    code: '<span class="cm"># Menyaring kolom Akad</span>',
+    clue: '🔎 Petunjuk: Di dalam .query(), string literal diapit kutip ganda atau tunggal di dalam ekspresi.',
+    opts: [
+      'df.query("Akad == \'Murabahah\' or Akad == \'Mudharabah\'")',
+      'df.query(Akad == Murabahah | Akad == Mudharabah)',
+      'df.query("Akad in [Murabahah, Mudharabah]")',
+      'df.query("Akad == Murabahah or Akad == Mudharabah")'
+    ],
+    ans: 0,
+    exp: '<strong>Sangat tepat!</strong> Pada <code>.query()</code>, string nilai diapit tanda kutip di dalam string query, dan kita bisa menggunakan kata kunci yang lebih natural seperti <code>or</code> atau <code>in</code>.'
+  },
+  {
+    topic: 'Groupby & Multiple Aggregations',
+    q: 'Diberikan perintah groupby berikut. Berapakah jumlah kolom agregasi yang akan dihasilkan?',
+    code: 'df.groupby(<span class="st">"Kategori"</span>)[<span class="st">"Nominal"</span>].agg([<span class="st">"count"</span>, <span class="st">"mean"</span>, <span class="st">"sum"</span>])',
+    clue: '🔎 Petunjuk: .agg() dengan list fungsi menghasilkan DataFrame dengan 3 kolom statistik ringkasan.',
+    opts: [
+      '1 kolom gabungan',
+      '2 kolom (count dan sum)',
+      '3 kolom (count, mean, dan sum)',
+      'Error karena agg hanya menerima 1 fungsi'
+    ],
+    ans: 2,
+    exp: '<strong>Benar!</strong> Mengoper list fungsi ke <code>.agg([\'count\', \'mean\', \'sum\'])</code> akan menghasilkan 3 kolom output terpisah untuk tiap kategori.'
+  },
+  {
+    topic: 'Relational Merge & Join Type',
+    q: 'Anda memiliki df_nasabah (100 nasabah) dan df_transaksi (80 nasabah yang pernah bertransaksi). Jika ingin menampilkan SEMUA 100 nasabah termasuk yang belum pernah bertransaksi, jenis merge apa yang digunakan?',
+    code: 'pd.merge(df_nasabah, df_transaksi, on=<span class="st">"ID_Nasabah"</span>, how=<span class="st">"..."</span>)',
+    clue: '🔎 Petunjuk: Mempertahankan seluruh baris dari DataFrame sebelah kiri (df_nasabah).',
+    opts: [
+      'how="inner"',
+      'how="left"',
+      'how="right"',
+      'how="cross"'
+    ],
+    ans: 1,
+    exp: '<strong>Tepat!</strong> <code>how="left"</code> mempertahankan semua baris dari DataFrame kiri (df_nasabah). Nasabah yang belum bertransaksi akan memiliki nilai <code>NaN</code> pada kolom transaksi.'
+  },
+  {
+    topic: 'Transformasi apply() & Lambda',
+    q: 'Perhatikan kode lambda berikut. Apa output nilai kolom "Status_Plafon" jika nominal pembiayaan adalah Rp 75.000.000?',
+    code: 'df[<span class="st">"Status_Plafon"</span>] = df[<span class="st">"Nominal"</span>].apply(\n  <span class="kw">lambda</span> x: <span class="st">"Mikro"</span> <span class="kw">if</span> x <= <span class="nm">50000000</span> <span class="kw">else</span> (<span class="st">"Komersial"</span> <span class="kw">if</span> x > <span class="nm">100000000</span> <span class="kw">else</span> <span class="st">"Menengah"</span>)\n)',
+    clue: '🔎 Petunjuk: Evaluasi kondisi: 75 juta tidak <= 50 juta, dan tidak > 100 juta.',
+    opts: [
+      '"Mikro"',
+      '"Menengah"',
+      '"Komersial"',
+      'None / NaN'
+    ],
+    ans: 1,
+    exp: '<strong>Benar!</strong> Karena 75.000.000 berada di antara 50 juta dan 100 juta, cabang else kedua mengembalikan string <strong>"Menengah"</strong>.'
+  },
+  {
+    topic: 'Metode .isin() & .between()',
+    q: 'Manakah cara paling ringkas dan efisien di pandas untuk memfilter transaksi dengan rating risiko bernilai "A", "B", atau "A+"?',
+    code: '<span class="cm"># df memiliki kolom "Rating"</span>',
+    clue: '🔎 Petunjuk: Fungsi .isin() menerima list nilai yang ingin dicocokkan.',
+    opts: [
+      'df[df["Rating"].isin(["A", "B", "A+"])]',
+      'df[df["Rating"] == ["A", "B", "A+"]]',
+      'df[df["Rating"].between("A", "B")]',
+      'df.filter(Rating in ["A", "B", "A+"])'
+    ],
+    ans: 0,
+    exp: '<strong>Tepat!</strong> <code>df[\'Rating\'].isin([\'A\', \'B\', \'A+\'])</code> menghasilkan boolean Series yang sangat efisien untuk memfilter sekumpulan kategori.'
+  },
+  {
+    topic: 'Groupby Transform vs Aggregate',
+    q: 'Apa perbedaan utama antara <code>df.groupby(\'Cabang\')[\'Omset\'].transform(\'mean\')</code> dibandingkan dengan <code>.agg(\'mean\')</code>?',
+    code: '<span class="cm"># transform vs agg</span>',
+    clue: '🔎 Petunjuk: .transform() mengembalikan Series dengan ukuran baris yang sama persis dengan DataFrame asli.',
+    opts: [
+      'transform menghasilkan agregasi tabel ringkas dengan indeks unik Cabang',
+      'transform mempertahankan panjang baris asli DataFrame sehingga mudah disematkan sebagai kolom baru',
+      'transform hanya bisa digunakan untuk fungsi sum, tidak bisa mean',
+      'transform mengubah nama kolom menjadi huruf kapital semua'
+    ],
+    ans: 1,
+    exp: '<strong>Benar!</strong> <code>.transform()</code> mengembalikan Series yang memiliki dimensi/panjang indeks yang sama dengan DataFrame asli, sehingga sangat ideal untuk menghitung rasio atau selisih per kelompok.'
+  },
+  {
+    topic: 'Penanganan Missing Value Setelah Merge',
+    q: 'Setelah melakukan <code>left merge</code> data nasabah dengan mutasi transaksi, kolom "Total_Transaksi" bernilai <code>NaN</code> untuk nasabah pasif. Perintah apa yang tepat untuk mengganti NaN dengan angka 0?',
+    code: 'df[<span class="st">"Total_Transaksi"</span>] = df[<span class="st">"Total_Transaksi"</span>]....',
+    clue: '🔎 Petunjuk: Fungsi pandas untuk mengisi nilai null (imputation).',
+    opts: [
+      'df["Total_Transaksi"].dropna(0)',
+      'df["Total_Transaksi"].fillna(0)',
+      'df["Total_Transaksi"].replace(null, 0)',
+      'df["Total_Transaksi"].set_null(0)'
+    ],
+    ans: 1,
+    exp: '<strong>Tepat!</strong> <code>.fillna(0)</code> digunakan untuk mengganti seluruh nilai <code>NaN / null</code> dengan angka 0.'
+  },
+  {
+    topic: 'Integritas Analisis Data Syariah (Iqra\')',
+    q: 'Seorang data analyst sengaja menghapus 15 baris data transaksi pembiayaan macet sebelum melakukan <code>groupby()</code> agar rata-rata rasio NPF cabang terlihat rendah. Tindakan manipulasi ini melanggar prinsip:',
+    code: '<span class="cm"># Manipulasi seleksi baris sebelum agregasi</span>',
+    clue: '🔎 Petunjuk: Perintah membaca data dengan amanah, adil, objektif, dan larangan tadlis.',
+    opts: [
+      'Prinsip Iqra\' & Amanah (Kejujuran dan Larangan Tadlis Informasi)',
+      'Prinsip Data Compression',
+      'Prinsip Normalisasi Database 3NF',
+      'Prinsip Vectorization Speed'
+    ],
+    ans: 0,
+    exp: '<strong>Sangat tepat!</strong> Analisis data dalam Islam berlandaskan nilai <em>Iqra\'</em> (membaca realitas dengan benar) dan <em>Amanah</em>. Menghapus data buruk secara sengaja adalah bentuk <strong>Tadlis (penipuan fakta)</strong> yang merusak integritas keputusan bisnis.'
+  }
+];
+
+/* ══════════ AUDIO SFX SYNTHESIZER (WEB AUDIO API) ══════════ */
+let audioCtx = null;
+function getAudio(){
+  if(!audioCtx){
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if(AC) audioCtx = new AC();
+  }
+  return audioCtx;
+}
+function sfxGood(){
+  const ctx = getAudio(); if(!ctx) return;
+  const now = ctx.currentTime;
+  const osc = ctx.createOscillator(); const gain = ctx.createGain();
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(523.25, now);
+  osc.frequency.exponentialRampToValueAtTime(783.99, now + 0.12);
+  gain.gain.setValueAtTime(0.3, now);
+  gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+  osc.connect(gain); gain.connect(ctx.destination);
+  osc.start(now); osc.stop(now + 0.35);
+}
+function sfxBad(){
+  const ctx = getAudio(); if(!ctx) return;
+  const now = ctx.currentTime;
+  const osc = ctx.createOscillator(); const gain = ctx.createGain();
+  osc.type = 'sawtooth';
+  osc.frequency.setValueAtTime(180, now);
+  osc.frequency.linearRampToValueAtTime(110, now + 0.25);
+  gain.gain.setValueAtTime(0.3, now);
+  gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+  osc.connect(gain); gain.connect(ctx.destination);
+  osc.start(now); osc.stop(now + 0.3);
+}
+function sfxTick(){
+  const ctx = getAudio(); if(!ctx) return;
+  const now = ctx.currentTime;
+  const osc = ctx.createOscillator(); const gain = ctx.createGain();
+  osc.type = 'triangle';
+  osc.frequency.setValueAtTime(800, now);
+  gain.gain.setValueAtTime(0.15, now);
+  gain.gain.exponentialRampToValueAtTime(0.01, now + 0.04);
+  osc.connect(gain); gain.connect(ctx.destination);
+  osc.start(now); osc.stop(now + 0.04);
+}
+
+/* ══════════ CONFETTI CANNON ══════════ */
+function launchConfetti(count = 70){
+  const cv = document.getElementById('confettiCanvas');
+  if(!cv) return;
+  const ctx = cv.getContext('2d');
+  cv.width = window.innerWidth; cv.height = window.innerHeight;
+  const particles = [];
+  const colors = ['#20C8D0','#38BDF8','#22C55E','#EF4444','#F59E0B','#A855F7'];
+  for(let i=0; i<count; i++){
+    particles.push({
+      x: cv.width/2, y: cv.height/2,
+      vx: (Math.random() - 0.5) * 16,
+      vy: (Math.random() - 0.7) * 16,
+      r: Math.random() * 6 + 3,
+      c: colors[Math.floor(Math.random() * colors.length)],
+      a: 1
+    });
+  }
+  (function anim(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    let alive = false;
+    particles.forEach(p=>{
+      p.x += p.vx; p.y += p.vy; p.vy += 0.35; p.a -= 0.018;
+      if(p.a > 0){
+        alive = true;
+        ctx.globalAlpha = p.a; ctx.fillStyle = p.c;
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill();
+      }
+    });
+    if(alive) requestAnimationFrame(anim);
+    else ctx.clearRect(0,0,cv.width,cv.height);
+  })();
+}
+
+/* ══════════ QUIZ STATE & LOGIC ══════════ */
+let curQ = 0;
+let userScore = 0;
+let streak = 0;
+let correctCount = 0;
+let timerLeft = 20;
+let timerInterval = null;
+let answered = false;
+
+function initQuiz(){
+  curQ = 0; userScore = 0; streak = 0; correctCount = 0;
+  document.getElementById('hudScore').textContent = '0 pts';
+  document.getElementById('hudCombo').textContent = '🔥 x1';
+  document.getElementById('quizBox').style.display = 'block';
+  document.getElementById('resultBox').style.display = 'none';
+  renderQuestion();
+  initCloudSync();
+}
+
+function renderQuestion(){
+  answered = false;
+  clearInterval(timerInterval);
+  timerLeft = 20;
+
+  const q = QUIZ_QUESTIONS[curQ];
+  document.getElementById('qIndexTxt').textContent = curQ + 1;
+  document.getElementById('qTotalTxt').textContent = QUIZ_QUESTIONS.length;
+  document.getElementById('qTopicTxt').textContent = q.topic;
+  document.getElementById('qTitleTxt').textContent = q.q;
+
+  const codeBox = document.getElementById('qCodeSnippet');
+  if(q.code){
+    codeBox.innerHTML = q.code;
+    codeBox.style.display = 'block';
+  } else {
+    codeBox.style.display = 'none';
+  }
+
+  const clueBox = document.getElementById('qClueBox');
+  if(q.clue){
+    clueBox.textContent = q.clue;
+    clueBox.style.display = 'block';
+  } else {
+    clueBox.style.display = 'none';
+  }
+
+  document.getElementById('explainBox').style.display = 'none';
+  document.getElementById('btnNext').disabled = true;
+
+  const letters = ['A','B','C','D'];
+  const optsContainer = document.getElementById('qOptions');
+  optsContainer.innerHTML = q.opts.map((opt, i) => `
+    <button class="opt-btn" id="optBtn${i}" onclick="selectAnswer(${i})">
+      <div class="opt-badge">${letters[i]}</div>
+      <div style="flex:1">${opt}</div>
+    </button>
+  `).join('');
+
+  // Start Countdown Timer
+  updateTimerUI();
+  timerInterval = setInterval(() => {
+    timerLeft--;
+    updateTimerUI();
+    if(timerLeft <= 0){
+      clearInterval(timerInterval);
+      if(!answered) timeOutAnswer();
+    }
+  }, 1000);
+}
+
+function updateTimerUI(){
+  document.getElementById('hudTimer').textContent = timerLeft + 's';
+  const pct = (timerLeft / 20) * 100;
+  document.getElementById('qTimeBar').style.width = pct + '%';
+}
+
+function selectAnswer(chosenIdx){
+  if(answered) return;
+  answered = true;
+  clearInterval(timerInterval);
+
+  const q = QUIZ_QUESTIONS[curQ];
+  const isRight = (chosenIdx === q.ans);
+  const btns = document.querySelectorAll('.opt-btn');
+  btns.forEach((b, i) => {
+    b.disabled = true;
+    if(i === q.ans) b.classList.add('correct');
+    else if(i === chosenIdx && !isRight) b.classList.add('wrong');
+  });
+
+  const expBox = document.getElementById('explainBox');
+  const expHd = document.getElementById('explainHd');
+  const expTxt = document.getElementById('explainTxt');
+  expBox.style.display = 'block';
+
+  if(isRight){
+    sfxGood();
+    streak++;
+    correctCount++;
+    const comboMult = streak >= 3 ? 1.5 : (streak >= 2 ? 1.25 : 1.0);
+    const timeBonus = timerLeft * 5;
+    const gained = Math.round((100 + timeBonus) * comboMult);
+    userScore += gained;
+
+    document.getElementById('hudScore').textContent = userScore + ' pts';
+    document.getElementById('hudCombo').textContent = `🔥 x${comboMult.toFixed(2)}`;
+    expHd.innerHTML = `✅ <span style="color:#4ADE80">Jawaban Tepat! (+${gained} pts)</span>`;
+    expTxt.innerHTML = q.exp;
+    launchConfetti(40);
+  } else {
+    sfxBad();
+    streak = 0;
+    document.getElementById('hudCombo').textContent = '🔥 x1';
+    expHd.innerHTML = `❌ <span style="color:#F87171">Kurang Tepat</span>`;
+    expTxt.innerHTML = q.exp + `<div style="margin-top:8px;font-size:12px;color:#FFB885">💡 <em>Jika skor Anda tertinggal di akhir, putar Roda Hukuman untuk tebus poin!</em></div>`;
+  }
+
+  syncPlayerScoreLive();
+  document.getElementById('btnNext').disabled = false;
+}
+
+function timeOutAnswer(){
+  if(answered) return;
+  answered = true;
+  sfxBad();
+  streak = 0;
+  document.getElementById('hudCombo').textContent = '🔥 x1';
+
+  const q = QUIZ_QUESTIONS[curQ];
+  const btns = document.querySelectorAll('.opt-btn');
+  btns.forEach((b, i) => {
+    b.disabled = true;
+    if(i === q.ans) b.classList.add('correct');
+  });
+
+  const expBox = document.getElementById('explainBox');
+  document.getElementById('explainHd').innerHTML = `⏱️ <span style="color:#F59E0B">Waktu Habis!</span>`;
+  document.getElementById('explainTxt').innerHTML = q.exp;
+  expBox.style.display = 'block';
+
+  syncPlayerScoreLive();
+  document.getElementById('btnNext').disabled = false;
+}
+
+function nextQuestion(){
+  curQ++;
+  if(curQ < QUIZ_QUESTIONS.length){
+    renderQuestion();
+  } else {
+    showQuizResult();
+  }
+}
+
+function showQuizResult(){
+  document.getElementById('quizBox').style.display = 'none';
+  document.getElementById('resultBox').style.display = 'block';
+
+  const pct = Math.round((correctCount / QUIZ_QUESTIONS.length) * 100);
+  document.getElementById('resFinalScore').textContent = userScore + ' pts';
+  document.getElementById('resFinalAcc').textContent = pct + '%';
+
+  const medalEl = document.getElementById('resMedal');
+  const titleEl = document.getElementById('resTitle');
+  const subEl = document.getElementById('resSub');
+
+  if(pct >= 80){
+    medalEl.textContent = '🥇';
+    titleEl.textContent = 'Luar Biasa! Data Analytics Expert';
+    subEl.textContent = `Akurasi Anda ${pct}% (${correctCount}/10 soal benar). Pemahaman Anda pada manipulasi pandas sangat solid!`;
+    launchConfetti(120);
+  } else if(pct >= 60){
+    medalEl.textContent = '🥈';
+    titleEl.textContent = 'Bagus! Data Analyst Madya';
+    subEl.textContent = `Akurasi Anda ${pct}% (${correctCount}/10 soal benar). Terus asah logika filtering dan aggregasi data.`;
+    launchConfetti(60);
+  } else {
+    medalEl.textContent = '🎪';
+    titleEl.textContent = 'Perlu Latihan Lagi & Tebus Tantangan!';
+    subEl.textContent = `Akurasi Anda ${pct}% (${correctCount}/10 soal benar). Ayo putar Roda Hukuman Edukatif untuk raih bonus poin sportivitas!`;
+  }
+
+  syncPlayerScoreLive();
+}
+
+function restartQuiz(){
+  initQuiz();
+}
+
+/* ══════════ CLOUD FIRESTORE LEADERBOARD SYNC (ADA P02) ══════════ */
+let liveLeaderboardPlayers = [];
+const DEFAULT_QUIZ_ROSTER = [
+  { nim: '2510102006', nama: 'Nurjanah', quizScore: 0, updatedAt: '-' },
+  { nim: '2510102001', nama: 'Zahra Qatrun Nada', quizScore: 0, updatedAt: '-' },
+  { nim: '2510102033', nama: 'RAGIL ADITIYA', quizScore: 0, updatedAt: '-' },
+  { nim: '2510102024', nama: 'Muhammad Ibrahim', quizScore: 0, updatedAt: '-' },
+  { nim: '2510102012', nama: 'Parvez Athaya Rifa Adrian', quizScore: 0, updatedAt: '-' },
+  { nim: '2510102011', nama: 'Era Firda Fajriah', quizScore: 0, updatedAt: '-' },
+  { nim: '2510102005', nama: 'Muhammad Isnan Azuhri', quizScore: 0, updatedAt: '-' }
+];
+
+function syncPlayerScoreLive(){
+  const myNim = (window.currentStudent && window.currentStudent.nim) || localStorage.getItem('tazkia_student_nim') || 'MHS-01';
+  const myName = (window.currentStudent && window.currentStudent.nama) || localStorage.getItem('tazkia_student_nama') || 'Anda';
+  
+  if(window.RealtimeGameEngine){
+    RealtimeGameEngine.submitPlayerScore(userScore, streak, curQ + 1, [userScore,0,0,0,0,0], 'ada_p02_quiz');
+  }
+  updateLocalLeaderboard(userScore, myNim, myName);
+}
+
+function updateLocalLeaderboard(score, myNim, myName){
+  let list = liveLeaderboardPlayers.length > 0 ? [...liveLeaderboardPlayers] : [...DEFAULT_QUIZ_ROSTER];
+  const idx = list.findIndex(p => (myNim && p.nim === myNim) || p.nama === myName);
+  const now = new Date().toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit' });
+
+  if(idx >= 0){
+    list[idx].quizScore = Math.max(list[idx].quizScore || 0, score);
+    list[idx].updatedAt = now;
+  } else {
+    list.push({ nim: myNim, nama: myName, quizScore: score, updatedAt: now });
+  }
+
+  list.sort((a,b) => (b.quizScore || 0) - (a.quizScore || 0));
+  liveLeaderboardPlayers = list;
+  renderLeaderboardUI(list);
+}
+
+function renderLeaderboardUI(players){
+  const myNim = (window.currentStudent && window.currentStudent.nim) || localStorage.getItem('tazkia_student_nim') || '';
+  const myName = (window.currentStudent && window.currentStudent.nama) || localStorage.getItem('tazkia_student_nama') || 'Anda';
+
+  let myRank = players.findIndex(p => (myNim && p.nim === myNim) || p.nama === myName) + 1;
+  const myRankStr = myRank > 0 ? `#${myRank}` : '#—';
+
+  // Update HUD & Topbar
+  document.getElementById('hudRank').textContent = myRankStr;
+  document.getElementById('topRankBadge').textContent = myRankStr;
+  document.getElementById('lbMyName').textContent = myName + (myNim ? ` (${myNim})` : '');
+  document.getElementById('lbMyScore').textContent = `${userScore} pts`;
+  document.getElementById('lbMyRank').textContent = `Peringkat ${myRankStr}`;
+
+  const medals = ['🥇','🥈','🥉'];
+  const html = players.slice(0, 10).map((p, i) => {
+    const isMe = (p.nim === myNim) || (p.nama === myName);
+    const medal = medals[i] || `${i+1}.`;
+    const pScore = p.quizScore !== undefined ? p.quizScore : (p.score || 0);
+    const isPlayed = pScore > 0;
+
+    return `
+      <div class="lb-row ${isMe ? 'lb-row-me' : ''}" style="${!isPlayed ? 'opacity:.65' : ''}">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:16px;font-weight:800;width:24px;text-align:center">${medal}</span>
+          <div>
+            <div style="font-weight:700;font-size:13px;color:var(--tx)">
+              ${p.nama || 'Mahasiswa'}
+              ${isMe ? '<span style="background:var(--meet-acc);color:#030E18;font-size:10px;font-weight:800;padding:1px 6px;border-radius:4px;margin-left:4px">ANDA</span>' : ''}
+            </div>
+            <div style="font-size:11px;color:var(--txm)">NIM: ${p.nim || '-'} · ${isPlayed ? 'Skor Riil Kuis' : 'Belum Mulai Kuis'}</div>
+          </div>
+        </div>
+        <div style="font-family:'Source Code Pro',monospace;font-weight:700;font-size:15px;color:${isPlayed ? 'var(--meet-gold)' : 'var(--txl)'}">
+          ${pScore} pts
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  document.getElementById('lbListContainer').innerHTML = html;
+}
+
+function toggleLeaderboardModal(show){
+  const m = document.getElementById('modalLeaderboard');
+  if(!m) return;
+  if(show !== undefined){
+    if(show) m.classList.add('show'); else m.classList.remove('show');
+  } else {
+    m.classList.toggle('show');
+  }
+}
+
+function syncManualScore(){
+  syncPlayerScoreLive();
+  sfxGood();
+  alert(`☁️ Skor kuis ADA P02 (${userScore} pts) berhasil disinkronkan ke Cloud Firestore!`);
+}
+
+function initCloudSync(){
+  if(window.RealtimeGameEngine){
+    RealtimeGameEngine.listenLeaderboard(players => {
+      const mapped = players.map(p => ({
+        ...p,
+        quizScore: (p.gameScores && p.gameScores[0]) !== undefined ? p.gameScores[0] : (p.quizScore || 0)
+      }));
+      liveLeaderboardPlayers = mapped;
+      renderLeaderboardUI(mapped);
+    });
+  }
+  renderLeaderboardUI(DEFAULT_QUIZ_ROSTER);
+}
+
+/* ══════════ RODA HUKUMAN & FORFEITS (DATA SCIENCE & PANDAS THEME) ══════════ */
+const FORFEIT_SECTORS = [
+  { label:'Sintaks',  title:'💡 Duta Sintaks pandas (30 Detik)', desc:'Jelaskan secara lisan perbedaan mendasar antara .loc dan .iloc dengan contoh kasus nyata di depan kelas!' },
+  { label:'Murottal', title:'📜 Murottal Nilai Iqra\' (QS. Al-\'Alaq)', desc:'Bacakan QS. Al-\'Alaq 1–5 beserta hikmah pentingnya membaca dan meneliti data dengan jujur.' },
+  { label:'Pantomim', title:'🎭 Pantomim Merge & Join', desc:'Peragakan konsep "Inner Join" vs "Left Join" hanya dengan gerakan tubuh tanpa bicara sampai teman sekelas menebak!' },
+  { label:'Apresiasi',title:'🤝 Orasi Pujian Juara 1', desc:'Berikan 3 kalimat pujian puitis kepada rekan mahasiswa yang memimpin klasemen kuis ADA P02!' },
+  { label:'Debugging',title:'🐛 Debugging Kilat di Papan Tulis', desc:'Tuliskan 1 baris kode groupby dengan 2 fungsi agregasi sekaligus di papan tulis dalam 30 detik!' },
+  { label:'Tanya Rekan',title:'🎯 Kuis Balik Antar Mahasiswa', desc:'Tunjuk 1 rekan kelas untuk melempar 1 pertanyaan seputar boolean filtering dan jawab seketika!' },
+  { label:'Traktir',  title:'☕ Janji Traktir Sedekah Snack', desc:'Janji memberikan sedekah snack atau traktir kopi untuk teman duduk di sebelah Anda hari ini.' },
+  { label:'Pantun DS',title:'⚡ Pantun Data Science Syariah', desc:'Bacakan 1 bait pantun jenaka bertema Analis Data / programmer Python di depan kelas!' }
+];
+
+let wheelCanvas, wheelCtx;
+let wheelAngle = 0;
+let isSpinning = false;
+let forfeitTimer = null;
+let forfeitSeconds = 30;
+
+function drawForfeitWheel(){
+  wheelCanvas = document.getElementById('wheelCanvas');
+  if(!wheelCanvas) return;
+  wheelCtx = wheelCanvas.getContext('2d');
+  const cx = 145, cy = 145, r = 135;
+  const num = FORFEIT_SECTORS.length;
+  const arc = (Math.PI * 2) / num;
+  const colors = ['#C03818','#0F766E','#20C8D0','#1F9060','#7040B0','#2A50B0','#1B7898','#B45309'];
+
+  wheelCtx.clearRect(0,0,290,290);
+
+  for(let i=0; i<num; i++){
+    const ang = wheelAngle + i * arc;
+    wheelCtx.beginPath();
+    wheelCtx.fillStyle = colors[i % colors.length];
+    wheelCtx.moveTo(cx,cy);
+    wheelCtx.arc(cx,cy,r,ang,ang+arc);
+    wheelCtx.lineTo(cx,cy);
+    wheelCtx.fill();
+    wheelCtx.stroke();
+
+    // Text Label
+    wheelCtx.save();
+    wheelCtx.translate(cx,cy);
+    wheelCtx.rotate(ang + arc/2);
+    wheelCtx.textAlign = 'right';
+    wheelCtx.fillStyle = '#FFFFFF';
+    wheelCtx.font = 'bold 11px system-ui, sans-serif';
+    wheelCtx.fillText(FORFEIT_SECTORS[i].label, r - 16, 4);
+    wheelCtx.restore();
+  }
+}
+
+function spinForfeitWheel(){
+  if(isSpinning) return;
+  isSpinning = true;
+  document.getElementById('btnSpinWheel').disabled = true;
+  document.getElementById('wheelStatusTxt').textContent = '🎡 Roda sedang berputar...';
+
+  const totalRotations = (5 + Math.floor(Math.random()*4)) * 360;
+  const randomExtra = Math.floor(Math.random()*360);
+  const targetDeg = totalRotations + randomExtra;
+  let curDeg = 0;
+  let speed = 25;
+
+  const anim = setInterval(() => {
+    curDeg += speed;
+    wheelAngle = (curDeg * Math.PI) / 180;
+    drawForfeitWheel();
+    sfxTick();
+
+    if(curDeg >= targetDeg - 360) speed = Math.max(2, speed * 0.96);
+
+    if(curDeg >= targetDeg){
+      clearInterval(anim);
+      isSpinning = false;
+      document.getElementById('btnSpinWheel').disabled = false;
+
+      const num = FORFEIT_SECTORS.length;
+      const arc = 360 / num;
+      const normalized = (360 - (curDeg % 360) + 270) % 360;
+      const idx = Math.floor(normalized / arc) % num;
+      const chosen = FORFEIT_SECTORS[idx];
+
+      document.getElementById('wheelStatusTxt').innerHTML = `🎯 Terpilih: <strong>${chosen.title}</strong>`;
+      document.getElementById('forfeitTitle').textContent = chosen.title;
+      document.getElementById('forfeitDesc').textContent = chosen.desc;
+      sfxGood();
+      launchConfetti(50);
+    }
+  }, 25);
+}
+
+function startForfeitTimer(){
+  clearInterval(forfeitTimer);
+  forfeitSeconds = 30;
+  document.getElementById('forfeitTimerTxt').textContent = '30s';
+  document.getElementById('btnStart30s').disabled = true;
+
+  forfeitTimer = setInterval(() => {
+    forfeitSeconds--;
+    document.getElementById('forfeitTimerTxt').textContent = `${forfeitSeconds}s`;
+    sfxTick();
+    if(forfeitSeconds <= 0){
+      clearInterval(forfeitTimer);
+      sfxBad();
+      document.getElementById('forfeitTimerTxt').textContent = 'WAKTU HABIS!';
+      document.getElementById('btnStart30s').disabled = false;
+    }
+  }, 1000);
+}
+
+function claimForfeitReward(){
+  clearInterval(forfeitTimer);
+  userScore += 50;
+  document.getElementById('hudScore').textContent = userScore + ' pts';
+  syncPlayerScoreLive();
+  sfxGood();
+  launchConfetti(80);
+  alert('🎉 Sportivitas Anda luar biasa! Bonus +50 Poin telah ditambahkan ke skor kuis Anda.');
+  closeForfeitModal();
+}
+
+function openForfeitModal(){
+  document.getElementById('modalForfeit').classList.add('show');
+  setTimeout(drawForfeitWheel, 100);
+}
+function closeForfeitModal(){
+  clearInterval(forfeitTimer);
+  document.getElementById('modalForfeit').classList.remove('show');
+}
+
+/* ══════════ AUTO INITIALIZE ══════════ */
+window.addEventListener('DOMContentLoaded', () => {
+  initQuiz();
+  drawForfeitWheel();
+});
+</script>
+</body>
+</html>
