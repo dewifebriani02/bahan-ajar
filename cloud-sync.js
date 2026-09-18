@@ -948,7 +948,14 @@ window.RealtimeGameEngine = {
           if (s && s.classGroup) p.classGroup = s.classGroup;
         }
         const key = p.nim || p.nama;
-        const currentScore = (p.gameScores && p.gameScores[0]) !== undefined ? p.gameScores[0] : (p.quizScore || p.score || 0);
+        let currentScore = 0;
+        if (p.quizScore !== undefined && p.quizScore !== null) {
+          currentScore = Number(p.quizScore);
+        } else if (p.score !== undefined && p.score !== null) {
+          currentScore = Number(p.score);
+        } else if (p.gameScores && Array.isArray(p.gameScores) && p.gameScores.length > 0) {
+          currentScore = Number(p.gameScores[0]) || 0;
+        }
         const pNormalized = { ...p, score: currentScore, quizScore: currentScore };
         
         if (!playerMap.has(key) || currentScore >= (playerMap.get(key).score || 0)) {

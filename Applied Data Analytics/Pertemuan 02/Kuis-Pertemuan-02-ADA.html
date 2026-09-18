@@ -882,11 +882,11 @@ function restartQuiz(){
 /* ══════════ CLOUD FIRESTORE LEADERBOARD SYNC (ADA P02) ══════════ */
 let liveLeaderboardPlayers = [];
 const DEFAULT_QUIZ_ROSTER = [
-  { nim: '2410102013', nama: 'Ibnu Hajar', classGroup: 'ADA / BIV', quizScore: 2816, updatedAt: '12:00' },
-  { nim: '2410102011', nama: 'Mohamad Fikri Zim Aufar', classGroup: 'ADA / BIV', quizScore: 2752, updatedAt: '12:00' },
-  { nim: '2410102008', nama: 'Liana Tasa', classGroup: 'ADA / BIV', quizScore: 2740, updatedAt: '12:00' },
-  { nim: '2410102007', nama: 'Rasti Septa Sari', classGroup: 'ADA / BIV', quizScore: 2713, updatedAt: '12:00' },
-  { nim: '2410102010', nama: 'Izza Arydani', classGroup: 'ADA / BIV', quizScore: 2712, updatedAt: '12:00' },
+  { nim: '2410102013', nama: 'Ibnu Hajar', classGroup: 'ADA / BIV', quizScore: 1408, updatedAt: '12:00' },
+  { nim: '2410102011', nama: 'Mohamad Fikri Zim Aufar', classGroup: 'ADA / BIV', quizScore: 1376, updatedAt: '12:00' },
+  { nim: '2410102008', nama: 'Liana Tasa', classGroup: 'ADA / BIV', quizScore: 1370, updatedAt: '12:00' },
+  { nim: '2410102007', nama: 'Rasti Septa Sari', classGroup: 'ADA / BIV', quizScore: 1356, updatedAt: '12:00' },
+  { nim: '2410102010', nama: 'Izza Arydani', classGroup: 'ADA / BIV', quizScore: 1356, updatedAt: '12:00' },
   { nim: '2410102002', nama: 'Aliffa Rahmadanni', classGroup: 'ADA / BIV', quizScore: 0, updatedAt: '-' },
   { nim: '2410102004', nama: 'Fairuz Alya Manora', classGroup: 'ADA / BIV', quizScore: 0, updatedAt: '-' },
   { nim: '2410102005', nama: 'Suciyanti', classGroup: 'ADA / BIV', quizScore: 0, updatedAt: '-' },
@@ -954,7 +954,29 @@ function renderLeaderboardUI(players){
     }
     return true;
   });
-  const sorted = [...validPlayers].sort((a,b) => (b.quizScore || b.score || 0) - (a.quizScore || a.score || 0));
+
+  // Merge with full 11 ADA roster so all students are represented
+  const playerMap = new Map();
+  DEFAULT_QUIZ_ROSTER.forEach(s => {
+    playerMap.set(s.nim, { ...s });
+  });
+
+  validPlayers.forEach(p => {
+    const raw = (p.quizScore !== undefined && p.quizScore !== null) ? Number(p.quizScore) : 
+                (p.score !== undefined && p.score !== null) ? Number(p.score) : 
+                (p.gameScores && Array.isArray(p.gameScores)) ? Number(p.gameScores[0]) : 0;
+    // Scale any legacy score > 1500 down to max 1500 scale
+    const normalized = raw > 1500 ? Math.min(1500, Math.round((raw / 3000) * 1500)) : raw;
+    const key = p.nim || p.nama;
+    const existing = playerMap.get(p.nim);
+    if (existing) {
+      playerMap.set(p.nim, { ...existing, ...p, quizScore: Math.max(existing.quizScore || 0, normalized) });
+    } else {
+      playerMap.set(key, { ...p, quizScore: normalized });
+    }
+  });
+
+  const sorted = Array.from(playerMap.values()).sort((a,b) => (b.quizScore || 0) - (a.quizScore || 0));
 
   // Toggle User Stat Card for Dosen vs Mahasiswa
   const statCard = document.querySelector('.user-stat-card');
@@ -1016,7 +1038,7 @@ function renderLeaderboardUI(players){
     </div>`;
   }
 
-  html += sorted.slice(0, 15).map((p, i) => {
+  html += sorted.map((p, i) => {
     const isMe = !isDosen && ((p.nim === myNim) || (p.nama === myName));
     const medal = medals[i] || `${i+1}.`;
     const pScore = p.quizScore !== undefined ? p.quizScore : (p.score || 0);
