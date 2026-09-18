@@ -824,13 +824,24 @@ window.isDosenUser = isDosenUser;
 
 // 6. REALTIME MULTIPLAYER GAME ROOM ENGINE (P02 Games)
 window.RealtimeGameEngine = {
-  activeRoomId: 'BMT-ARENA-02',
+  activeRoomId: null,
   listenerUnsubscribe: null,
   leaderboardUnsubscribe: null,
 
+  getEffectiveRoomId: function (customRoomId) {
+    if (customRoomId) return customRoomId;
+    if (this.activeRoomId) return this.activeRoomId;
+    const info = detectCurrentCourseInfo();
+    const courseCode = (info && info.code) || 'AIS';
+    const path = decodeURIComponent(window.location.pathname);
+    const match = path.match(/Pertemuan\s*(\d{1,2})/i);
+    const pCode = match ? 'P' + String(match[1]).padStart(2, '0') : 'P02';
+    return `${courseCode}-ARENA-${pCode}`;
+  },
+
   // Bergabung atau membuat Room Game
   joinRoom: function (roomId, teamName, onUpdateCallback) {
-    this.activeRoomId = roomId || 'BMT-ARENA-02';
+    this.activeRoomId = roomId || this.getEffectiveRoomId();
     // If current student is Dosen, clean up any previous accidental lecturer score from the leaderboard
     if (isDosenUser(currentStudent)) {
       window.onCloudSyncReady(dbInstance => {
@@ -867,8 +878,9 @@ window.RealtimeGameEngine = {
 
   // Tambah Skor Tim
   addTeamScore: function (teamName, points) {
+    const roomId = this.getEffectiveRoomId();
     window.onCloudSyncReady(dbInstance => {
-      const roomRef = dbInstance.collection('games').doc(this.activeRoomId);
+      const roomRef = dbInstance.collection('games').doc(roomId);
       const updateObj = {};
       updateObj[`teams.${teamName}.score`] = firebase.firestore.FieldValue.increment(points);
       roomRef.update(updateObj).catch(err => console.error("Error update team score:", err));
@@ -886,8 +898,9 @@ window.RealtimeGameEngine = {
       console.log("ℹ️ Mode Dosen: Skor tidak dipublikasikan ke papan klasemen mahasiswa.");
       return;
     }
+    const roomId = this.getEffectiveRoomId();
     window.onCloudSyncReady(dbInstance => {
-      const roomRef = dbInstance.collection('games').doc(this.activeRoomId);
+      const roomRef = dbInstance.collection('games').doc(roomId);
       const studentInfo = findStudentByNim(currentStudent.nim);
       const classGroup = (studentInfo && studentInfo.classGroup) || currentStudent.classGroup || 'Reguler';
 
@@ -911,10 +924,11 @@ window.RealtimeGameEngine = {
   },
 
   // Listen to Top Players Realtime Leaderboard
-  listenLeaderboard: function (onLeaderboardChange) {
+  listenLeaderboard: function (onLeaderboardChange, customRoomId) {
+    const roomId = this.getEffectiveRoomId(customRoomId);
     window.onCloudSyncReady(dbInstance => {
       if (this.leaderboardUnsubscribe) this.leaderboardUnsubscribe();
-      this.leaderboardUnsubscribe = dbInstance.collection('games').doc(this.activeRoomId).collection('players')
+      this.leaderboardUnsubscribe = dbInstance.collection('games').doc(roomId).collection('players')
         .orderBy('score', 'desc')
         .limit(100)
         .onSnapshot(snapshot => {

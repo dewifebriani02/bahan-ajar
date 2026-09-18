@@ -942,8 +942,18 @@ function renderLeaderboardUI(players){
   const myNim = (window.currentStudent && window.currentStudent.nim) || localStorage.getItem('tazkia_student_nim') || '';
   const myName = (window.currentStudent && window.currentStudent.nama) || localStorage.getItem('tazkia_student_nama') || 'Anda';
 
-  // Filter out any Dosen from display
-  const validPlayers = (players || []).filter(p => !(window.isDosenUser && window.isDosenUser(p)) && p.nim !== '0206015' && !/dewi\s*febriani|dosen/i.test(p.nama || ''));
+  // Filter out any Dosen and non-ADA/BIV students from display
+  const validPlayers = (players || []).filter(p => {
+    if (window.isDosenUser && window.isDosenUser(p)) return false;
+    if (p.nim === '0206015' || /dewi\s*febriani|dosen/i.test(p.nama || '')) return false;
+    if (window.findStudentByNim && p.nim) {
+      const s = window.findStudentByNim(p.nim);
+      if (s && s.courses && !s.courses.includes('ADA') && !s.courses.includes('BIV')) {
+        return false; // Exclude non-ADA students
+      }
+    }
+    return true;
+  });
   const sorted = [...validPlayers].sort((a,b) => (b.quizScore || b.score || 0) - (a.quizScore || a.score || 0));
 
   if (isDosen) {
@@ -1032,6 +1042,7 @@ function syncManualScore(){
 
 function initCloudSync(){
   if(window.RealtimeGameEngine){
+    RealtimeGameEngine.joinRoom('ADA-ARENA-P02');
     RealtimeGameEngine.listenLeaderboard(players => {
       const mapped = players.map(p => ({
         ...p,
@@ -1039,7 +1050,7 @@ function initCloudSync(){
       }));
       liveLeaderboardPlayers = mapped;
       renderLeaderboardUI(mapped);
-    });
+    }, 'ADA-ARENA-P02');
   }
   renderLeaderboardUI(DEFAULT_QUIZ_ROSTER);
 }

@@ -1665,18 +1665,25 @@ function renderLeaderboard(players){
   const studentInfo = (window.findStudentByNim && window.findStudentByNim(myNim)) || null;
   const myClassGroup = (studentInfo && studentInfo.classGroup) || '';
 
-  // Filter out any Dosen from display and enrich classGroup
+  // Filter out any Dosen and non-AIS students from display
   const validPlayers = (players || []).filter(p => {
     if (window.isDosenUser && window.isDosenUser(p)) return false;
     if (p.nim === '0206015' || /dewi\s*febriani|dosen/i.test(p.nama || '')) return false;
+    if (window.findStudentByNim && p.nim) {
+      const s = window.findStudentByNim(p.nim);
+      if (s && s.courses && !s.courses.includes('AIS') && !s.courses.includes('SIA')) {
+        return false; // Exclude ADA / BIV students
+      }
+    }
     return true;
   }).map(p => {
     let cg = p.classGroup;
-    if (!cg && p.nim && window.findStudentByNim) {
+    if (p.nim && window.findStudentByNim) {
       const s = window.findStudentByNim(p.nim);
-      if (s) cg = s.classGroup;
+      if (s && s.classGroup) cg = s.classGroup;
     }
-    return { ...p, classGroup: cg || 'AIS - Reguler' };
+    if (!cg) cg = 'AIS - Reguler';
+    return { ...p, classGroup: cg };
   });
 
   // Calculate counts for badges
@@ -1736,9 +1743,12 @@ function renderLeaderboard(players){
   html += sorted.slice(0,15).map((p,i)=>{
     const isMe = !isDosen && ((myNim && p.nim === myNim) || (p.nama === myName));
     const isKaryawan = /karyawan/i.test(p.classGroup || '');
+    const isReguler = /reguler/i.test(p.classGroup || '');
     const classBadge = isKaryawan 
       ? '<span class="class-badge class-badge-karyawan">💼 Karyawan</span>' 
-      : '<span class="class-badge class-badge-reguler">🎓 Reguler</span>';
+      : isReguler
+      ? '<span class="class-badge class-badge-reguler">🎓 Reguler</span>'
+      : `<span class="class-badge" style="background:rgba(255,255,255,.1);color:#fff">${escapeHtml(p.classGroup)}</span>`;
 
     return `
     <div style="background:#060C14;border:1px solid ${isMe ? '#F97316' : 'var(--bd)'};padding:10px 14px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;${isMe ? 'box-shadow:0 0 12px rgba(249,115,22,.2);background:rgba(249,115,22,.04)' : ''}">
@@ -1771,7 +1781,8 @@ function triggerManualSync(){
 }
 
 if(window.RealtimeGameEngine){
-  RealtimeGameEngine.listenLeaderboard(players=>renderLeaderboard(players));
+  RealtimeGameEngine.joinRoom('AIS-ARENA-P02');
+  RealtimeGameEngine.listenLeaderboard(players=>renderLeaderboard(players), 'AIS-ARENA-P02');
 }
 initClassFilterDefault();
 sbRender();
