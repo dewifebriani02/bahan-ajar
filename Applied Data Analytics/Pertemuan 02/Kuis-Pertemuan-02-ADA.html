@@ -892,25 +892,33 @@ const DEFAULT_QUIZ_ROSTER = [
 ];
 
 function syncPlayerScoreLive(){
+  const isDosen = window.isDosenUser && window.isDosenUser(window.currentStudent);
   const myNim = (window.currentStudent && window.currentStudent.nim) || localStorage.getItem('tazkia_student_nim') || 'MHS-01';
   const myName = (window.currentStudent && window.currentStudent.nama) || localStorage.getItem('tazkia_student_nama') || 'Anda';
   
-  if(window.RealtimeGameEngine){
+  if(!isDosen && window.RealtimeGameEngine){
     RealtimeGameEngine.submitPlayerScore(userScore, streak, curQ + 1, [userScore,0,0,0,0,0], 'ada_p02_quiz');
   }
   updateLocalLeaderboard(userScore, myNim, myName);
 }
 
 function updateLocalLeaderboard(score, myNim, myName){
+  const isDosen = window.isDosenUser && window.isDosenUser(window.currentStudent);
   let list = liveLeaderboardPlayers.length > 0 ? [...liveLeaderboardPlayers] : [...DEFAULT_QUIZ_ROSTER];
-  const idx = list.findIndex(p => (myNim && p.nim === myNim) || p.nama === myName);
-  const now = new Date().toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit' });
+  
+  // Exclude dosen from leaderboard list
+  list = list.filter(p => !(window.isDosenUser && window.isDosenUser(p)) && p.nim !== '0206015' && !/dewi\s*febriani|dosen/i.test(p.nama || ''));
+  
+  if(!isDosen){
+    const idx = list.findIndex(p => (myNim && p.nim === myNim) || p.nama === myName);
+    const now = new Date().toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit' });
 
-  if(idx >= 0){
-    list[idx].quizScore = Math.max(list[idx].quizScore || 0, score);
-    list[idx].updatedAt = now;
-  } else {
-    list.push({ nim: myNim, nama: myName, quizScore: score, updatedAt: now });
+    if(idx >= 0){
+      list[idx].quizScore = Math.max(list[idx].quizScore || 0, score);
+      list[idx].updatedAt = now;
+    } else {
+      list.push({ nim: myNim, nama: myName, quizScore: score, updatedAt: now });
+    }
   }
 
   list.sort((a,b) => (b.quizScore || 0) - (a.quizScore || 0));
@@ -919,22 +927,54 @@ function updateLocalLeaderboard(score, myNim, myName){
 }
 
 function renderLeaderboardUI(players){
+  const isDosen = window.isDosenUser && window.isDosenUser(window.currentStudent);
   const myNim = (window.currentStudent && window.currentStudent.nim) || localStorage.getItem('tazkia_student_nim') || '';
   const myName = (window.currentStudent && window.currentStudent.nama) || localStorage.getItem('tazkia_student_nama') || 'Anda';
 
-  let myRank = players.findIndex(p => (myNim && p.nim === myNim) || p.nama === myName) + 1;
-  const myRankStr = myRank > 0 ? `#${myRank}` : '#—';
+  // Filter out any Dosen from display
+  const validPlayers = (players || []).filter(p => !(window.isDosenUser && window.isDosenUser(p)) && p.nim !== '0206015' && !/dewi\s*febriani|dosen/i.test(p.nama || ''));
+  const sorted = [...validPlayers].sort((a,b) => (b.quizScore || b.score || 0) - (a.quizScore || a.score || 0));
 
-  // Update HUD & Topbar
-  document.getElementById('hudRank').textContent = myRankStr;
-  document.getElementById('topRankBadge').textContent = myRankStr;
+  if (isDosen) {
+    document.getElementById('hudRank').textContent = 'Dosen 🎓';
+    const topBadge = document.getElementById('topRankBadge');
+    if(topBadge) topBadge.textContent = 'Dosen';
+    const lbMyRank = document.getElementById('lbMyRank');
+    if(lbMyRank) lbMyRank.textContent = 'Mode Dosen 🎓';
+    const lbMyStatus = document.getElementById('lbMyStatus');
+    if(lbMyStatus) lbMyStatus.textContent = 'Skor disembunyikan dari klasemen';
+  } else {
+    const myRank = sorted.findIndex(p => (myNim && p.nim === myNim) || p.nama === myName) + 1;
+    const myRankStr = myRank > 0 ? `#${myRank}` : '#—';
+    document.getElementById('hudRank').textContent = myRankStr;
+    const topBadge = document.getElementById('topRankBadge');
+    if(topBadge) topBadge.textContent = myRankStr;
+    const lbMyRank = document.getElementById('lbMyRank');
+    if(lbMyRank) lbMyRank.textContent = `Peringkat ${myRankStr}`;
+    const lbMyStatus = document.getElementById('lbMyStatus');
+    if(lbMyStatus) lbMyStatus.textContent = 'Kuis Sedang Berlangsung';
+  }
+
   document.getElementById('lbMyName').textContent = myName + (myNim ? ` (${myNim})` : '');
   document.getElementById('lbMyScore').textContent = `${userScore} pts`;
-  document.getElementById('lbMyRank').textContent = `Peringkat ${myRankStr}`;
+
+  if(!sorted.length){
+    document.getElementById('lbListContainer').innerHTML = isDosen
+      ? '<div style="background:rgba(32,200,208,.12);border:1px solid rgba(32,200,208,.3);padding:10px 14px;border-radius:8px;font-size:12px;color:var(--meet-acc);text-align:center">🎓 <strong>Mode Dosen / Pengawas:</strong> Skor Anda tidak ditampilkan di klasemen mahasiswa.</div><div style="text-align:center;color:var(--txl);padding:14px 0">Belum ada skor mahasiswa terkirim.</div>'
+      : '<div style="text-align:center;color:var(--txl);padding:14px 0">Belum ada skor mahasiswa terkirim.</div>';
+    return;
+  }
 
   const medals = ['🥇','🥈','🥉'];
-  const html = players.slice(0, 10).map((p, i) => {
-    const isMe = (p.nim === myNim) || (p.nama === myName);
+  let html = '';
+  if (isDosen) {
+    html += `<div style="background:rgba(32,200,208,.12);border:1px solid rgba(32,200,208,.3);padding:10px 14px;border-radius:8px;font-size:12.5px;color:var(--meet-acc);margin-bottom:12px;text-align:center">
+      🎓 <strong>Mode Dosen / Pengawas:</strong> Skor Anda tidak dipublikasikan ke papan klasemen mahasiswa.
+    </div>`;
+  }
+
+  html += sorted.slice(0, 10).map((p, i) => {
+    const isMe = !isDosen && ((p.nim === myNim) || (p.nama === myName));
     const medal = medals[i] || `${i+1}.`;
     const pScore = p.quizScore !== undefined ? p.quizScore : (p.score || 0);
     const isPlayed = pScore > 0;

@@ -809,6 +809,19 @@ window.saveScoreToCloud = function (pertemuan, aktivitas, skor, total, detail = 
   });
 };
 
+function isDosenUser(student) {
+  if (!student) return false;
+  const nim = String(student.nim || '').trim();
+  const nama = String(student.nama || '').trim();
+  const status = String(student.status || '').trim();
+  const group = String(student.classGroup || '').trim();
+  return nim === '0206015' ||
+         status.toLowerCase() === 'dosen' ||
+         group.toLowerCase().includes('dosen') ||
+         /dewi\s*febriani|dosen/i.test(nama);
+}
+window.isDosenUser = isDosenUser;
+
 // 6. REALTIME MULTIPLAYER GAME ROOM ENGINE (P02 Games)
 window.RealtimeGameEngine = {
   activeRoomId: 'BMT-ARENA-02',
@@ -818,6 +831,12 @@ window.RealtimeGameEngine = {
   // Bergabung atau membuat Room Game
   joinRoom: function (roomId, teamName, onUpdateCallback) {
     this.activeRoomId = roomId || 'BMT-ARENA-02';
+    // If current student is Dosen, clean up any previous accidental lecturer score from the leaderboard
+    if (isDosenUser(currentStudent)) {
+      window.onCloudSyncReady(dbInstance => {
+        dbInstance.collection('games').doc(this.activeRoomId).collection('players').doc('0206015').delete().catch(()=>{});
+      });
+    }
     window.onCloudSyncReady(dbInstance => {
       const roomRef = dbInstance.collection('games').doc(this.activeRoomId);
 
@@ -825,46 +844,34 @@ window.RealtimeGameEngine = {
       roomRef.get().then(doc => {
         if (!doc.exists) {
           roomRef.set({
-            title: "Ekspedisi Transaksi BMT P02",
-            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-            activeCaseIndex: 0,
+            created: firebase.firestore.FieldValue.serverTimestamp(),
             teams: {
-              "Tim 1: Wadiah": { score: 0, members: 0 },
-              "Tim 2: Murabahah": { score: 0, members: 0 },
-              "Tim 3: Mudharabah": { score: 0, members: 0 },
-              "Tim 4: Ijarah": { score: 0, members: 0 }
+              'Wadiah': { score: 0, members: 0 },
+              'Murabahah': { score: 0, members: 0 },
+              'Mudharabah': { score: 0, members: 0 },
+              'Ijarah': { score: 0, members: 0 }
             }
           });
         }
-      }).catch(err => console.error("Error checking game room:", err));
+      });
 
-      // Realtime Listener using Firestore onSnapshot
+      // Realtime listener room
       if (this.listenerUnsubscribe) this.listenerUnsubscribe();
       this.listenerUnsubscribe = roomRef.onSnapshot(doc => {
         if (doc.exists && onUpdateCallback) {
           onUpdateCallback(doc.data());
         }
-      }, err => console.error("Error listening to game room:", err));
+      }, err => console.error("Error listening room:", err));
     });
   },
 
-  // Update Nilai Skor Tim Realtime (untuk Proyektor Dosen / Tim)
-  updateTeamScoreRealtime: function (teamName, pointDelta) {
+  // Tambah Skor Tim
+  addTeamScore: function (teamName, points) {
     window.onCloudSyncReady(dbInstance => {
       const roomRef = dbInstance.collection('games').doc(this.activeRoomId);
-
-      dbInstance.runTransaction(async transaction => {
-        const doc = await transaction.get(roomRef);
-        if (!doc.exists) return;
-        const data = doc.data();
-        const teams = data.teams || {};
-        if (teams[teamName]) {
-          teams[teamName].score = Math.max(0, (teams[teamName].score || 0) + pointDelta);
-        } else {
-          teams[teamName] = { score: Math.max(0, pointDelta), members: 0 };
-        }
-        transaction.update(roomRef, { teams: teams, lastUpdated: firebase.firestore.FieldValue.serverTimestamp() });
-      }).catch(err => console.error("Error updating team score:", err));
+      const updateObj = {};
+      updateObj[`teams.${teamName}.score`] = firebase.firestore.FieldValue.increment(points);
+      roomRef.update(updateObj).catch(err => console.error("Error update team score:", err));
     });
   },
 
@@ -872,6 +879,11 @@ window.RealtimeGameEngine = {
   submitPlayerScore: function (playerScore, comboCount, roundCompleted, gameScoresBreakdown, activeGameIndex) {
     if (!currentStudent.nim) {
       showIdentityModal();
+      return;
+    }
+    // Dosen diproteksi: tidak akan dimasukkan ke papan klasemen mahasiswa
+    if (isDosenUser(currentStudent)) {
+      console.log("ℹ️ Mode Dosen: Skor tidak dipublikasikan ke papan klasemen mahasiswa.");
       return;
     }
     window.onCloudSyncReady(dbInstance => {
@@ -901,11 +913,17 @@ window.RealtimeGameEngine = {
       if (this.leaderboardUnsubscribe) this.leaderboardUnsubscribe();
       this.leaderboardUnsubscribe = dbInstance.collection('games').doc(this.activeRoomId).collection('players')
         .orderBy('score', 'desc')
-        .limit(10)
+        .limit(25)
         .onSnapshot(snapshot => {
           const players = [];
-          snapshot.forEach(doc => players.push(doc.data()));
-          if (onLeaderboardChange) onLeaderboardChange(players);
+          snapshot.forEach(doc => {
+            const p = doc.data();
+            // Filter out dosen records
+            if (!isDosenUser(p)) {
+              players.push(p);
+            }
+          });
+          if (onLeaderboardChange) onLeaderboardChange(players.slice(0, 10));
         }, err => console.error("Error listening leaderboard:", err));
     });
   }

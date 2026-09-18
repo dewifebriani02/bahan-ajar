@@ -1534,22 +1534,47 @@ function closeLeaderboardModal(){ document.getElementById('modalLeaderboard').cl
 
 function renderLeaderboard(players){
   const box = document.getElementById('leaderboardList'); if(!box) return;
+  const isDosen = window.isDosenUser && window.isDosenUser(window.currentStudent);
   const myName = (window.currentStudent && window.currentStudent.nama) || 'Anda';
-  const sorted = [...(players||[])].sort((a,b)=>(b.score||0)-(a.score||0));
-  const myRank = sorted.findIndex(p=>p.nama===myName)+1;
-  document.getElementById('hudRank').textContent = myRank>0 ? `#${myRank}` : '#—';
-  if(!sorted.length){ box.innerHTML = '<div style="text-align:center;color:var(--txl)">Belum ada data klasemen.</div>'; return; }
-  box.innerHTML = sorted.slice(0,10).map((p,i)=>`
+  
+  // Filter out any Dosen from display
+  const validPlayers = (players || []).filter(p => !(window.isDosenUser && window.isDosenUser(p)) && p.nim !== '0206015' && !/dewi\s*febriani|dosen/i.test(p.nama || ''));
+  const sorted = [...validPlayers].sort((a,b)=>(b.score||0)-(a.score||0));
+  
+  if (isDosen) {
+    document.getElementById('hudRank').textContent = 'Dosen 🎓';
+  } else {
+    const myRank = sorted.findIndex(p=>p.nama===myName)+1;
+    document.getElementById('hudRank').textContent = myRank>0 ? `#${myRank}` : '#—';
+  }
+
+  if(!sorted.length){ 
+    box.innerHTML = isDosen 
+      ? '<div style="background:rgba(56,189,248,.12);border:1px solid rgba(56,189,248,.3);padding:10px 14px;border-radius:8px;font-size:12px;color:var(--pri);text-align:center">🎓 <strong>Mode Dosen / Pengawas:</strong> Skor Anda tidak ditampilkan di klasemen mahasiswa.</div><div style="text-align:center;color:var(--txl);margin-top:12px">Belum ada data skor mahasiswa.</div>'
+      : '<div style="text-align:center;color:var(--txl)">Belum ada data klasemen.</div>'; 
+    return; 
+  }
+  
+  let html = '';
+  if (isDosen) {
+    html += `<div style="background:rgba(56,189,248,.12);border:1px solid rgba(56,189,248,.3);padding:10px 14px;border-radius:8px;font-size:12.5px;color:var(--pri);margin-bottom:12px;text-align:center">
+      🎓 <strong>Mode Dosen / Pengawas:</strong> Skor Anda tidak dipublikasikan ke papan klasemen mahasiswa.
+    </div>`;
+  }
+
+  html += sorted.slice(0,10).map((p,i)=>`
     <div style="background:#060C14;border:1px solid var(--bd);padding:10px 14px;border-radius:8px;display:flex;justify-content:space-between;align-items:center">
       <div style="display:flex;align-items:center;gap:10px">
         <span style="font-weight:800;font-size:16px">${['🥇','🥈','🥉'][i]||(i+1)+'.'}</span>
         <div>
-          <div style="font-weight:700;color:#fff">${p.nama||'Mahasiswa'} ${p.nama===myName?'<span style="font-size:10px;background:#F97316;color:#fff;padding:1px 6px;border-radius:4px">ANDA</span>':''}</div>
+          <div style="font-weight:700;color:#fff">${p.nama||'Mahasiswa'} ${(!isDosen && p.nama===myName)?'<span style="font-size:10px;background:#F97316;color:#fff;padding:1px 6px;border-radius:4px">ANDA</span>':''}</div>
           <div style="font-size:11px;color:var(--txm)">NIM: ${p.nim||'-'}</div>
         </div>
       </div>
       <div style="font-family:'Source Code Pro',monospace;font-weight:700;color:#38BDF8">${p.score||0} pts</div>
     </div>`).join('');
+    
+  box.innerHTML = html;
 }
 
 function triggerManualSync(){
@@ -1559,7 +1584,7 @@ function triggerManualSync(){
     RealtimeGameEngine.submitPlayerScore(total, 1, done, [...scores]);
   }
   sGood();
-  alert(`☁️ Skor total (${total} pts) berhasil disinkronkan ke Cloud Firestore!`);
+  alert(`☁️ Skor total (${total} pts) berhasil diperbarui!`);
 }
 
 if(window.RealtimeGameEngine){
