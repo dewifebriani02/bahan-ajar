@@ -565,7 +565,7 @@ body{
   <div class="hud-stats">
     <button class="hud-pill hud-rank-btn" onclick="openLeaderboardModal()">🏆 Klasemen <span id="hudRank">#—</span></button>
     <div class="hud-pill hud-score">🏅 <span id="grandTotal">0</span> pts</div>
-    <button class="hud-pill" style="cursor:pointer" onclick="openForfeitModal()">🎪 Roda Hukuman</button>
+    <button class="hud-pill" style="cursor:pointer" onclick="openForfeitModal()">🎪 Roda Tantangan</button>
     <button class="hud-pill" style="cursor:pointer" onclick="toggleSound()" id="soundBtn">🔊 ON</button>
   </div>
 </div>
@@ -830,13 +830,13 @@ body{
 
 </main>
 
-<!-- FORFEIT / PUNISHMENT MODAL -->
+<!-- RODA TANTANGAN EDUKATIF / FORFEIT MODAL -->
 <div id="modalPunishment" class="modal-overlay" onclick="if(event.target===this) closeForfeitModal()">
   <div class="modal-box">
     <div class="modal-hd" style="background:linear-gradient(135deg,#5A0A10,#1B0C18)">
       <div>
-        <h3 class="modal-title">🎪 Roda Konsekuensi &amp; Hukuman Seru</h3>
-        <div style="font-size:11.5px;color:rgba(255,255,255,.75)">Putar roda hukuman &amp; raih +50 Poin Sportivitas!</div>
+        <h3 class="modal-title">🎪 Roda Tantangan Edukatif &amp; Sportivitas</h3>
+        <div style="font-size:11.5px;color:rgba(255,255,255,.75)">Putar roda tantangan seru &amp; raih +50 Poin Sportivitas!</div>
       </div>
       <button class="modal-close" onclick="closeForfeitModal()">✕</button>
     </div>
@@ -847,8 +847,8 @@ body{
           <canvas id="forfeitWheelCanvas" width="280" height="280"></canvas>
           <div class="wheel-hub">🤡</div>
         </div>
-        <div class="wheel-result" id="forfeitWheelTxt">Putar roda untuk mengacak hukuman!</div>
-        <button class="btn-spin" id="btnSpinForfeit" onclick="spinForfeitWheel()" style="background:#EF4444;border-color:#EF4444">🎡 Putar Roda Hukuman</button>
+        <div class="wheel-result" id="forfeitWheelTxt">Putar roda untuk menentukan tantangan edukatif!</div>
+        <button class="btn-spin" id="btnSpinForfeit" onclick="spinForfeitWheel()" style="background:#EF4444;border-color:#EF4444">🎡 Putar Roda Tantangan</button>
       </div>
 
       <div id="activeForfeitBox" style="display:none;text-align:left;background:#060C14;border:1px solid var(--bd);border-radius:8px;padding:16px;margin-top:14px">
@@ -1485,7 +1485,7 @@ function spinForfeitWheel(){
   if(forfeitSpinning) return;
   forfeitSpinning = true;
   document.getElementById('btnSpinForfeit').disabled = true;
-  document.getElementById('forfeitWheelTxt').textContent = 'Roda berputar menentukan hukuman…';
+  document.getElementById('forfeitWheelTxt').textContent = 'Roda berputar menentukan tantangan edukatif…';
   const dur = 3000 + Math.random()*500;
   const target = forfeitWheelAngle + Math.PI*2*(5 + Math.random()*3);
   const start = forfeitWheelAngle, t0 = performance.now();

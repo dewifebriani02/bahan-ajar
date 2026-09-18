@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kuis Interaktif &amp; Roda Hukuman — ADA P02 (pandas Essentials)</title>
+<title>Kuis Interaktif &amp; Roda Tantangan Edukatif — ADA P02 (pandas Essentials)</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600;700&family=Source+Code+Pro:wght@600;700;800&display=swap">
 <script src="../../cloud-sync.js?v=20260912b"></script>
 <style>
@@ -272,7 +272,7 @@ body{
   </div>
   <div class="topbar-right">
     <button class="btn-forfeit-top" onclick="openForfeitModal()">
-      <span>🎪 Roda Hukuman</span>
+      <span>🎪 Roda Tantangan Edukatif</span>
     </button>
     <button class="btn-lb-top" onclick="toggleLeaderboardModal(true)">
       <span>🏆 Klasemen Live</span>
@@ -287,7 +287,7 @@ body{
     <div class="hero-tag">⚡ LIVE QUIZ ARENA · APPLIED DATA ANALYTICS (ADA P02)</div>
     <h1 class="hero-h1">Uji Pemahaman pandas: Filtering, Groupby, &amp; Merge</h1>
     <p class="hero-desc">
-      Jawab 10 studi kasus kode pandas Python, manipulasi DataFrame bisnis, aggregasi statistik, dan integritas data syariah. Raih skor tertinggi dan hindari putaran <strong>Roda Hukuman Edukatif</strong>!
+      Jawab 10 studi kasus kode pandas Python, manipulasi DataFrame bisnis, aggregasi statistik, dan integritas data syariah. Raih skor tertinggi dan hindari putaran <strong>Roda Tantangan Edukatif</strong>!
     </p>
   </section>
 
@@ -367,7 +367,7 @@ body{
 
     <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
       <button class="btn-next" onclick="restartQuiz()">🔄 Ulangi Kuis</button>
-      <button class="btn-forfeit-top" style="padding:10px 20px;font-size:14px" onclick="openForfeitModal()">🎪 Putar Roda Hukuman</button>
+      <button class="btn-forfeit-top" style="padding:10px 20px;font-size:14px" onclick="openForfeitModal()">🎪 Putar Roda Tantangan</button>
       <button class="btn-lb-top" style="padding:10px 20px;font-size:14px" onclick="toggleLeaderboardModal(true)">🏆 Cek Klasemen Akhir</button>
     </div>
   </section>
@@ -412,13 +412,13 @@ body{
   </div>
 </div>
 
-<!-- RODA HUKUMAN / FORFEIT MODAL -->
+<!-- RODA TANTANGAN / FORFEIT MODAL -->
 <div id="modalForfeit" class="modal-overlay" onclick="if(event.target===this) closeForfeitModal()">
   <div class="modal-win" style="max-width:520px">
     <div class="modal-hd wheel">
       <div>
-        <h3 class="modal-title">🎪 Roda Konsekuensi &amp; Hukuman Seru</h3>
-        <div style="font-size:11.5px;color:rgba(255,255,255,.75);margin-top:2px">Putar roda untuk tantangan edukatif data science di kelas &amp; raih +50 Poin Sportivitas!</div>
+        <h3 class="modal-title">🎪 Roda Tantangan Edukatif &amp; Sportivitas</h3>
+        <div style="font-size:11.5px;color:rgba(255,255,255,.75);margin-top:2px">Putar roda tantangan edukatif data science di kelas &amp; raih +50 Poin Sportivitas!</div>
       </div>
       <button class="modal-close" onclick="closeForfeitModal()">✕</button>
     </div>
@@ -437,7 +437,7 @@ body{
 
       <div style="margin-top:12px">
         <button class="btn-forfeit-top" id="btnSpinWheel" style="padding:10px 24px;font-size:14px;margin:0 auto" onclick="spinForfeitWheel()">
-          🎡 Putar Roda Hukuman
+          🎡 Putar Roda Tantangan
         </button>
       </div>
 
@@ -805,7 +805,7 @@ function selectAnswer(chosenIdx){
     streak = 0;
     document.getElementById('hudCombo').textContent = '🔥 x1';
     expHd.innerHTML = `❌ <span style="color:#F87171">Kurang Tepat</span>`;
-    expTxt.innerHTML = q.exp + `<div style="margin-top:8px;font-size:12px;color:#FFB885">💡 <em>Jika skor Anda tertinggal di akhir, putar Roda Hukuman untuk tebus poin!</em></div>`;
+    expTxt.innerHTML = q.exp + `<div style="margin-top:8px;font-size:12px;color:#FFB885">💡 <em>Jika skor Anda tertinggal di akhir, putar Roda Tantangan untuk raih bonus poin!</em></div>`;
   }
 
   syncPlayerScoreLive();
@@ -869,7 +869,7 @@ function showQuizResult(){
   } else {
     medalEl.textContent = '🎪';
     titleEl.textContent = 'Perlu Latihan Lagi & Tebus Tantangan!';
-    subEl.textContent = `Akurasi Anda ${pct}% (${correctCount}/10 soal benar). Ayo putar Roda Hukuman Edukatif untuk raih bonus poin sportivitas!`;
+    subEl.textContent = `Akurasi Anda ${pct}% (${correctCount}/10 soal benar). Ayo putar Roda Tantangan Edukatif untuk raih bonus poin sportivitas!`;
   }
 
   syncPlayerScoreLive();
@@ -991,7 +991,7 @@ function initCloudSync(){
   renderLeaderboardUI(DEFAULT_QUIZ_ROSTER);
 }
 
-/* ══════════ RODA HUKUMAN & FORFEITS (DATA SCIENCE & PANDAS THEME) ══════════ */
+/* ══════════ RODA TANTANGAN EDUKATIF & SPORTIVITAS (DATA SCIENCE & PANDAS THEME) ══════════ */
 const FORFEIT_SECTORS = [
   { label:'Sintaks',  title:'💡 Duta Sintaks pandas (30 Detik)', desc:'Jelaskan secara lisan perbedaan mendasar antara .loc dan .iloc dengan contoh kasus nyata di depan kelas!' },
   { label:'Murottal', title:'📜 Murottal Nilai Iqra\' (QS. Al-\'Alaq)', desc:'Bacakan QS. Al-\'Alaq 1–5 beserta hikmah pentingnya membaca dan meneliti data dengan jujur.' },
