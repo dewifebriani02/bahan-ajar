@@ -543,6 +543,69 @@ body{
 }
 .modal-body{padding:20px}
 
+/* ── CLASS FILTER TABS & BADGES ── */
+.class-filter-tabs{
+  display:flex;
+  gap:6px;
+  background:rgba(255,255,255,.04);
+  padding:4px;
+  border-radius:10px;
+  margin-bottom:14px;
+  border:1px solid var(--bd);
+}
+.class-tab-btn{
+  flex:1;
+  padding:8px 10px;
+  font-size:12px;
+  font-weight:700;
+  font-family:inherit;
+  border-radius:8px;
+  border:1px solid transparent;
+  background:transparent;
+  color:var(--txm);
+  cursor:pointer;
+  transition:all .2s ease;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  white-space:nowrap;
+}
+.class-tab-btn:hover{
+  color:#fff;
+  background:rgba(255,255,255,.08);
+}
+.class-tab-btn.active{
+  background:linear-gradient(135deg, #0284C7, #0369A1);
+  color:#fff;
+  border-color:rgba(56, 189, 248, 0.4);
+  box-shadow:0 2px 8px rgba(2, 132, 199, 0.35);
+}
+.tab-count{
+  font-size:10.5px;
+  opacity:.8;
+  font-family:'Source Code Pro',monospace;
+}
+.class-badge{
+  font-size:10px;
+  padding:1px 6px;
+  border-radius:4px;
+  font-weight:700;
+  display:inline-flex;
+  align-items:center;
+  gap:3px;
+}
+.class-badge-reguler{
+  background:rgba(56, 189, 248, 0.15);
+  color:#38BDF8;
+  border:1px solid rgba(56, 189, 248, 0.35);
+}
+.class-badge-karyawan{
+  background:rgba(245, 158, 11, 0.15);
+  color:#FBBF24;
+  border:1px solid rgba(245, 158, 11, 0.35);
+}
+
 /* ── FOOTER ── */
 .ft{
   background:#060C14;
@@ -869,7 +932,7 @@ body{
 
 <!-- LEADERBOARD MODAL -->
 <div id="modalLeaderboard" class="modal-overlay" onclick="if(event.target===this) closeLeaderboardModal()">
-  <div class="modal-box" style="max-width:560px">
+  <div class="modal-box" style="max-width:580px">
     <div class="modal-hd">
       <div>
         <h3 class="modal-title">🏆 Klasemen Real-Time Kelas</h3>
@@ -878,6 +941,19 @@ body{
       <button class="modal-close" onclick="closeLeaderboardModal()">✕</button>
     </div>
     <div class="modal-body">
+      <!-- CLASS FILTER TABS -->
+      <div class="class-filter-tabs">
+        <button id="tabClassAll" class="class-tab-btn active" onclick="setClassFilter('all')">
+          🏢 Semua Kelas <span class="tab-count" id="countAll"></span>
+        </button>
+        <button id="tabClassReguler" class="class-tab-btn" onclick="setClassFilter('reguler')">
+          🎓 Reguler <span class="tab-count" id="countReguler"></span>
+        </button>
+        <button id="tabClassKaryawan" class="class-tab-btn" onclick="setClassFilter('karyawan')">
+          💼 Karyawan <span class="tab-count" id="countKaryawan"></span>
+        </button>
+      </div>
+
       <div id="leaderboardList" style="display:grid;gap:8px">
         <div style="color:var(--txl);font-size:12.5px;text-align:center;padding:16px 0">Memuat klasemen real-time...</div>
       </div>
@@ -1528,30 +1604,125 @@ function completeForfeit(){
   closeForfeitModal();
 }
 
-/* ══════════ LEADERBOARD MODAL ══════════ */
-function openLeaderboardModal(){ document.getElementById('modalLeaderboard').classList.add('show'); }
-function closeLeaderboardModal(){ document.getElementById('modalLeaderboard').classList.remove('show'); }
+/* ══════════ LEADERBOARD & CLASS FILTERING ══════════ */
+let currentClassFilter = 'all'; // 'all' | 'reguler' | 'karyawan'
+let rawLeaderboardData = [];
+let classFilterInitialized = false;
+
+function initClassFilterDefault(){
+  if (classFilterInitialized) return;
+  const nim = (window.currentStudent && window.currentStudent.nim) || localStorage.getItem('tazkia_student_nim') || '';
+  const student = (window.findStudentByNim && window.findStudentByNim(nim)) || null;
+  const classGroup = (student && student.classGroup) || '';
+  
+  if (/karyawan/i.test(classGroup)) {
+    currentClassFilter = 'karyawan';
+  } else if (/reguler/i.test(classGroup)) {
+    currentClassFilter = 'reguler';
+  } else {
+    currentClassFilter = 'all';
+  }
+  classFilterInitialized = true;
+  updateClassTabButtons();
+}
+
+function setClassFilter(filter){
+  currentClassFilter = filter;
+  updateClassTabButtons();
+  if(rawLeaderboardData && rawLeaderboardData.length){
+    renderLeaderboard(rawLeaderboardData);
+  }
+}
+
+function updateClassTabButtons(){
+  document.querySelectorAll('.class-tab-btn').forEach(b => b.classList.remove('active'));
+  const activeBtn = document.getElementById(
+    currentClassFilter === 'reguler' ? 'tabClassReguler' : 
+    currentClassFilter === 'karyawan' ? 'tabClassKaryawan' : 'tabClassAll'
+  );
+  if(activeBtn) activeBtn.classList.add('active');
+}
+
+function openLeaderboardModal(){ 
+  initClassFilterDefault();
+  document.getElementById('modalLeaderboard').classList.add('show'); 
+}
+function closeLeaderboardModal(){ 
+  document.getElementById('modalLeaderboard').classList.remove('show'); 
+}
 
 function renderLeaderboard(players){
-  const box = document.getElementById('leaderboardList'); if(!box) return;
+  rawLeaderboardData = players || [];
+  initClassFilterDefault();
+
+  const box = document.getElementById('leaderboardList'); 
+  if(!box) return;
+
   const isDosen = window.isDosenUser && window.isDosenUser(window.currentStudent);
-  const myName = (window.currentStudent && window.currentStudent.nama) || 'Anda';
+  const myNim = (window.currentStudent && window.currentStudent.nim) || localStorage.getItem('tazkia_student_nim') || '';
+  const myName = (window.currentStudent && window.currentStudent.nama) || localStorage.getItem('tazkia_student_nama') || 'Anda';
   
-  // Filter out any Dosen from display
-  const validPlayers = (players || []).filter(p => !(window.isDosenUser && window.isDosenUser(p)) && p.nim !== '0206015' && !/dewi\s*febriani|dosen/i.test(p.nama || ''));
-  const sorted = [...validPlayers].sort((a,b)=>(b.score||0)-(a.score||0));
+  const studentInfo = (window.findStudentByNim && window.findStudentByNim(myNim)) || null;
+  const myClassGroup = (studentInfo && studentInfo.classGroup) || '';
+
+  // Filter out any Dosen from display and enrich classGroup
+  const validPlayers = (players || []).filter(p => {
+    if (window.isDosenUser && window.isDosenUser(p)) return false;
+    if (p.nim === '0206015' || /dewi\s*febriani|dosen/i.test(p.nama || '')) return false;
+    return true;
+  }).map(p => {
+    let cg = p.classGroup;
+    if (!cg && p.nim && window.findStudentByNim) {
+      const s = window.findStudentByNim(p.nim);
+      if (s) cg = s.classGroup;
+    }
+    return { ...p, classGroup: cg || 'AIS - Reguler' };
+  });
+
+  // Calculate counts for badges
+  const countAll = validPlayers.length;
+  const countReg = validPlayers.filter(p => /reguler/i.test(p.classGroup || '')).length;
+  const countKar = validPlayers.filter(p => /karyawan/i.test(p.classGroup || '')).length;
+
+  const countAllEl = document.getElementById('countAll');
+  if (countAllEl) countAllEl.textContent = `(${countAll})`;
+  const countRegEl = document.getElementById('countReguler');
+  if (countRegEl) countRegEl.textContent = `(${countReg})`;
+  const countKarEl = document.getElementById('countKaryawan');
+  if (countKarEl) countKarEl.textContent = `(${countKar})`;
+
+  // Filter based on active tab
+  let filteredPlayers = validPlayers;
+  if (currentClassFilter === 'reguler') {
+    filteredPlayers = validPlayers.filter(p => /reguler/i.test(p.classGroup || ''));
+  } else if (currentClassFilter === 'karyawan') {
+    filteredPlayers = validPlayers.filter(p => /karyawan/i.test(p.classGroup || ''));
+  }
+
+  const sorted = [...filteredPlayers].sort((a,b)=>(b.score||0)-(a.score||0));
   
+  // Compute HUD rank relative to student's own class group
   if (isDosen) {
-    document.getElementById('hudRank').textContent = 'Dosen 🎓';
+    const hud = document.getElementById('hudRank');
+    if (hud) hud.textContent = 'Dosen 🎓';
   } else {
-    const myRank = sorted.findIndex(p=>p.nama===myName)+1;
-    document.getElementById('hudRank').textContent = myRank>0 ? `#${myRank}` : '#—';
+    let myGroupPlayers = validPlayers;
+    if (/karyawan/i.test(myClassGroup)) {
+      myGroupPlayers = validPlayers.filter(p => /karyawan/i.test(p.classGroup || ''));
+    } else if (/reguler/i.test(myClassGroup)) {
+      myGroupPlayers = validPlayers.filter(p => /reguler/i.test(p.classGroup || ''));
+    }
+    const myGroupSorted = [...myGroupPlayers].sort((a,b)=>(b.score||0)-(a.score||0));
+    const myRankInClass = myGroupSorted.findIndex(p => (myNim && p.nim === myNim) || p.nama === myName) + 1;
+    const hud = document.getElementById('hudRank');
+    if (hud) hud.textContent = myRankInClass > 0 ? `#${myRankInClass}` : '#—';
   }
 
   if(!sorted.length){ 
+    const classNameLabel = currentClassFilter === 'reguler' ? 'Kelas Reguler' : currentClassFilter === 'karyawan' ? 'Kelas Karyawan' : 'Semua Kelas';
     box.innerHTML = isDosen 
-      ? '<div style="background:rgba(56,189,248,.12);border:1px solid rgba(56,189,248,.3);padding:10px 14px;border-radius:8px;font-size:12px;color:var(--pri);text-align:center">🎓 <strong>Mode Dosen / Pengawas:</strong> Skor Anda tidak ditampilkan di klasemen mahasiswa.</div><div style="text-align:center;color:var(--txl);margin-top:12px">Belum ada data skor mahasiswa.</div>'
-      : '<div style="text-align:center;color:var(--txl)">Belum ada data klasemen.</div>'; 
+      ? `<div style="background:rgba(56,189,248,.12);border:1px solid rgba(56,189,248,.3);padding:10px 14px;border-radius:8px;font-size:12px;color:var(--pri);text-align:center">🎓 <strong>Mode Dosen / Pengawas:</strong> Skor Anda tidak ditampilkan di klasemen mahasiswa.</div><div style="text-align:center;color:var(--txl);padding:16px 0">Belum ada data skor untuk <strong>${classNameLabel}</strong>.</div>`
+      : `<div style="text-align:center;color:var(--txl);padding:16px 0">Belum ada data klasemen untuk <strong>${classNameLabel}</strong>.</div>`; 
     return; 
   }
   
@@ -1562,17 +1733,29 @@ function renderLeaderboard(players){
     </div>`;
   }
 
-  html += sorted.slice(0,10).map((p,i)=>`
-    <div style="background:#060C14;border:1px solid var(--bd);padding:10px 14px;border-radius:8px;display:flex;justify-content:space-between;align-items:center">
+  html += sorted.slice(0,15).map((p,i)=>{
+    const isMe = !isDosen && ((myNim && p.nim === myNim) || (p.nama === myName));
+    const isKaryawan = /karyawan/i.test(p.classGroup || '');
+    const classBadge = isKaryawan 
+      ? '<span class="class-badge class-badge-karyawan">💼 Karyawan</span>' 
+      : '<span class="class-badge class-badge-reguler">🎓 Reguler</span>';
+
+    return `
+    <div style="background:#060C14;border:1px solid ${isMe ? '#F97316' : 'var(--bd)'};padding:10px 14px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;${isMe ? 'box-shadow:0 0 12px rgba(249,115,22,.2);background:rgba(249,115,22,.04)' : ''}">
       <div style="display:flex;align-items:center;gap:10px">
-        <span style="font-weight:800;font-size:16px">${['🥇','🥈','🥉'][i]||(i+1)+'.'}</span>
+        <span style="font-weight:800;font-size:16px;width:24px;text-align:center">${['🥇','🥈','🥉'][i]||(i+1)+'.'}</span>
         <div>
-          <div style="font-weight:700;color:#fff">${p.nama||'Mahasiswa'} ${(!isDosen && p.nama===myName)?'<span style="font-size:10px;background:#F97316;color:#fff;padding:1px 6px;border-radius:4px">ANDA</span>':''}</div>
+          <div style="font-weight:700;color:#fff;display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+            ${p.nama||'Mahasiswa'} 
+            ${isMe ? '<span style="font-size:10px;background:#F97316;color:#fff;padding:1px 6px;border-radius:4px;font-weight:800">ANDA</span>' : ''}
+            ${classBadge}
+          </div>
           <div style="font-size:11px;color:var(--txm)">NIM: ${p.nim||'-'}</div>
         </div>
       </div>
-      <div style="font-family:'Source Code Pro',monospace;font-weight:700;color:#38BDF8">${p.score||0} pts</div>
-    </div>`).join('');
+      <div style="font-family:'Source Code Pro',monospace;font-weight:700;font-size:15px;color:#38BDF8">${p.score||0} pts</div>
+    </div>`;
+  }).join('');
     
   box.innerHTML = html;
 }
@@ -1590,6 +1773,7 @@ function triggerManualSync(){
 if(window.RealtimeGameEngine){
   RealtimeGameEngine.listenLeaderboard(players=>renderLeaderboard(players));
 }
+initClassFilterDefault();
 sbRender();
 </script>
 

@@ -882,13 +882,17 @@ function restartQuiz(){
 /* ══════════ CLOUD FIRESTORE LEADERBOARD SYNC (ADA P02) ══════════ */
 let liveLeaderboardPlayers = [];
 const DEFAULT_QUIZ_ROSTER = [
-  { nim: '2510102006', nama: 'Nurjanah', quizScore: 0, updatedAt: '-' },
-  { nim: '2510102001', nama: 'Zahra Qatrun Nada', quizScore: 0, updatedAt: '-' },
-  { nim: '2510102033', nama: 'RAGIL ADITIYA', quizScore: 0, updatedAt: '-' },
-  { nim: '2510102024', nama: 'Muhammad Ibrahim', quizScore: 0, updatedAt: '-' },
-  { nim: '2510102012', nama: 'Parvez Athaya Rifa Adrian', quizScore: 0, updatedAt: '-' },
-  { nim: '2510102011', nama: 'Era Firda Fajriah', quizScore: 0, updatedAt: '-' },
-  { nim: '2510102005', nama: 'Muhammad Isnan Azuhri', quizScore: 0, updatedAt: '-' }
+  { nim: '2410102002', nama: 'Aliffa Rahmadanni', classGroup: 'ADA / BIV', quizScore: 0, updatedAt: '-' },
+  { nim: '2410102004', nama: 'Fairuz Alya Manora', classGroup: 'ADA / BIV', quizScore: 0, updatedAt: '-' },
+  { nim: '2410102005', nama: 'Suciyanti', classGroup: 'ADA / BIV', quizScore: 0, updatedAt: '-' },
+  { nim: '2410102006', nama: 'Zenieta Nijwa', classGroup: 'ADA / BIV', quizScore: 0, updatedAt: '-' },
+  { nim: '2410102007', nama: 'Rasti Septa Sari', classGroup: 'ADA / BIV', quizScore: 0, updatedAt: '-' },
+  { nim: '2410102008', nama: 'Liana Tasa', classGroup: 'ADA / BIV', quizScore: 0, updatedAt: '-' },
+  { nim: '2410102009', nama: 'Utami Apri Robi Laijah', classGroup: 'ADA / BIV', quizScore: 0, updatedAt: '-' },
+  { nim: '2410102010', nama: 'Izza Arydani', classGroup: 'ADA / BIV', quizScore: 0, updatedAt: '-' },
+  { nim: '2410102011', nama: 'Mohamad Fikri Zim Aufar', classGroup: 'ADA / BIV', quizScore: 0, updatedAt: '-' },
+  { nim: '2410102012', nama: 'Muhammad Waqif Al Ghifari', classGroup: 'ADA / BIV', quizScore: 0, updatedAt: '-' },
+  { nim: '2410102013', nama: 'Ibnu Hajar', classGroup: 'ADA / BIV', quizScore: 0, updatedAt: '-' }
 ];
 
 function syncPlayerScoreLive(){
@@ -917,7 +921,14 @@ function updateLocalLeaderboard(score, myNim, myName){
       list[idx].quizScore = Math.max(list[idx].quizScore || 0, score);
       list[idx].updatedAt = now;
     } else {
-      list.push({ nim: myNim, nama: myName, quizScore: score, updatedAt: now });
+      const studentInfo = window.findStudentByNim && window.findStudentByNim(myNim);
+      list.push({ 
+        nim: myNim, 
+        nama: myName, 
+        classGroup: (studentInfo && studentInfo.classGroup) || 'ADA / BIV',
+        quizScore: score, 
+        updatedAt: now 
+      });
     }
   }
 
@@ -973,20 +984,22 @@ function renderLeaderboardUI(players){
     </div>`;
   }
 
-  html += sorted.slice(0, 10).map((p, i) => {
+  html += sorted.slice(0, 15).map((p, i) => {
     const isMe = !isDosen && ((p.nim === myNim) || (p.nama === myName));
     const medal = medals[i] || `${i+1}.`;
     const pScore = p.quizScore !== undefined ? p.quizScore : (p.score || 0);
     const isPlayed = pScore > 0;
+    const classBadge = '<span style="font-size:10px;background:rgba(32,200,208,.15);color:var(--meet-acc);border:1px solid rgba(32,200,208,.35);padding:1px 6px;border-radius:4px;font-weight:700">📊 ADA / BIV</span>';
 
     return `
       <div class="lb-row ${isMe ? 'lb-row-me' : ''}" style="${!isPlayed ? 'opacity:.65' : ''}">
         <div style="display:flex;align-items:center;gap:10px">
           <span style="font-size:16px;font-weight:800;width:24px;text-align:center">${medal}</span>
           <div>
-            <div style="font-weight:700;font-size:13px;color:var(--tx)">
+            <div style="font-weight:700;font-size:13px;color:var(--tx);display:flex;align-items:center;gap:6px;flex-wrap:wrap">
               ${p.nama || 'Mahasiswa'}
-              ${isMe ? '<span style="background:var(--meet-acc);color:#030E18;font-size:10px;font-weight:800;padding:1px 6px;border-radius:4px;margin-left:4px">ANDA</span>' : ''}
+              ${isMe ? '<span style="background:var(--meet-acc);color:#030E18;font-size:10px;font-weight:800;padding:1px 6px;border-radius:4px">ANDA</span>' : ''}
+              ${classBadge}
             </div>
             <div style="font-size:11px;color:var(--txm)">NIM: ${p.nim || '-'} · ${isPlayed ? 'Skor Riil Kuis' : 'Belum Mulai Kuis'}</div>
           </div>

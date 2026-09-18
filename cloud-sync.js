@@ -888,10 +888,13 @@ window.RealtimeGameEngine = {
     }
     window.onCloudSyncReady(dbInstance => {
       const roomRef = dbInstance.collection('games').doc(this.activeRoomId);
+      const studentInfo = findStudentByNim(currentStudent.nim);
+      const classGroup = (studentInfo && studentInfo.classGroup) || currentStudent.classGroup || 'Reguler';
 
       const playerEntry = {
         nim: currentStudent.nim,
         nama: currentStudent.nama,
+        classGroup: classGroup,
         score: playerScore,
         combo: comboCount,
         round: roundCompleted,
@@ -913,17 +916,21 @@ window.RealtimeGameEngine = {
       if (this.leaderboardUnsubscribe) this.leaderboardUnsubscribe();
       this.leaderboardUnsubscribe = dbInstance.collection('games').doc(this.activeRoomId).collection('players')
         .orderBy('score', 'desc')
-        .limit(25)
+        .limit(100)
         .onSnapshot(snapshot => {
           const players = [];
           snapshot.forEach(doc => {
             const p = doc.data();
             // Filter out dosen records
             if (!isDosenUser(p)) {
+              if (!p.classGroup && p.nim) {
+                const s = findStudentByNim(p.nim);
+                if (s && s.classGroup) p.classGroup = s.classGroup;
+              }
               players.push(p);
             }
           });
-          if (onLeaderboardChange) onLeaderboardChange(players.slice(0, 10));
+          if (onLeaderboardChange) onLeaderboardChange(players);
         }, err => console.error("Error listening leaderboard:", err));
     });
   }
