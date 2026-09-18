@@ -217,6 +217,28 @@ ul.lst li strong { color: var(--tx); }
 .match-item:hover { border-color: var(--acc); }
 .match-item.selected { border-color: var(--acc); background: var(--accl); color: var(--pri); font-weight: 600; }
 
+/* ── AI VS POWER BI MATRIX & HYBRID FLOW ── */
+.comp-table-wrap { overflow-x: auto; margin: 18px 0; border: 1px solid var(--bs); border-radius: var(--r); }
+.comp-table { width: 100%; border-collapse: collapse; font-size: 13.5px; background: var(--sf); }
+.comp-table th { background: var(--sf2); color: var(--pri); font-weight: 700; padding: 12px 16px; border-bottom: 2px solid var(--bs); text-align: left; }
+.comp-table td { padding: 12px 16px; border-bottom: 1px solid var(--bs); color: var(--txm); vertical-align: top; }
+.comp-table tr:last-child td { border-bottom: none; }
+.comp-table .col-dim { font-weight: 700; color: var(--tx); width: 22%; }
+.comp-table .col-ai { background: rgba(96,48,176,.03); width: 39%; }
+.comp-table .col-pbi { background: rgba(192,144,48,.04); width: 39%; }
+.badge-ai { display: inline-block; font-size: 10.5px; font-weight: 700; color: #6030B0; background: #EEE0FA; padding: 2px 8px; border-radius: 10px; margin-bottom: 4px; }
+.badge-pbi { display: inline-block; font-size: 10.5px; font-weight: 700; color: #8A6010; background: #F8EDD0; padding: 2px 8px; border-radius: 10px; margin-bottom: 4px; }
+
+.hybrid-flow-box { background: linear-gradient(135deg, var(--meet-mid), var(--meet-to)); border-radius: var(--r); padding: 20px 22px; color: #fff; margin: 18px 0; }
+.hybrid-flow-title { font-family: 'Amiri', serif; font-size: 18px; font-weight: 700; color: var(--meet-acc); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+.hybrid-steps { display: grid; grid-template-columns: 1fr auto 1fr; gap: 12px; align-items: center; }
+@media (max-width: 640px) { .hybrid-steps { grid-template-columns: 1fr; } .hybrid-arrow { transform: rotate(90deg); margin: 6px auto; } }
+.h-step-card { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.15); border-radius: var(--rs); padding: 14px 16px; }
+.h-step-tag { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--meet-acc); margin-bottom: 4px; }
+.h-step-title { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+.h-step-desc { font-size: 12.5px; color: rgba(255,255,255,.8); line-height: 1.5; margin: 0; }
+.hybrid-arrow { font-size: 22px; color: var(--meet-acc); font-weight: 700; }
+
 /* ── SUBMISSION & COMPLETION ── */
 .quiz-submit-row { display: flex; align-items: center; gap: 14px; margin-top: 20px; }
 .btn-submit { background: linear-gradient(135deg, var(--meet-mid), var(--meet-acc)); color: #fff; border: none; border-radius: 20px; padding: 11px 26px; font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer; }
@@ -248,12 +270,12 @@ ul.lst li strong { color: var(--tx); }
       <span class="hd-kode">BIV-301 · 3 SKS</span>
     </div>
     <h1 class="hd-title">Prinsip Desain Visualisasi: Pilih Chart yang Tepat</h1>
-    <p class="hd-sub">Taksonomi pemilihan grafik, eliminasi ilusi pie chart 3D, prinsip Gestalt, dan pemrosesan pre-attentive untuk dashboard eksekutif yang jujur dan berdaya guna.</p>
+    <p class="hd-sub">Taksonomi pemilihan grafik, eliminasi ilusi pie chart 3D, prinsip Gestalt, pemrosesan pre-attentive, serta perbandingan AI Agentic Visualization vs Enterprise Power BI.</p>
     <div class="hd-pills">
       <span class="hpill">Target: <strong>CPMK-1 (C2)</strong></span>
       <span class="hpill">Pilar: <strong>Chart Chooser &amp; Gestalt</strong></span>
+      <span class="hpill">Komparasi: <strong>AI Agent vs Power BI</strong></span>
       <span class="hpill">Nilai Syariah: <strong>'Adl (Keadilan Representasi)</strong></span>
-      <span class="hpill">Referensi: <strong>Cole N. Knaflic &amp; Alberto Cairo</strong></span>
     </div>
   </div>
   <div class="hd-arch">
@@ -275,6 +297,7 @@ ul.lst li strong { color: var(--tx); }
       <div class="prog-dot" id="pd4"></div>
       <div class="prog-dot" id="pd5"></div>
       <div class="prog-dot" id="pd6"></div>
+      <div class="prog-dot" id="pd7"></div>
     </div>
     <span class="prog-pct" id="progPct">0%</span>
   </div>
@@ -492,14 +515,128 @@ ul.lst li strong { color: var(--tx); }
       <li><strong>Transparansi Metrik:</strong> Selalu sertakan definisi dan basis kalkulasi data agar tidak ada ambiguitas dalam laporan akuntabilitas syariah.</li>
     </ul>
 
-    <button class="btn-paham" onclick="unlock(5)">Saya Paham, Masuk ke Interactive Simulator &amp; Kuis ➔</button>
+    <button class="btn-paham" onclick="unlock(5)">Saya Paham, Lanjut ke AI Agent vs Power BI ➔</button>
   </div>
 </div>
 
-<!-- ╔══ SEKSI 6: INTERACTIVE GAMES & EVALUASI ══╗ -->
+<!-- ╔══ SEKSI 6: AI AGENTIC VISUALIZATION VS ENTERPRISE POWER BI ══╗ -->
 <div class="sec-card locked" id="sec6">
   <div class="sec-hd">
     <div class="sec-num" id="sn6">7</div>
+    <div class="sec-title">AI Agentic Visualization vs Enterprise Power BI: Kapan Menggunakan Apa?</div>
+    <span class="sec-cpmk">CPMK-1</span>
+  </div>
+  <div class="sec-body">
+    <div class="callout case">
+      <div class="case-label">💡 Pertanyaan Kritis Mahasiswa</div>
+      <strong>"Jika Google Antigravity &amp; Gemini Agent bisa menghasilkan visualisasi data instan hanya dalam 10 detik dari sebuah dataset CSV/Excel, mengapa kita masih harus belajar Power BI dan memodelkan data secara manual?"</strong>
+    </div>
+
+    <p>Ini adalah pertanyaan fundamental di era <em>Generative AI &amp; Agentic Coding</em>. Jawabannya terletak pada perbedaan mendasar antara <strong>Exploratory Ad-Hoc Analytics (AI Agent)</strong> dan <strong>Enterprise Governed Business Intelligence (Power BI)</strong>.</p>
+
+    <h3 class="sh">5 Dimensi Komparasi Strategis</h3>
+
+    <div class="comp-table-wrap">
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th class="col-dim">Dimensi Kebutuhan</th>
+            <th class="col-ai">AI Agentic Visualization (Antigravity / Gemini / Python)</th>
+            <th class="col-pbi">Enterprise Business Intelligence (Microsoft Power BI)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="col-dim">1. Kecepatan &amp; Tujuan Utama</td>
+            <td class="col-ai">
+              <span class="badge-ai">Exploratory / Ad-hoc Prototyping</span><br>
+              Sangat cepat untuk eksplorasi data awal (EDA), screening anomali data, dan membuat prototipe visualisasi sekali pakai (<em>one-off charts</em>) dalam hitungan detik.
+            </td>
+            <td class="col-pbi">
+              <span class="badge-pbi">Production &amp; Single Source of Truth</span><br>
+              Membangun platform analitik terpusat, terstruktur, dan terstandarisasi yang digunakan ribuan pengambil keputusan secara konsisten setiap hari.
+            </td>
+          </tr>
+          <tr>
+            <td class="col-dim">2. Konsistensi Logika &amp; Integritas Syariah</td>
+            <td class="col-ai">
+              <span class="badge-ai">Rawan Prompt Drift / Halusinasi</span><br>
+              Hasil kalkulasi rumus perbankan kompleks (NPF, CAR, FDR, Bagi Hasil) bergantung pada prompt dan rentan variasi tafsir jika data berubah.
+            </td>
+            <td class="col-pbi">
+              <span class="badge-pbi">Strict Semantic Model &amp; DAX</span><br>
+              Formula rasio keuangan dikunci dalam Measure DAX yang tervalidasi, lolos audit internal/OJK, dan identik bagi seluruh cabang &amp; divisi.
+            </td>
+          </tr>
+          <tr>
+            <td class="col-dim">3. Keamanan Data &amp; Hak Akses (Security &amp; RLS)</td>
+            <td class="col-ai">
+              <span class="badge-ai">Single-File Security</span><br>
+              Biasanya memproses data lokal per sesi interaksi. Tidak memiliki sistem otomatis untuk memfilter baris data berdasarkan jabatan secara terpusat.
+            </td>
+            <td class="col-pbi">
+              <span class="badge-pbi">Row-Level Security (RLS) &amp; Azure AD</span><br>
+              Otomatis membatasi data: Kepala Cabang Surabaya hanya bisa melihat nasabah Surabaya, sedangkan Direksi Utama melihat konsolidasi nasional.
+            </td>
+          </tr>
+          <tr>
+            <td class="col-dim">4. Automasi Pipeline &amp; Live Core Banking</td>
+            <td class="col-ai">
+              <span class="badge-ai">Manual Snapshot / API Scripting</span><br>
+              Membutuhkan input file berkala atau script integrasi mandiri untuk memperbarui dataset.
+            </td>
+            <td class="col-pbi">
+              <span class="badge-pbi">Enterprise Gateway &amp; Scheduled Refresh</span><br>
+              Terhubung langsung ke Core Banking System (SQL Server, Oracle, Data Lakehouse) dan otomatis ter-refresh berkala (misal tiap jam) tanpa intervensi manusia.
+            </td>
+          </tr>
+          <tr>
+            <td class="col-dim">5. Interaksi Audiens Eksekutif (C-Level UX)</td>
+            <td class="col-ai">
+              <span class="badge-ai">Prompt / Code Interaction</span><br>
+              Audiens harus mengetik prompt baru atau membaca script jika ingin mengubah filter atau sudut pandang analitik.
+            </td>
+            <td class="col-pbi">
+              <span class="badge-pbi">Zero-Code Point &amp; Click Interactivity</span><br>
+              Direksi dapat melakukan klik slicer, cross-filtering antar chart, drill-through ke detail transaksi, dan bookmark skenario tanpa perlu paham coding/prompting.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 🔄 HYBRID WORKFLOW -->
+    <div class="hybrid-flow-box">
+      <div class="hybrid-flow-title">🔄 The Modern Hybrid Analytics Workflow: Alur Kerja Masa Depan</div>
+      <div class="hybrid-steps">
+        <div class="h-step-card">
+          <div class="h-step-tag">Fase 1 · AI Agent as Co-Pilot</div>
+          <div class="h-step-title">Rapid EDA &amp; Prototyping</div>
+          <p class="h-step-desc">Gunakan Google Antigravity / Gemini Agent untuk memeriksa kualitas data mentah, mendeteksi korelasi tersembunyi, dan menguji opsi visual awal dalam waktu 5 menit.</p>
+        </div>
+
+        <div class="hybrid-arrow">➔</div>
+
+        <div class="h-step-card">
+          <div class="h-step-tag">Fase 2 · Power BI as Production Engine</div>
+          <div class="h-step-title">Enterprise Dashboard &amp; Governance</div>
+          <p class="h-step-desc">Bangun Star Schema, kunci ukuran DAX, terapkan prinsip Gestalt &amp; Pre-Attentive, atur RLS per cabang, dan publikasikan dashboard resmi untuk direksi.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout syn">
+      <strong>📌 Kesimpulan Utama:</strong> AI Agent bukan pengganti Power BI, melainkan <strong>akselerator super</strong> bagi seorang Data/BI Analyst. Analis yang menguasai keduanya akan mampu bekerja 10x lebih cepat dalam eksplorasi sekaligus menghasilkan produk analitik enterprise yang aman, patuh syariah, dan berstandar industri.
+    </div>
+
+    <button class="btn-paham" onclick="unlock(6)">Saya Paham, Masuk ke Interactive Simulator &amp; Kuis ➔</button>
+  </div>
+</div>
+
+<!-- ╔══ SEKSI 7: INTERACTIVE GAMES & EVALUASI ══╗ -->
+<div class="sec-card locked" id="sec7">
+  <div class="sec-hd">
+    <div class="sec-num" id="sn7">8</div>
     <div class="sec-title">Game Edukasi &amp; Kuis Evaluasi Pemahaman</div>
     <span class="sec-cpmk">CPMK-1</span>
   </div>
@@ -650,7 +787,7 @@ ul.lst li strong { color: var(--tx); }
 
 <script>
 const STORAGE_KEY = 'tazkia-biv-p02-v1';
-const TOTAL_SECS = 7;
+const TOTAL_SECS = 8;
 
 // Simulator Scenario Answers: S1=1 (Horizontal Bar), S2=0 (Line Chart), S3=1 (100% Stacked Bar)
 const SCENARIO_CORRECT = [1, 0, 1];
@@ -686,6 +823,7 @@ const SECTION_BTNS = [
   "Saya Paham, Lanjut ke Prinsip Gestalt ➔",
   "Saya Paham, Lanjut ke Pre-Attentive Visual ➔",
   "Saya Paham, Lanjut ke Nilai Syariah ➔",
+  "Saya Paham, Lanjut ke AI Agent vs Power BI ➔",
   "Saya Paham, Masuk ke Interactive Simulator & Kuis ➔"
 ];
 

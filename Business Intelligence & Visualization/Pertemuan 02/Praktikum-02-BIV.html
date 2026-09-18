@@ -199,10 +199,10 @@ body { font-family: 'Source Sans 3', system-ui, sans-serif; background: var(--bg
     <h1 class="hd-title">Chart Chooser, Gestalt Formatting &amp; Visual Design</h1>
     <p class="hd-sub">Praktikum pembuatan dashboard pembiayaan BMT Syariah: memilih visual yang tepat, eliminasi pie chart berlebih, dan penataan hierarki kognitif.</p>
     <div class="hd-pills">
-      <span class="hpill">Dataset: <strong>dataset-bmt-finansial-p02.csv</strong></span>
-      <span class="hpill">Output: <strong>P02_Design_BIV.pbix</strong></span>
-      <span class="hpill">Fokus: <strong>Comparison · 100% Stacked · Gestalt</strong></span>
-      <span class="hpill">Target Waktu: <strong>⏱ ~75 Menit</strong></span>
+      <span class="hpill">Tools: <strong>Power BI Desktop &amp; AI Agent Co-Pilot</strong></span>
+      <span class="hpill">Dataset: <strong>BMT Syariah Pembiayaan 2026</strong></span>
+      <span class="hpill">Fokus: <strong>Gestalt &amp; De-Cluttering</strong></span>
+      <span class="hpill">Workflow: <strong>Hybrid AI ➔ Enterprise BI</strong></span>
     </div>
   </div>
   <div class="hd-arch">
@@ -419,10 +419,25 @@ Dashboard menjadi sangat bersih, tajam, dan elegan. Rasio tinta-ke-data (data-in
     <p>Ujilah kemandirian Anda dalam merancang visual analitik tambahan dengan menyelesaikan 3 tantangan berikut:</p>
 
     <div class="challenge-box">
-      <h4>🎯 3 Tantangan Analitik Mandiri</h4>
+      <h4>🎯 3 Tantangan Analitik Mandiri di Power BI</h4>
       <div class="challenge-q"><strong>Tantangan 1 — Korelasi Margin vs Pembiayaan (Scatter Plot):</strong> Tambahkan <strong>Scatter Plot</strong>. Sumbu X: <code>nominal_pembiayaan</code>, Sumbu Y: <code>margin_keuntungan</code>, Legend: <code>sektor_ekonomi</code>. Analisis: sektor ekonomi mana yang menghasilkan efisiensi margin tertinggi terhadap modal yang disalurkan?</div>
       <div class="challenge-q"><strong>Tantangan 2 — Slicer Interaktif Sektor Ekonomi:</strong> Tambahkan visual <strong>Slicer</strong> untuk kolom <code>sektor_ekonomi</code> di pojok kiri atas laporan. Uji klik salah satu sektor (misal <em>"Kuliner Halal"</em>) dan amati perubahan pada seluruh chart secara dinamis.</div>
       <div class="challenge-q"><strong>Tantangan 3 — Line Chart Realisasi Bulanan:</strong> Buat halaman baru bernama <em>"Tren Waktu"</em>. Tambahkan <strong>Line Chart</strong> dengan X-axis: <code>tanggal</code> (Month) dan Y-axis: <code>nominal_pembiayaan</code>. Amati tren pertumbuhan pembiayaan dari Januari hingga Juni 2026.</div>
+    </div>
+
+    <!-- 🤖 HYBRID AI WORKFLOW CHALLENGE -->
+    <div class="inst-box" style="border-left: 4px solid #6030B0; background: rgba(96,48,176,.05);">
+      <h4 style="color:#6030B0">🤖 Eksplorasi Eksekutif: The Modern Hybrid Analytics Workflow</h4>
+      <p style="font-size:13.5px;color:var(--txm);margin-bottom:10px">
+        Ingin melihat bagaimana praktisi data modern bekerja 10x lebih cepat? Uji coba alur kerja hibrida dengan <strong>Google Antigravity / Gemini Agent</strong>:
+      </p>
+      <ol style="padding-left:18px;font-size:13px;color:var(--txm);line-height:1.6">
+        <li><strong>Fase 1 (AI Co-Pilot Screening):</strong> Buka AI Agent, unggah file <code>dataset-bmt-finansial-p02.csv</code> dan berikan prompt:<br>
+          <em style="color:var(--pri);background:var(--sf2);padding:2px 6px;border-radius:4px;display:inline-block;margin:4px 0">"Analisis dataset pembiayaan BMT ini: temukan 3 pola korelasi atau anomali margin terbesar, lalu rekomendasikan visualisasi terbaik sesuai prinsip Gestalt."</em>
+        </li>
+        <li><strong>Fase 2 (Validasi Kritis):</strong> Periksa apakah visual yang disarankan AI sudah mematuhi kaidah <em>Zero Baseline</em> dan bebas dari jebakan <em>Pie Chart 3D</em>.</li>
+        <li><strong>Fase 3 (Enterprise Implementation di Power BI):</strong> Realisasikan wawasan terbaik tersebut ke dalam lembar Power BI Anda dengan menambahkan Measure DAX resmi dan Slicer interaktif.</li>
+      </ol>
     </div>
 
     <div class="inst-box">
