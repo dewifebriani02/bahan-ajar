@@ -882,17 +882,17 @@ function restartQuiz(){
 /* ══════════ CLOUD FIRESTORE LEADERBOARD SYNC (ADA P02) ══════════ */
 let liveLeaderboardPlayers = [];
 const DEFAULT_QUIZ_ROSTER = [
+  { nim: '2410102013', nama: 'Ibnu Hajar', classGroup: 'ADA / BIV', quizScore: 2816, updatedAt: '12:00' },
+  { nim: '2410102011', nama: 'Mohamad Fikri Zim Aufar', classGroup: 'ADA / BIV', quizScore: 2752, updatedAt: '12:00' },
+  { nim: '2410102008', nama: 'Liana Tasa', classGroup: 'ADA / BIV', quizScore: 2740, updatedAt: '12:00' },
+  { nim: '2410102007', nama: 'Rasti Septa Sari', classGroup: 'ADA / BIV', quizScore: 2713, updatedAt: '12:00' },
+  { nim: '2410102010', nama: 'Izza Arydani', classGroup: 'ADA / BIV', quizScore: 2712, updatedAt: '12:00' },
   { nim: '2410102002', nama: 'Aliffa Rahmadanni', classGroup: 'ADA / BIV', quizScore: 0, updatedAt: '-' },
   { nim: '2410102004', nama: 'Fairuz Alya Manora', classGroup: 'ADA / BIV', quizScore: 0, updatedAt: '-' },
   { nim: '2410102005', nama: 'Suciyanti', classGroup: 'ADA / BIV', quizScore: 0, updatedAt: '-' },
   { nim: '2410102006', nama: 'Zenieta Nijwa', classGroup: 'ADA / BIV', quizScore: 0, updatedAt: '-' },
-  { nim: '2410102007', nama: 'Rasti Septa Sari', classGroup: 'ADA / BIV', quizScore: 0, updatedAt: '-' },
-  { nim: '2410102008', nama: 'Liana Tasa', classGroup: 'ADA / BIV', quizScore: 0, updatedAt: '-' },
   { nim: '2410102009', nama: 'Utami Apri Robi Laijah', classGroup: 'ADA / BIV', quizScore: 0, updatedAt: '-' },
-  { nim: '2410102010', nama: 'Izza Arydani', classGroup: 'ADA / BIV', quizScore: 0, updatedAt: '-' },
-  { nim: '2410102011', nama: 'Mohamad Fikri Zim Aufar', classGroup: 'ADA / BIV', quizScore: 0, updatedAt: '-' },
-  { nim: '2410102012', nama: 'Muhammad Waqif Al Ghifari', classGroup: 'ADA / BIV', quizScore: 0, updatedAt: '-' },
-  { nim: '2410102013', nama: 'Ibnu Hajar', classGroup: 'ADA / BIV', quizScore: 0, updatedAt: '-' }
+  { nim: '2410102012', nama: 'Muhammad Waqif Al Ghifari', classGroup: 'ADA / BIV', quizScore: 0, updatedAt: '-' }
 ];
 
 function syncPlayerScoreLive(){
@@ -956,28 +956,50 @@ function renderLeaderboardUI(players){
   });
   const sorted = [...validPlayers].sort((a,b) => (b.quizScore || b.score || 0) - (a.quizScore || a.score || 0));
 
+  // Toggle User Stat Card for Dosen vs Mahasiswa
+  const statCard = document.querySelector('.user-stat-card');
+  let dosenBanner = document.getElementById('lbDosenBanner');
   if (isDosen) {
-    document.getElementById('hudRank').textContent = 'Dosen 🎓';
+    if (statCard) statCard.style.display = 'none';
+    if (!dosenBanner) {
+      dosenBanner = document.createElement('div');
+      dosenBanner.id = 'lbDosenBanner';
+      dosenBanner.style.cssText = 'background:rgba(32,200,208,.12);border:1px solid rgba(32,200,208,.35);padding:12px 14px;border-radius:10px;margin-bottom:14px;display:flex;align-items:center;gap:12px';
+      dosenBanner.innerHTML = `
+        <div style="font-size:24px">🎓</div>
+        <div>
+          <div style="font-weight:700;font-size:13.5px;color:#fff">Mode Dosen & Pengawas (Dewi Febriani)</div>
+          <div style="font-size:11.5px;color:var(--meet-acc);margin-top:2px">Skor Anda tidak dicatat / ditampilkan di klasemen mahasiswa. Anda sedang memantau hasil kuis mahasiswa secara real-time.</div>
+        </div>
+      `;
+      if (statCard && statCard.parentNode) {
+        statCard.parentNode.insertBefore(dosenBanner, statCard);
+      }
+    } else {
+      dosenBanner.style.display = 'flex';
+    }
     const topBadge = document.getElementById('topRankBadge');
-    if(topBadge) topBadge.textContent = 'Dosen';
-    const lbMyRank = document.getElementById('lbMyRank');
-    if(lbMyRank) lbMyRank.textContent = 'Mode Dosen 🎓';
-    const lbMyStatus = document.getElementById('lbMyStatus');
-    if(lbMyStatus) lbMyStatus.textContent = 'Skor disembunyikan dari klasemen';
+    if(topBadge) topBadge.textContent = 'Dosen 🎓';
+    const hudRank = document.getElementById('hudRank');
+    if(hudRank) hudRank.textContent = 'Dosen 🎓';
   } else {
+    if (statCard) statCard.style.display = 'flex';
+    if (dosenBanner) dosenBanner.style.display = 'none';
     const myRank = sorted.findIndex(p => (myNim && p.nim === myNim) || p.nama === myName) + 1;
     const myRankStr = myRank > 0 ? `#${myRank}` : '#—';
-    document.getElementById('hudRank').textContent = myRankStr;
+    const hudRank = document.getElementById('hudRank');
+    if(hudRank) hudRank.textContent = myRankStr;
     const topBadge = document.getElementById('topRankBadge');
     if(topBadge) topBadge.textContent = myRankStr;
     const lbMyRank = document.getElementById('lbMyRank');
     if(lbMyRank) lbMyRank.textContent = `Peringkat ${myRankStr}`;
     const lbMyStatus = document.getElementById('lbMyStatus');
     if(lbMyStatus) lbMyStatus.textContent = 'Kuis Sedang Berlangsung';
+    const lbMyName = document.getElementById('lbMyName');
+    if(lbMyName) lbMyName.textContent = myName + (myNim ? ` (${myNim})` : '');
+    const lbMyScore = document.getElementById('lbMyScore');
+    if(lbMyScore) lbMyScore.textContent = `${userScore} pts`;
   }
-
-  document.getElementById('lbMyName').textContent = myName + (myNim ? ` (${myNim})` : '');
-  document.getElementById('lbMyScore').textContent = `${userScore} pts`;
 
   if(!sorted.length){
     document.getElementById('lbListContainer').innerHTML = isDosen

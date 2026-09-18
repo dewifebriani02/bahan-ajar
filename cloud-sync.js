@@ -928,24 +928,65 @@ window.RealtimeGameEngine = {
     const roomId = this.getEffectiveRoomId(customRoomId);
     window.onCloudSyncReady(dbInstance => {
       if (this.leaderboardUnsubscribe) this.leaderboardUnsubscribe();
+
+      // Purge any lecturer records from room collections
+      dbInstance.collection('games').doc(roomId).collection('players').doc('0206015').delete().catch(()=>{});
+      dbInstance.collection('games').doc('BMT-ARENA-02').collection('players').doc('0206015').delete().catch(()=>{});
+
+      const playerMap = new Map();
+
+      const emitPlayers = () => {
+        const list = Array.from(playerMap.values()).sort((a,b) => (b.score||0) - (a.score||0));
+        if (onLeaderboardChange) onLeaderboardChange(list);
+      };
+
+      const handleDoc = (doc) => {
+        const p = doc.data();
+        if (!p || isDosenUser(p) || p.nim === '0206015' || /dewi\s*febriani|dosen/i.test(p.nama || '')) return;
+        if (!p.classGroup && p.nim) {
+          const s = findStudentByNim(p.nim);
+          if (s && s.classGroup) p.classGroup = s.classGroup;
+        }
+        const key = p.nim || p.nama;
+        const currentScore = (p.gameScores && p.gameScores[0]) !== undefined ? p.gameScores[0] : (p.quizScore || p.score || 0);
+        const pNormalized = { ...p, score: currentScore, quizScore: currentScore };
+        
+        if (!playerMap.has(key) || currentScore >= (playerMap.get(key).score || 0)) {
+          playerMap.set(key, pNormalized);
+        }
+      };
+
+      // 1. Fetch & Auto-migrate historical scores from legacy BMT-ARENA-02 if running in dedicated room
+      if (roomId !== 'BMT-ARENA-02') {
+        dbInstance.collection('games').doc('BMT-ARENA-02').collection('players').get().then(snap => {
+          snap.forEach(d => {
+            const data = d.data();
+            if (data && data.nim && !isDosenUser(data) && data.nim !== '0206015') {
+              handleDoc(d);
+              // Migrate to dedicated room in background
+              const student = findStudentByNim(data.nim);
+              const info = detectCurrentCourseInfo();
+              const courseCode = (info && info.code) || 'AIS';
+              if (student && student.courses && (student.courses.includes(courseCode) || (courseCode === 'AIS' && student.courses.includes('SIA')))) {
+                dbInstance.collection('games').doc(roomId).collection('players').doc(data.nim).set(data, { merge: true }).catch(()=>{});
+              }
+            }
+          });
+          emitPlayers();
+        }).catch(()=>{});
+      }
+
+      // 2. Realtime listener on dedicated room
       this.leaderboardUnsubscribe = dbInstance.collection('games').doc(roomId).collection('players')
         .orderBy('score', 'desc')
         .limit(100)
         .onSnapshot(snapshot => {
-          const players = [];
-          snapshot.forEach(doc => {
-            const p = doc.data();
-            // Filter out dosen records
-            if (!isDosenUser(p)) {
-              if (!p.classGroup && p.nim) {
-                const s = findStudentByNim(p.nim);
-                if (s && s.classGroup) p.classGroup = s.classGroup;
-              }
-              players.push(p);
-            }
-          });
-          if (onLeaderboardChange) onLeaderboardChange(players);
-        }, err => console.error("Error listening leaderboard:", err));
+          snapshot.forEach(doc => handleDoc(doc));
+          emitPlayers();
+        }, err => {
+          console.error("Error listening leaderboard:", err);
+          emitPlayers();
+        });
     });
   }
 };
