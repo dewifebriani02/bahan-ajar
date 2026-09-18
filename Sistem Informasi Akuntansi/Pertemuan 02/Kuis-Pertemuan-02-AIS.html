@@ -936,7 +936,7 @@ body{
     <div class="modal-hd">
       <div>
         <h3 class="modal-title">🏆 Klasemen Real-Time Kelas</h3>
-        <div style="font-size:11.5px;color:var(--txm)">Live Sync via Cloud Firestore</div>
+        <div style="font-size:11.5px;color:var(--txm)">Akumulasi Skor 6 Game Arena AIS P02 (Maks. 5.210 pts)</div>
       </div>
       <button class="modal-close" onclick="closeLeaderboardModal()">✕</button>
     </div>
@@ -1750,6 +1750,22 @@ function renderLeaderboard(players){
       ? '<span class="class-badge class-badge-reguler">🎓 Reguler</span>'
       : `<span class="class-badge" style="background:rgba(255,255,255,.1);color:#fff">${escapeHtml(p.classGroup)}</span>`;
 
+    const pScore = p.score || 0;
+    let doneGames = 1;
+    if (p.gameScores && Array.isArray(p.gameScores)) {
+      doneGames = p.gameScores.filter(s => s > 0).length || 1;
+    } else if (p.round) {
+      doneGames = p.round;
+    } else if (pScore > 3000) {
+      doneGames = 6;
+    } else if (pScore > 2000) {
+      doneGames = 4;
+    } else if (pScore > 1400) {
+      doneGames = 2;
+    } else {
+      doneGames = 1;
+    }
+
     return `
     <div style="background:#060C14;border:1px solid ${isMe ? '#F97316' : 'var(--bd)'};padding:10px 14px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;${isMe ? 'box-shadow:0 0 12px rgba(249,115,22,.2);background:rgba(249,115,22,.04)' : ''}">
       <div style="display:flex;align-items:center;gap:10px">
@@ -1760,10 +1776,15 @@ function renderLeaderboard(players){
             ${isMe ? '<span style="font-size:10px;background:#F97316;color:#fff;padding:1px 6px;border-radius:4px;font-weight:800">ANDA</span>' : ''}
             ${classBadge}
           </div>
-          <div style="font-size:11px;color:var(--txm)">NIM: ${p.nim||'-'}</div>
+          <div style="font-size:11px;color:var(--txm);margin-top:2px">
+            NIM: ${p.nim||'-'} · <span style="color:#38BDF8;font-weight:600">🎮 ${doneGames}/6 Game Selesai</span>
+          </div>
         </div>
       </div>
-      <div style="font-family:'Source Code Pro',monospace;font-weight:700;font-size:15px;color:#38BDF8">${p.score||0} pts</div>
+      <div style="text-align:right">
+        <div style="font-family:'Source Code Pro',monospace;font-weight:700;font-size:15px;color:#38BDF8">${pScore} pts</div>
+        <div style="font-size:10.5px;color:var(--txl)">Total Akumulasi</div>
+      </div>
     </div>`;
   }).join('');
     
