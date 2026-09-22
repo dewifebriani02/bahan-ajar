@@ -1229,8 +1229,18 @@ let state = {
 function loadState(){
   try{
     const s = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    if(s) state = s;
-  }catch(e){}
+    if(s) {
+      state = s;
+    } else {
+      // Fix 3: Kunjungan pertama / cache terhapus — buka semua materi agar tidak terkunci
+      state.done = Array.from({length: TOTAL_SECS}, (_, i) => i);
+      saveState();
+    }
+  }catch(e){
+    // Fix 3: State korup — buka semua materi sebagai fallback daripada terkunci
+    state.done = Array.from({length: TOTAL_SECS}, (_, i) => i);
+    try { saveState(); } catch(e2) {}
+  }
 }
 function saveState(){
   try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){}
@@ -1347,7 +1357,7 @@ function submitQuiz(){
   const badge = document.getElementById('scoreBadge');
   if(badge){
     badge.style.display = 'inline-block';
-    badge.textContent = ;
+    badge.textContent = `Skor: ${score}/${total} (${pct}%)`;
     if(pct >= 75){
       badge.className = 'score-badge pass';
       document.getElementById('completion')?.classList.add('show');

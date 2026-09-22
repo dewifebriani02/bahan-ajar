@@ -21,6 +21,7 @@ const FIREBASE_CONFIG = {
 let db = null;
 let isDbReady = false;
 const readyCallbacks = [];
+window.isOfflineMode = false; // Flag mode tamu/offline - skor tidak disinkronisasi
 
 let currentStudent = {
   nim: localStorage.getItem('tazkia_student_nim') || '',
@@ -440,6 +441,15 @@ function checkCourseAccessPin() {
     return;
   }
 
+  // Fix 2: Cek mode offline/tamu (session-only, reset saat browser ditutup)
+  const offlineBypass = sessionStorage.getItem('tazkia_offline_bypass_' + info.code) === 'true';
+  if (window.isOfflineMode || offlineBypass) {
+    const lockModal = document.getElementById('coursePinModal');
+    if (lockModal) lockModal.remove();
+    document.body.style.overflow = '';
+    return;
+  }
+
   const unlocked = localStorage.getItem('tazkia_pin_unlocked_' + info.code);
 
   if (unlocked === requiredPin) {
@@ -487,6 +497,7 @@ function showPinModal(info, requiredPin) {
           <div style="margin-top:16px">
             <a href="${info.code === 'DOSEN' ? 'index.html' : '../../index.html'}" style="color:#94A3B8;font-size:12.5px;text-decoration:none">← Kembali ke Portal Utama</a>
           </div>
+          ${!isDosenPage ? '<div style="margin-top:10px"><button onclick="skipPinModal(\'' + info.code + '\')" style="display:block;width:100%;background:rgba(255,255,255,.04);border:1px solid #1E293B;color:#64748B;border-radius:6px;padding:8px;font-size:12px;cursor:pointer;font-family:\'Source Sans 3\',sans-serif">Akses Offline - Lihat materi tanpa menyimpan skor</button><p style="font-size:10.5px;color:#475569;margin-top:6px;line-height:1.4;text-align:center">PIN dibagikan Dosen saat sesi kelas dimulai.</p></div>' : ''}
         </div>
       </div>
     `;
@@ -503,6 +514,16 @@ function showPinModal(info, requiredPin) {
     }, 100);
   }
 }
+
+// Fix 2: Fungsi bypass PIN modal - aktifkan mode offline
+window.skipPinModal = function(courseCode) {
+  window.isOfflineMode = true;
+  sessionStorage.setItem('tazkia_offline_bypass_' + courseCode, 'true');
+  const modal = document.getElementById('coursePinModal');
+  if (modal) modal.remove();
+  document.body.style.overflow = '';
+  showCloudToast('Mode Offline aktif - Materi dapat diakses. Skor tidak disimpan ke cloud.');
+};
 
 window.submitCoursePin = function (courseCode) {
   const input = document.getElementById('inputCoursePin');
@@ -650,6 +671,11 @@ function showIdentityModal() {
           </div>
 
           <button id="btnSaveIdentity" onclick="saveStudentIdentity()" style="width:100%;background:linear-gradient(135deg,#D46020,#E88030);color:#fff;border:none;border-radius:8px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;transition:all .15s;box-shadow:0 4px 16px rgba(212,96,32,.3)">Simpan &amp; Masuk Kelas ✓</button>
+          <div style="margin-top:14px;text-align:center;border-top:1px solid #1E293B;padding-top:12px">
+            <button onclick="skipIdentityModal()" style="background:none;border:none;color:#64748B;font-size:12px;cursor:pointer;font-family:'Source Sans 3',sans-serif;padding:4px;text-decoration:underline;line-height:1.5">
+              Lewati — Lihat Materi Saja (skor tidak akan disinkronisasi)
+            </button>
+          </div>
         </div>
       </div>
     `;
@@ -660,6 +686,14 @@ function showIdentityModal() {
     }
   }
 }
+
+// Fix 1: Fungsi lewati modal identitas - aktifkan mode tamu
+window.skipIdentityModal = function() {
+  window.isOfflineMode = true;
+  const modal = document.getElementById('studentIdModal');
+  if (modal) modal.remove();
+  showCloudToast('Mode Tamu aktif - Materi dapat diakses. Skor tidak disinkronisasi ke cloud.');
+};
 
 function saveStudentIdentity() {
   const nimInput = document.getElementById('inputStudentNIM');
@@ -779,7 +813,7 @@ function showCloudToast(message, isError = false) {
 // 6. Submit Skor Kuis / Tugas Praktikum ke Cloud Firestore
 window.saveScoreToCloud = function (pertemuan, aktivitas, skor, total, detail = {}) {
   if (!currentStudent.nim) {
-    showIdentityModal();
+    if (!window.isOfflineMode) showIdentityModal(); // Hanya tampilkan modal jika bukan mode tamu
     return;
   }
 
@@ -890,8 +924,7 @@ window.RealtimeGameEngine = {
   // Submit Skor Individu / Pasangan ke Live Leaderboard
   submitPlayerScore: function (playerScore, comboCount, roundCompleted, gameScoresBreakdown, activeGameIndex) {
     if (!currentStudent.nim) {
-      showIdentityModal();
-      return;
+      return; // Mode tamu/offline - skor tidak dipublikasikan ke leaderboard
     }
     // Dosen diproteksi: tidak akan dimasukkan ke papan klasemen mahasiswa
     if (isDosenUser(currentStudent)) {
