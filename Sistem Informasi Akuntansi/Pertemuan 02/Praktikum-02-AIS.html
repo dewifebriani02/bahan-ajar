@@ -204,7 +204,7 @@ ul.lst li strong{color:var(--tx)}
 </div>
 
 <!-- ╔══ LANGKAH 2: DOKUMEN SUMBER & INPUT CONTROL ══╗ -->
-<div class="step-card locked" id="step1">
+<div class="step-card unlocked" id="step1">
   <div class="step-hd">
     <div class="step-num" id="sn1">2</div>
     <div class="step-title">Perancangan Dokumen Sumber &amp; Pengendalian Input</div>
@@ -255,7 +255,7 @@ Otorisasi Manajer Pembiayaan : [Digital PIN Approval]
 </div>
 
 <!-- ╔══ LANGKAH 3: BAGAN AKUN (COA) 5-DIGIT ══╗ -->
-<div class="step-card locked" id="step2">
+<div class="step-card unlocked" id="step2">
   <div class="step-hd">
     <div class="step-num" id="sn2">3</div>
     <div class="step-title">Perancangan Bagan Akun (Chart of Accounts - COA) LKS</div>
@@ -318,7 +318,7 @@ LANGKAH 4 — Cek Logika Saldo Normal:
 </div>
 
 <!-- ╔══ LANGKAH 4: HIERARKI DATA & SKEMA DATABASE ══╗ -->
-<div class="step-card locked" id="step3">
+<div class="step-card unlocked" id="step3">
   <div class="step-hd">
     <div class="step-num" id="sn3">4</div>
     <div class="step-title">Pemetaan Hierarki Data &amp; Master vs Transaction File</div>
@@ -382,7 +382,7 @@ LANGKAH 4 — Cek Logika Saldo Normal:
 </div>
 
 <!-- ╔══ LANGKAH 5: PEMODELAN DFD ══╗ -->
-<div class="step-card locked" id="step4">
+<div class="step-card unlocked" id="step4">
   <div class="step-hd">
     <div class="step-num" id="sn4">5</div>
     <div class="step-title">Perancangan Data Flow Diagram (DFD) Simpan-Pinjam Syariah</div>
@@ -480,7 +480,7 @@ ENTITAS LUAR: [Anggota Penabung] --------------------+
 </div>
 
 <!-- ╔══ LANGKAH 6: TANTANGAN MANDIRI ══╗ -->
-<div class="step-card locked" id="step5">
+<div class="step-card unlocked" id="step5">
   <div class="step-hd">
     <div class="step-num" id="sn5">6</div>
     <div class="step-title">Tantangan Mandiri &amp; Audit Jejak Transaksi</div>
@@ -530,15 +530,34 @@ let labState = {done:[]};
 function loadLabState(){
   try{
     const s = JSON.parse(localStorage.getItem(LAB_KEY));
-    if(s) labState = s;
-  }catch(e){}
+    if(s) {
+      labState = s;
+    } else {
+      // Kunjungan pertama / cache terhapus — tandai semua langkah sebagai terbuka
+      // (langkah tetap bisa diklik; progress tracker tetap berfungsi)
+      labState.done = [];
+    }
+  }catch(e){
+    // State korup — reset bersih
+    labState.done = [];
+    try { saveLabState(); } catch(e2) {}
+  }
 }
 function saveLabState(){
   try{ localStorage.setItem(LAB_KEY, JSON.stringify(labState)); }catch(e){}
 }
 
 function applyLabState(){
-  labState.done.forEach(i=>applyDone(i));
+  // Pastikan semua step selalu bisa diakses (tidak locked)
+  for(let i = 0; i < TOTAL_STEPS; i++){
+    const card = document.getElementById('step' + i);
+    if(card && card.classList.contains('locked')){
+      card.classList.remove('locked');
+      card.classList.add('unlocked');
+    }
+  }
+  // Terapkan status done pada langkah yang sudah selesai
+  labState.done.forEach(i => applyDone(i));
   updateTracker();
   if(labState.done.length === TOTAL_STEPS) document.getElementById('completion').classList.add('show');
 }
@@ -551,8 +570,7 @@ function applyDone(i){
   if(num){ num.style.background = 'var(--sya)'; num.textContent = '✓'; }
   const btn = document.getElementById('btn' + i);
   if(btn){ btn.className = 'btn-unlock done-state'; btn.disabled = true; btn.textContent = '✓ Selesai'; }
-  const next = document.getElementById('step' + (i+1));
-  if(next) next.className = 'step-card unlocked';
+  // Tidak perlu unlock next — semua step sudah unlocked dari awal
 }
 
 function completeStep(i){
