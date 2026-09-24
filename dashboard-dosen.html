@@ -1464,7 +1464,9 @@ function populateDropdowns() {
     { val: 'ADA - Pertemuan 01', text: 'ADA — Pertemuan 01 (Python & Colab)' },
     { val: 'ADA - Pertemuan 02', text: 'ADA — Pertemuan 02 (Pandas Groupby)' },
     { val: 'ADA - Pertemuan 03', text: 'ADA — Pertemuan 03 (Data Wrangling)' },
-    { val: 'BIV - Pertemuan 01', text: 'BIV — Pertemuan 01 (Fondasi BI & Power BI)' }
+    { val: 'BIV - Pertemuan 01', text: 'BIV — Pertemuan 01 (Fondasi BI & Power BI)' },
+    { val: 'BIV - Pertemuan 02', text: 'BIV — Pertemuan 02 (Prinsip Desain & Chart Chooser)' },
+    { val: 'BIV - Pertemuan 03', text: 'BIV — Pertemuan 03 (Audit Visual Menyesatkan & Sidq)' }
   ];
 
   defaultOptions.forEach(opt => {
@@ -1743,9 +1745,10 @@ var ALL_COURSE_MEETINGS = [
   { courseCode: 'ADA', courseName: 'Applied Data Analytics (ADA-301)', pNum: 2, pCode: 'P02', title: 'Pertemuan 02: Pandas Groupby, Aggregation & Filtering', desc: 'Manipulasi data lanjutan dengan Pandas: filtering multi-kondisi, agregasi statistik, dan segmentasi nasabah.' },
   { courseCode: 'ADA', courseName: 'Applied Data Analytics (ADA-301)', pNum: 3, pCode: 'P03', title: 'Pertemuan 03: Data Wrangling, Cleaning & Preprocessing', desc: 'Teknik penanganan missing values, imputasi statistik, deteksi outlier, dan normalisasi dataset e-commerce.' },
 
-  // BIV (2 Meetings)
+  // BIV (3 Meetings)
   { courseCode: 'BIV', courseName: 'Business Intelligence & Visualization (BIV-301)', pNum: 1, pCode: 'P01', title: 'Pertemuan 01: Fondasi BI & Power BI Interactive Dashboard', desc: 'Arsitektur data warehouse, KPI dashboard eksekutif, visualisasi interaktif PowerBI/Tableau untuk keputusan manajerial.' },
-  { courseCode: 'BIV', courseName: 'Business Intelligence & Visualization (BIV-301)', pNum: 2, pCode: 'P02', title: 'Pertemuan 02: Prinsip Desain Visualisasi & Chart Chooser', desc: 'Framework pemilihan chart (comparison, trend, composition, correlation), Gestalt principles, dan eliminasi clutter.' }
+  { courseCode: 'BIV', courseName: 'Business Intelligence & Visualization (BIV-301)', pNum: 2, pCode: 'P02', title: 'Pertemuan 02: Prinsip Desain Visualisasi & Chart Chooser', desc: 'Framework pemilihan chart (comparison, trend, composition, correlation), Gestalt principles, dan eliminasi clutter.' },
+  { courseCode: 'BIV', courseName: 'Business Intelligence & Visualization (BIV-301)', pNum: 3, pCode: 'P03', title: 'Pertemuan 03: Mengenali & Menghindari Visualisasi Menyesatkan', desc: 'Anatomi manipulasi grafik (Truncated Y-Axis, 3D Distortion, Cherry-Picking), Lie Factor, dan insersi nilai Syariah (Sidq vs Tadlis).' }
 ];
 
 function renderMeetingLocks() {
