@@ -1,0 +1,49 @@
+Tahun,Bulan,Periode,Cabang,Segmen_Nasabah,Produk_Akad,Target_DPK_Miliar,Realisasi_DPK_Miliar,NPF_Persen,Biaya_Operasional_Juta,Pendapatan_Margin_Juta,Kepuasan_Nasabah_Skor
+2025,Jan,2025-01,Jakarta Pusat,Korporat,Mudharabah,120.5,118.2,1.85,450,1280,4.2
+2025,Feb,2025-02,Jakarta Pusat,Korporat,Mudharabah,125.0,126.4,1.82,460,1310,4.3
+2025,Mar,2025-03,Jakarta Pusat,Korporat,Mudharabah,130.0,128.9,1.90,480,1340,4.1
+2025,Apr,2025-04,Jakarta Pusat,Korporat,Mudharabah,135.0,132.1,2.05,510,1380,3.9
+2025,Mei,2025-05,Jakarta Pusat,Korporat,Mudharabah,140.0,134.0,2.15,530,1400,3.8
+2025,Jun,2025-06,Jakarta Pusat,Korporat,Mudharabah,145.0,131.5,2.40,580,1390,3.7
+2025,Jul,2025-07,Jakarta Pusat,Korporat,Mudharabah,150.0,129.8,2.65,620,1370,3.6
+2025,Agu,2025-08,Jakarta Pusat,Korporat,Mudharabah,155.0,127.4,2.80,650,1350,3.5
+2025,Sep,2025-09,Jakarta Pusat,Korporat,Mudharabah,160.0,125.0,3.10,690,1320,3.4
+2025,Okt,2025-10,Jakarta Pusat,Korporat,Mudharabah,165.0,122.3,3.35,720,1290,3.3
+2025,Nov,2025-11,Jakarta Pusat,Korporat,Mudharabah,170.0,120.1,3.60,760,1260,3.2
+2025,Des,2025-12,Jakarta Pusat,Korporat,Mudharabah,175.0,118.5,3.85,810,1230,3.1
+2025,Jan,2025-01,Bandung,Retail UMKM,Murabahah,45.0,46.2,2.10,180,520,4.5
+2025,Feb,2025-02,Bandung,Retail UMKM,Murabahah,47.0,48.5,2.05,185,540,4.5
+2025,Mar,2025-03,Bandung,Retail UMKM,Murabahah,50.0,52.1,1.98,190,570,4.6
+2025,Apr,2025-04,Bandung,Retail UMKM,Murabahah,52.0,54.8,1.92,195,600,4.6
+2025,Mei,2025-05,Bandung,Retail UMKM,Murabahah,55.0,58.0,1.85,200,630,4.7
+2025,Jun,2025-06,Bandung,Retail UMKM,Murabahah,58.0,61.2,1.80,205,665,4.7
+2025,Jul,2025-07,Bandung,Retail UMKM,Murabahah,60.0,64.5,1.75,210,700,4.8
+2025,Agu,2025-08,Bandung,Retail UMKM,Murabahah,62.0,67.8,1.70,215,735,4.8
+2025,Sep,2025-09,Bandung,Retail UMKM,Murabahah,65.0,71.0,1.65,220,770,4.8
+2025,Okt,2025-10,Bandung,Retail UMKM,Murabahah,68.0,74.5,1.60,225,810,4.9
+2025,Nov,2025-11,Bandung,Retail UMKM,Murabahah,70.0,78.2,1.55,230,850,4.9
+2025,Des,2025-12,Bandung,Retail UMKM,Murabahah,72.0,82.0,1.50,235,890,5.0
+2025,Jan,2025-01,Surabaya,Komersial,Musyarakah,80.0,79.5,2.40,320,890,4.1
+2025,Feb,2025-02,Surabaya,Komersial,Musyarakah,82.0,81.0,2.45,330,905,4.1
+2025,Mar,2025-03,Surabaya,Komersial,Musyarakah,85.0,83.2,2.50,340,920,4.0
+2025,Apr,2025-04,Surabaya,Komersial,Musyarakah,88.0,84.5,2.60,355,930,4.0
+2025,Mei,2025-05,Surabaya,Komersial,Musyarakah,90.0,85.0,2.75,370,935,3.9
+2025,Jun,2025-06,Surabaya,Komersial,Musyarakah,92.0,85.2,2.90,390,930,3.8
+2025,Jul,2025-07,Surabaya,Komersial,Musyarakah,95.0,84.8,3.10,410,920,3.7
+2025,Agu,2025-08,Surabaya,Komersial,Musyarakah,98.0,83.5,3.30,430,905,3.6
+2025,Sep,2025-09,Surabaya,Komersial,Musyarakah,100.0,82.0,3.55,455,890,3.5
+2025,Okt,2025-10,Surabaya,Komersial,Musyarakah,102.0,80.2,3.80,480,870,3.4
+2025,Nov,2025-11,Surabaya,Komersial,Musyarakah,105.0,78.5,4.10,510,850,3.3
+2025,Des,2025-12,Surabaya,Komersial,Musyarakah,108.0,76.0,4.45,545,820,3.2
+2025,Jan,2025-01,Yogyakarta,Mikro Syariah,Qardh & Ijarah,25.0,26.5,1.20,95,290,4.7
+2025,Feb,2025-02,Yogyakarta,Mikro Syariah,Qardh & Ijarah,26.0,27.8,1.18,98,305,4.7
+2025,Mar,2025-03,Yogyakarta,Mikro Syariah,Qardh & Ijarah,27.5,29.2,1.15,100,320,4.8
+2025,Apr,2025-04,Yogyakarta,Mikro Syariah,Qardh & Ijarah,28.5,30.5,1.12,102,335,4.8
+2025,Mei,2025-05,Yogyakarta,Mikro Syariah,Qardh & Ijarah,30.0,32.0,1.10,105,350,4.8
+2025,Jun,2025-06,Yogyakarta,Mikro Syariah,Qardh & Ijarah,31.0,33.4,1.08,108,368,4.9
+2025,Jul,2025-07,Yogyakarta,Mikro Syariah,Qardh & Ijarah,32.5,35.0,1.05,110,385,4.9
+2025,Agu,2025-08,Yogyakarta,Mikro Syariah,Qardh & Ijarah,33.5,36.5,1.02,112,402,4.9
+2025,Sep,2025-09,Yogyakarta,Mikro Syariah,Qardh & Ijarah,35.0,38.2,1.00,115,420,5.0
+2025,Okt,2025-10,Yogyakarta,Mikro Syariah,Qardh & Ijarah,36.0,39.8,0.98,118,440,5.0
+2025,Nov,2025-11,Yogyakarta,Mikro Syariah,Qardh & Ijarah,37.5,41.5,0.95,120,460,5.0
+2025,Des,2025-12,Yogyakarta,Mikro Syariah,Qardh & Ijarah,39.0,43.2,0.92,122,480,5.0

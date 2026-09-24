@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Praktikum P03 BIV — Audit Visualisasi Menyesatkan &amp; Redesign Jujur di Power BI</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+<script src="../../cloud-sync.js?v=20260912b"></script>
+<style>
+/* ── BIV P03 · ROYAL PURPLE & GOLD THEME ── */
+:root {
+  --meet-from: #0E0420;
+  --meet-mid: #1A0838;
+  --meet-to: #2A1060;
+  --meet-acc: #C09030;
+  --meet-acc2: #D0A840;
+  --bg: #EDF1F6;
+  --sf: #FFFFFF;
+  --sf2: #F4EFF8;
+  --sf3: #F8F5FC;
+  --bd: #C4CDD8;
+  --bs: #DDE3EC;
+  --tx: #0C1824;
+  --txm: #475569;
+  --txl: #8A9AB0;
+  --pri: #1A0838;
+  --pril: #EAD8F8;
+  --prx: #F4EEF8;
+  --acc: #C09030;
+  --accl: #F8EDD0;
+  --sya: #1F9060;
+  --syal: #D0EEE2;
+  --syab: #40B080;
+  --done-bg: #D0EEE2;
+  --done-bd: #40B080;
+  --done-tx: #0A4020;
+  --danger: #D44040;
+  --danger-bg: #FEE0E0;
+  --danger-tx: #901010;
+  --code-bg: #1E1E2E;
+  --code-tx: #C9D1D9;
+  --r: 8px;
+  --rs: 5px;
+  --shadow: 0 4px 20px rgba(26,8,56,.1);
+  --shadow-sm: 0 2px 8px rgba(26,8,56,.06);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme=light]) {
+    --bg: #06030E;
+    --sf: #100818;
+    --sf2: #160C28;
+    --sf3: #0E0618;
+    --bd: #28104A;
+    --bs: #180830;
+    --tx: #E8D8F8;
+    --txm: #8060A8;
+    --txl: #3A1860;
+    --pri: #8050D0;
+    --pril: #18082A;
+    --prx: #0C0418;
+    --acc: #D0A840;
+    --accl: #18100A;
+    --sya: #40C890;
+    --syal: #031410;
+    --done-bg: #031810;
+    --done-bd: #40C890;
+    --done-tx: #40C890;
+    --danger: #FF6B6B;
+    --danger-bg: #280808;
+    --danger-tx: #FFA8A8;
+  }
+}
+
+:root[data-theme=dark] {
+  --bg: #06030E;
+  --sf: #100818;
+  --sf2: #160C28;
+  --sf3: #0E0618;
+  --bd: #28104A;
+  --bs: #180830;
+  --tx: #E8D8F8;
+  --txm: #8060A8;
+  --txl: #3A1860;
+  --pri: #8050D0;
+  --pril: #18082A;
+  --prx: #0C0418;
+  --acc: #D0A840;
+  --accl: #18100A;
+  --sya: #40C890;
+  --syal: #031410;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Source Sans 3', system-ui, sans-serif; background: var(--bg); color: var(--tx); font-size: 15px; line-height: 1.65; }
+
+/* ── HEADER ── */
+.hd { background: linear-gradient(160deg, var(--meet-from) 0%, var(--meet-mid) 55%, var(--meet-to) 100%); color: #fff; position: relative; overflow: hidden; }
+.hd-ornament { position: absolute; inset: 0; pointer-events: none; opacity: .12; }
+.hd-inner { max-width: 860px; margin: 0 auto; padding: 36px 28px 12px; position: relative; z-index: 1; }
+.hd-eyebrow { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+.hd-line { width: 28px; height: 1px; background: var(--meet-acc); }
+.hd-eye { font-size: 11px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; color: var(--meet-acc); }
+.hd-kode { font-size: 12px; background: rgba(192,144,48,.15); border: 1px solid rgba(192,144,48,.3); border-radius: 12px; padding: 2px 12px; color: var(--meet-acc2); margin-left: auto; }
+.hd-title { font-family: 'Amiri', serif; font-size: 32px; font-weight: 700; line-height: 1.2; margin-bottom: 6px; }
+.hd-sub { font-size: 14px; color: rgba(255,255,255,.65); margin-bottom: 18px; }
+.hd-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
+.hpill { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.14); border-radius: 14px; padding: 3px 12px; font-size: 12px; color: rgba(255,255,255,.75); }
+.hpill strong { color: #fff; }
+.hd-arch { line-height: 0; }
+.hd-arch svg { display: block; width: 100%; height: 28px; }
+
+/* ── TRACKER BAR ── */
+.tr-wrap { background: var(--sf); border-bottom: 1px solid var(--bs); position: sticky; top: 0; z-index: 40; box-shadow: var(--shadow-sm); }
+.tr-inner { max-width: 860px; margin: 0 auto; padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; gap: 8px; overflow-x: auto; }
+.tr-step { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.tr-circle { width: 26px; height: 26px; border-radius: 50%; background: var(--bs); color: var(--txm); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+.tr-circle.active { background: var(--pri); color: #fff; }
+.tr-circle.done { background: var(--sya); color: #fff; }
+.tr-label { font-size: 11.5px; font-weight: 600; color: var(--txl); }
+.tr-label.active { color: var(--pri); font-weight: 700; }
+.tr-label.done { color: var(--sya); }
+.tr-line { width: 18px; height: 2px; background: var(--bs); }
+.tr-line.done { background: var(--sya); }
+
+/* ── MAIN LAYOUT ── */
+.main { max-width: 860px; margin: 0 auto; padding: 28px 24px 80px; }
+
+/* ── STEP CARDS ── */
+.step-card { background: var(--sf); border: 1px solid var(--bs); border-radius: var(--r); margin-bottom: 20px; box-shadow: var(--shadow-sm); overflow: hidden; transition: opacity .3s, filter .3s; }
+.step-card.locked { opacity: .55; filter: grayscale(.3); pointer-events: none; }
+.step-card.unlocked { opacity: 1; filter: none; pointer-events: auto; }
+.step-card.completed { border-color: var(--done-bd); }
+.step-hd { display: flex; align-items: center; gap: 12px; padding: 15px 22px; background: var(--sf3); border-bottom: 1px solid var(--bs); }
+.step-num { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, var(--meet-mid), var(--meet-acc)); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+.step-title { font-family: 'Amiri', serif; font-size: 19px; font-weight: 700; color: var(--pri); }
+.step-time { font-size: 11.5px; color: var(--txl); margin-left: auto; font-weight: 600; }
+.step-body { padding: 22px 26px; }
+
+/* ── INSTRUCTION BLOCKS ── */
+.inst-box { background: var(--sf3); border: 1px solid var(--bs); border-radius: var(--rs); padding: 16px; margin: 14px 0; }
+.inst-box h4 { font-size: 14px; font-weight: 700; color: var(--pri); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+.audit-bad { background: var(--danger-bg); border-left: 4px solid var(--danger); border-radius: var(--rs); padding: 12px 16px; margin: 12px 0; font-size: 13.5px; color: var(--danger-tx); }
+.audit-good { background: var(--syal); border-left: 4px solid var(--sya); border-radius: var(--rs); padding: 12px 16px; margin: 12px 0; font-size: 13.5px; color: #0A4020; }
+
+/* ── CODE BOXES ── */
+.code-wrap { background: var(--code-bg); border-radius: var(--rs); margin: 12px 0; overflow: hidden; position: relative; }
+.code-hd { background: rgba(255,255,255,0.06); padding: 7px 14px; font-family: 'Source Code Pro', monospace; font-size: 11.5px; color: #8B949E; display: flex; justify-content: space-between; align-items: center; }
+.btn-copy { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; color: #C9D1D9; font-size: 11px; padding: 2px 8px; cursor: pointer; }
+.btn-copy:hover { background: rgba(255,255,255,0.2); }
+pre.code-block { padding: 12px 16px; font-family: 'Source Code Pro', monospace; font-size: 13px; color: var(--code-tx); overflow-x: auto; line-height: 1.5; margin: 0; }
+
+/* ── ACTION BUTTONS ── */
+.unlock-row { display: flex; justify-content: flex-end; margin-top: 18px; }
+.btn-unlock { background: linear-gradient(135deg, var(--meet-mid), var(--meet-acc)); color: #fff; border: none; border-radius: 20px; padding: 10px 24px; font-family: inherit; font-size: 13.5px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; transition: opacity .2s; }
+.btn-unlock:hover { opacity: .9; }
+.btn-unlock.done-state { background: var(--sya); cursor: default; }
+
+/* ── COMPLETION BANNER ── */
+.completion { display: none; background: linear-gradient(135deg, #0A2818, #184028); border: 2px solid var(--sya); border-radius: var(--r); padding: 28px; text-align: center; color: #fff; margin-top: 30px; }
+.completion.show { display: block; }
+.completion h2 { font-family: 'Amiri', serif; font-size: 26px; margin-bottom: 8px; color: #40C890; }
+.completion p { font-size: 14.5px; color: rgba(255,255,255,0.85); margin-bottom: 18px; }
+.next-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--acc); color: #0E0420; font-weight: 700; text-decoration: none; padding: 11px 26px; border-radius: 20px; font-size: 14px; }
+.next-btn:hover { background: var(--acc2); }
+</style>
+</head>
+<body>
+
+<!-- ╔══ HEADER ══╗ -->
+<header class="hd">
+  <div class="hd-ornament">
+    <svg viewBox="0 0 800 200" width="100%" height="100%" fill="none" stroke="currentColor">
+      <circle cx="120" cy="60" r="70" stroke-width="0.5" stroke="#C09030"/>
+      <circle cx="720" cy="140" r="110" stroke-width="0.5" stroke="#C09030"/>
+    </svg>
+  </div>
+  <div class="hd-inner">
+    <div class="hd-eyebrow">
+      <div class="hd-line"></div>
+      <span class="hd-eye">Laboratorium Business Intelligence — Universitas Tazkia</span>
+      <span class="hd-kode">BIV-301 · Praktikum 03</span>
+    </div>
+    <h1 class="hd-title">Audit Visualisasi Menyesatkan &amp; Redesign Jujur di Power BI</h1>
+    <p class="hd-sub">Membongkar 4 Kasus Manipulasi Grafik Finansial Perbankan Syariah dan Merekonstruksinya Sesuai Kaidah Sidq &amp; Lie Factor</p>
+    <div class="hd-pills">
+      <span class="hpill"><strong>File Dataset:</strong> dataset-audit-visual-p03.csv</span>
+      <span class="hpill"><strong>Output:</strong> P03_Audit_Visual_BIV.pbix</span>
+      <span class="hpill"><strong>Bobot:</strong> Lab 2 (30% Komponen Nilai)</span>
+      <span class="hpill"><strong>Tool:</strong> Power BI Desktop</span>
+    </div>
+  </div>
+  <div class="hd-arch">
+    <svg viewBox="0 0 1200 28" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,28 L0,16 Q20,4 40,16 Q60,28 80,16 Q100,4 120,16 Q140,28 160,16 Q180,4 200,16 Q220,28 240,16 Q260,4 280,16 Q300,28 320,16 Q340,4 360,16 Q380,28 400,16 Q420,4 440,16 Q460,28 480,16 Q500,4 520,16 Q540,28 560,16 Q580,4 600,16 Q620,28 640,16 Q660,4 680,16 Q700,28 720,16 Q740,4 760,16 Q780,28 800,16 Q820,4 840,16 Q860,28 880,16 Q900,4 920,16 Q940,28 960,16 Q980,4 1000,16 Q1020,28 1040,16 Q1060,4 1080,16 Q1100,28 1120,16 Q1140,4 1160,16 Q1180,28 1200,16 L1200,28 Z" fill="var(--bg)"/>
+    </svg>
+  </div>
+</header>
+
+<!-- ╔══ TRACKER BAR ══╗ -->
+<div class="tr-wrap">
+  <div class="tr-inner">
+    <div class="tr-step">
+      <div class="tr-circle active" id="tc0">1</div>
+      <div class="tr-label active" id="tl0">Setup Data</div>
+    </div>
+    <div class="tr-line" id="tln0"></div>
+    <div class="tr-step">
+      <div class="tr-circle" id="tc1">2</div>
+      <div class="tr-label" id="tl1">Audit Y-Axis</div>
+    </div>
+    <div class="tr-line" id="tln1"></div>
+    <div class="tr-step">
+      <div class="tr-circle" id="tc2">3</div>
+      <div class="tr-label" id="tl2">Audit 3D Pie</div>
+    </div>
+    <div class="tr-line" id="tln2"></div>
+    <div class="tr-step">
+      <div class="tr-circle" id="tc3">4</div>
+      <div class="tr-label" id="tl3">Audit Timeframe</div>
+    </div>
+    <div class="tr-line" id="tln3"></div>
+    <div class="tr-step">
+      <div class="tr-circle" id="tc4">5</div>
+      <div class="tr-label" id="tl4">Dual Axis Fix</div>
+    </div>
+    <div class="tr-line" id="tln4"></div>
+    <div class="tr-step">
+      <div class="tr-circle" id="tc5">6</div>
+      <div class="tr-label" id="tl5">Audit Report</div>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══ MAIN INSTRUCTIONS ══╗ -->
+<main class="main">
+
+<!-- ── STEP 1: SETUP DATA & DAX MEASURES ── -->
+<div class="step-card unlocked" id="step0">
+  <div class="step-hd">
+    <div class="step-num" id="sn0">1</div>
+    <div class="step-title">Langkah 1: Import Dataset &amp; Pembuatan DAX Measures</div>
+    <div class="step-time">⏱ 15 Menit</div>
+  </div>
+  <div class="step-body">
+    <p>Buka Power BI Desktop, kemudian muat file <code>dataset-audit-visual-p03.csv</code> yang berada di folder praktikum.</p>
+
+    <div class="inst-box">
+      <h4>📂 1.1 Ingest Data di Power Query</h4>
+      <ol style="padding-left:18px;font-size:13.5px;color:var(--txm);line-height:1.6">
+        <li>Pilih <strong>Get Data</strong> → <strong>Text/CSV</strong> → pilih berkas <code>dataset-audit-visual-p03.csv</code>.</li>
+        <li>Pastikan tipe data kolom <code>Target_DPK_Miliar</code>, <code>Realisasi_DPK_Miliar</code>, <code>NPF_Persen</code> bertipe <em>Decimal Number</em>, dan <code>Bulan</code> bertipe <em>Text</em>.</li>
+        <li>Klik <strong>Close &amp; Apply</strong>.</li>
+      </ol>
+    </div>
+
+    <div class="inst-box">
+      <h4>📐 1.2 Buat DAX Measures Kunci</h4>
+      <p style="font-size:13px;color:var(--txm);margin-bottom:8px">Buat tabel kalkulasi ukuran (Measure Table) dengan rumus DAX berikut:</p>
+      
+      <div class="code-wrap">
+        <div class="code-hd"><span>DAX — Total Realisasi DPK</span><button class="btn-copy" onclick="copyCode('c1')">Salin</button></div>
+        <pre class="code-block" id="c1">Total Realisasi DPK = SUM('dataset-audit-visual-p03'[Realisasi_DPK_Miliar])</pre>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-hd"><span>DAX — Rata-rata NPF</span><button class="btn-copy" onclick="copyCode('c2')">Salin</button></div>
+        <pre class="code-block" id="c2">Rata2 NPF = AVERAGE('dataset-audit-visual-p03'[NPF_Persen])</pre>
+      </div>
+    </div>
+
+    <div class="unlock-row">
+      <button class="btn-unlock" id="btn0" onclick="completeStep(0)">✓ Langkah 1 Selesai — Lanjut ke Kasus 1 ➔</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── STEP 2: AUDIT KASUS 1 (TRUNCATED Y-AXIS) ── -->
+<div class="step-card unlocked" id="step1">
+  <div class="step-hd">
+    <div class="step-num" id="sn1">2</div>
+    <div class="step-title">Langkah 2: Audit Kasus 1 — Truncated Y-Axis pada Kinerja Cabang</div>
+    <div class="step-time">⏱ 20 Menit</div>
+  </div>
+  <div class="step-body">
+    <p>Skenario: Manajemen cabang Jakarta Pusat menyajikan grafik capaian DPK dengan sumbu Y dipotong pada angka 110 agar cabang mereka terlihat mengungguli cabang lain secara masif.</p>
+
+    <div class="audit-bad">
+      <strong>🚨 Temuan Audit Manipulatif (Tadlis):</strong><br>
+      Grafik Clustered Column Chart dengan Y-Axis Minimum disetel manual ke <code>110</code>. Cabang Jakarta Pusat (128M) tampak 5x lebih tinggi daripada Cabang Surabaya (82M), padahal rasio aslinya hanya 1.56x ($\text{Lie Factor} \approx 3.2$).
+    </div>
+
+    <div class="audit-good">
+      <strong>✨ Tindakan Redesign Jujur (Sidq):</strong><br>
+      Kembalikan nilai <strong>Y-Axis Minimum ke 'Auto' (0)</strong>. Tambahkan <em>Data Labels</em> dan <em>Reference Line</em> target DPK agar pembaca melihat konteks sesungguhnya.
+    </div>
+
+    <div class="inst-box">
+      <h4>🛠️ Panduan Eksekusi di Power BI:</h4>
+      <ol style="padding-left:18px;font-size:13.5px;color:var(--txm);line-height:1.6">
+        <li>Buat <strong>Clustered Column Chart</strong>: X-axis = <code>Cabang</code>, Y-axis = <code>Total Realisasi DPK</code>.</li>
+        <li>Buka panel <strong>Format Visual</strong> → <strong>Y-Axis</strong> → pastikan <strong>Range Minimum = 0</strong>.</li>
+        <li>Buka <strong>Data Labels</strong> → aktifkan untuk menampilkan angka presisi di atas setiap batang.</li>
+        <li>Beri judul visual yang objektif: <em>"Perbandingan Realisasi DPK Antar Cabang (Skala Penuh Dimulai dari Nol)"</em>.</li>
+      </ol>
+    </div>
+
+    <div class="unlock-row">
+      <button class="btn-unlock" id="btn1" onclick="completeStep(1)">✓ Kasus 1 Selesai — Lanjut ke Kasus 2 ➔</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── STEP 3: AUDIT KASUS 2 (3D PIE & PROPORTIONS) ── -->
+<div class="step-card unlocked" id="step2">
+  <div class="step-hd">
+    <div class="step-num" id="sn2">3</div>
+    <div class="step-title">Langkah 3: Audit Kasus 2 — Dekonstruksi 3D Pie ke 2D Bar Terurut</div>
+    <div class="step-time">⏱ 20 Menit</div>
+  </div>
+  <div class="step-body">
+    <p>Skenario: Laporan tahunan menampilkan komposisi akad pembiayaan (Mudharabah, Murabahah, Musyarakah, Qardh) menggunakan diagram lingkaran 3D yang membingungkan.</p>
+
+    <div class="audit-bad">
+      <strong>🚨 Temuan Audit Manipulatif:</strong><br>
+      Irisan Murabahah (Retail UMKM) yang dimiringkan ke bawah tampak lebih dominan daripada Musyarakah, menyulitkan audiens membedakan proporsi riil.
+    </div>
+
+    <div class="audit-good">
+      <strong>✨ Tindakan Redesign Jujur:</strong><br>
+      Gantikan dengan <strong>Clustered Bar Chart (Horizontal)</strong> yang diurutkan secara menurun (Descending by DPK/Margin) dengan persentase kontribusi yang jelas.
+    </div>
+
+    <div class="inst-box">
+      <h4>🛠️ Panduan Eksekusi di Power BI:</h4>
+      <ol style="padding-left:18px;font-size:13.5px;color:var(--txm);line-height:1.6">
+        <li>Tambahkan visual <strong>Clustered Bar Chart</strong>.</li>
+        <li>Y-axis = <code>Produk_Akad</code>, X-axis = <code>Total Realisasi DPK</code>.</li>
+        <li>Klik titik tiga di sudut visual → <strong>Sort axis</strong> → pilih <code>Total Realisasi DPK</code> → <strong>Sort descending</strong>.</li>
+        <li>Beri warna aksen semantik khas Tazkia: Gold (<code>#C09030</code>) untuk akad dominan.</li>
+      </ol>
+    </div>
+
+    <div class="unlock-row">
+      <button class="btn-unlock" id="btn2" onclick="completeStep(2)">✓ Kasus 2 Selesai — Lanjut ke Kasus 3 ➔</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── STEP 4: AUDIT KASUS 3 (CHERRY-PICKING TIMEFRAME) ── -->
+<div class="step-card unlocked" id="step3">
+  <div class="step-hd">
+    <div class="step-num" id="sn3">4</div>
+    <div class="step-title">Langkah 4: Audit Kasus 3 — Mengatasi Cherry-Picking dengan Tren 12 Bulan</div>
+    <div class="step-time">⏱ 25 Menit</div>
+  </div>
+  <div class="step-body">
+    <p>Skenario: Pada cabang Jakarta Pusat, pembiayaan korporat mengalami penurunan berkelanjutan dari bulan April hingga Desember 2025. Namun, laporan triwulanan hanya menampilkan data Jan–Apr untuk mengklaim "tren selalu naik".</p>
+
+    <div class="audit-bad">
+      <strong>🚨 Temuan Audit Manipulatif:</strong><br>
+      Memfilter visual hanya pada kuartal I (Jan–Mar) sehingga menutupi penurunan 15% pada kuartal berikutnya.
+    </div>
+
+    <div class="audit-good">
+      <strong>✨ Tindakan Redesign Jujur:</strong><br>
+      Tampilkan rentang penuh 12 bulan (Januari s.d Desember 2025) menggunakan <strong>Line Chart</strong> lengkap dengan garis Target DPK untuk mengidentifikasi anomali penurunan sejak Q2.
+    </div>
+
+    <div class="inst-box">
+      <h4>🛠️ Panduan Eksekusi di Power BI:</h4>
+      <ol style="padding-left:18px;font-size:13.5px;color:var(--txm);line-height:1.6">
+        <li>Buat <strong>Line Chart</strong>.</li>
+        <li>X-axis = <code>Bulan</code> (pastikan urutan bulan sudah disortir berdasarkan kolom <code>Periode</code>).</li>
+        <li>Y-axis = <code>Realisasi_DPK_Miliar</code> dan <code>Target_DPK_Miliar</code>.</li>
+        <li>Gunakan Slicer <code>Cabang</code> untuk membandingkan kinerja Jakarta Pusat vs Bandung.</li>
+      </ol>
+    </div>
+
+    <div class="unlock-row">
+      <button class="btn-unlock" id="btn3" onclick="completeStep(3)">✓ Kasus 3 Selesai — Lanjut ke Kasus 4 ➔</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── STEP 5: AUDIT KASUS 4 (DUAL AXIS CORRELATION) ── -->
+<div class="step-card unlocked" id="step4">
+  <div class="step-hd">
+    <div class="step-num" id="sn4">5</div>
+    <div class="step-title">Langkah 5: Audit Kasus 4 — Menghilangkan Dual-Axis Trap dengan Small Multiples</div>
+    <div class="step-time">⏱ 20 Menit</div>
+  </div>
+  <div class="step-body">
+    <p>Skenario: Analis menyatukan NPF (%) dan Biaya Operasional (Juta Rp) ke dalam satu diagram garis sumbu ganda (Line Chart with Secondary Axis) dengan skala yang disesuaikan secara artifisial.</p>
+
+    <div class="audit-bad">
+      <strong>🚨 Temuan Audit Manipulatif:</strong><br>
+      Sumbu ganda memaksa dua kurva berimpit seolah-olah biaya operasional 100% mendikte kenaikan NPF.
+    </div>
+
+    <div class="audit-good">
+      <strong>✨ Tindakan Redesign Jujur:</strong><br>
+      Gunakan <strong>Scatter Plot</strong> untuk membuktikan korelasi matematis yang sebenarnya ($R^2$), atau pisahkan menjadi dua Line Chart independen (Small Multiples).
+    </div>
+
+    <div class="inst-box">
+      <h4>🛠️ Panduan Eksekusi di Power BI:</h4>
+      <ol style="padding-left:18px;font-size:13.5px;color:var(--txm);line-height:1.6">
+        <li>Buat <strong>Scatter Chart</strong>: X-axis = <code>Biaya_Operasional_Juta</code>, Y-axis = <code>NPF_Persen</code>, Values = <code>Periode</code>.</li>
+        <li>Buka panel <strong>Analytics</strong> (ikon kaca pembesar) → tambahkan <strong>Trend line</strong>.</li>
+        <li>Periksa arah garis tren untuk memberikan kesimpulan berbasis bukti, bukan ilusi visual sumbu ganda.</li>
+      </ol>
+    </div>
+
+    <div class="unlock-row">
+      <button class="btn-unlock" id="btn4" onclick="completeStep(4)">✓ Kasus 4 Selesai — Lanjut ke Laporan Akhir ➔</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── STEP 6: MODERN AI HYBRID WORKFLOW & EXPORT ── -->
+<div class="step-card unlocked" id="step5">
+  <div class="step-hd">
+    <div class="step-num" id="sn5">6</div>
+    <div class="step-title">Langkah 6: Checklist Anti-Tadlis, AI Co-Pilot &amp; Final Export</div>
+    <div class="step-time">⏱ 15 Menit</div>
+  </div>
+  <div class="step-body">
+    <div class="inst-box" style="background:var(--prx);border-color:var(--meet-acc)">
+      <h4 style="color:#6030B0">🤖 Eksplorasi Eksekutif: The Modern Hybrid Analytics Workflow</h4>
+      <p style="font-size:13.5px;color:var(--txm);margin-bottom:10px">
+        Uji kemampuan AI Co-Pilot untuk memverifikasi apakah dashboard Anda sudah mematuhi kaidah visualisasi jujur:
+      </p>
+      <ol style="padding-left:18px;font-size:13px;color:var(--txm);line-height:1.6">
+        <li>Buka AI Agent (Antigravity / Gemini), unggah file <code>dataset-audit-visual-p03.csv</code> dan berikan prompt:<br>
+          <em style="color:var(--pri);background:var(--sf2);padding:2px 6px;border-radius:4px;display:inline-block;margin:4px 0">"Lakukan audit integritas visual terhadap dataset ini: jelaskan mengapa cabang Jakarta Pusat mengalami anomali penurunan DPK di semester 2, dan berikan checklist 3 visualisasi terbaik yang bebas dari Lie Factor dan Tadlis visual."</em>
+        </li>
+        <li>Bandingkan jawaban AI dengan hasil investigasi Anda di Power BI.</li>
+      </ol>
+    </div>
+
+    <div class="inst-box">
+      <h4>💾 Simpan File Power BI</h4>
+      <p style="font-size:13.5px;color:var(--txm)">Simpan berkas Power BI Anda dengan menekan <strong>Ctrl + S</strong>. Beri nama berkas: <strong>P03_Audit_Visual_BIV.pbix</strong>.</p>
+    </div>
+
+    <div class="unlock-row">
+      <button class="btn-unlock" id="btn5" onclick="completeStep(5)">✓ Semua Langkah &amp; Tantangan Praktikum Selesai!</button>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══ COMPLETION BANNER ══╗ -->
+<div class="completion" id="completion">
+  <h2>🎉 Praktikum P03 BIV Selesai!</h2>
+  <p>Selamat! Anda telah berhasil menyelesaikan Audit Visualisasi Menyesatkan dan merekonstruksi 4 kasus grafik finansial bank syariah sesuai prinsip Sidq dan Edward Tufte Lie Factor.</p>
+  <a class="next-btn" href="Pertemuan-03-BIV.html">← Kembali ke Slide Teori P03</a>
+</div>
+
+</main>
+
+<script>
+const LAB_KEY = 'tazkia-biv-p03-lab-v1';
+const TOTAL_STEPS = 6;
+
+let labState = { done: [] };
+
+function loadLabState() {
+  try {
+    const s = JSON.parse(localStorage.getItem(LAB_KEY));
+    if (s && Array.isArray(s.done)) labState = s;
+  } catch (e) {}
+}
+
+function saveLabState() {
+  try {
+    localStorage.setItem(LAB_KEY, JSON.stringify(labState));
+  } catch (e) {}
+}
+
+function applyLabState() {
+  labState.done.forEach(i => applyDone(i));
+  updateTracker();
+}
+
+function applyDone(i) {
+  const card = document.getElementById('step' + i);
+  if (!card) return;
+  card.className = 'step-card unlocked completed';
+  const num = document.getElementById('sn' + i);
+  if (num) { num.style.background = 'var(--sya)'; num.textContent = '✓'; }
+  const btn = document.getElementById('btn' + i);
+  if (btn) { btn.className = 'btn-unlock done-state'; btn.disabled = true; btn.textContent = '✓ Selesai'; }
+  const next = document.getElementById('step' + (i + 1));
+  if (next) next.className = 'step-card unlocked';
+}
+
+function completeStep(i) {
+  if (!labState.done.includes(i)) {
+    labState.done.push(i);
+    saveLabState();
+  }
+  applyDone(i);
+  updateTracker();
+  const next = document.getElementById('step' + (i + 1));
+  if (next) next.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  if (labState.done.length === TOTAL_STEPS) {
+    const comp = document.getElementById('completion');
+    comp.classList.add('show');
+    comp.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (typeof saveScoreToCloud === 'function') {
+      saveScoreToCloud('BIV-P03-LAB', 100, { completedSteps: TOTAL_STEPS });
+    }
+  }
+}
+
+function updateTracker() {
+  for (let i = 0; i < TOTAL_STEPS; i++) {
+    const c = document.getElementById('tc' + i);
+    const l = document.getElementById('tl' + i);
+    const ln = document.getElementById('tln' + i);
+    if (!c) continue;
+    if (labState.done.includes(i)) {
+      c.className = 'tr-circle done'; c.textContent = '✓';
+      l.className = 'tr-label done';
+      if (ln) ln.className = 'tr-line done';
+    } else if (i === labState.done.length) {
+      c.className = 'tr-circle active';
+      l.className = 'tr-label active';
+    } else {
+      c.className = 'tr-circle';
+      l.className = 'tr-label';
+    }
+  }
+}
+
+function copyCode(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  navigator.clipboard.writeText(el.innerText).then(() => {
+    alert('Kode DAX berhasil disalin ke clipboard!');
+  });
+}
+
+// ── INIT ──
+loadLabState();
+applyLabState();
+</script>
+
+</body>
+</html>
