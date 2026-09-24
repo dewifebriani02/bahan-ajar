@@ -756,9 +756,10 @@ function submitAssessment() {
   }
 
   if (typeof saveScoreToCloud === 'function') {
-    saveScoreToCloud('BIV-P03-SLIDE', finalTotal, {
+    saveScoreToCloud('BIV Pertemuan 03', 'Kuis Audit Visual Menyesatkan & Sidq', finalTotal, 100, {
       quizScore: quizScore,
-      matchPairs: state.matchPairs.length
+      matchPairs: state.matchPairs.length,
+      passed: finalTotal >= 70
     });
   }
 

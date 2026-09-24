@@ -817,16 +817,29 @@ window.saveScoreToCloud = function (pertemuan, aktivitas, skor, total, detail = 
     return;
   }
 
+  // Handle overloaded argument calls (e.g. saveScoreToCloud(pertemuan, skor, detail))
+  if (typeof aktivitas === 'number') {
+    detail = typeof skor === 'object' ? skor : (detail || {});
+    total = typeof total === 'number' ? total : 100;
+    skor = aktivitas;
+    aktivitas = 'Evaluasi Pemahaman & Praktikum';
+  }
+
+  const safeSkor = Number(skor) || 0;
+  const safeTotal = Number(total) || 100;
+  const safePersen = safeTotal > 0 ? Math.round((safeSkor / safeTotal) * 100) : 0;
+  const safeDetail = (detail && typeof detail === 'object') ? detail : {};
+
   window.onCloudSyncReady(async (dbInstance) => {
     const record = {
-      nim: currentStudent.nim,
-      nama: currentStudent.nama,
-      pertemuan: pertemuan,
-      aktivitas: aktivitas,
-      skor: skor,
-      total: total,
-      persentase: Math.round((skor / total) * 100),
-      detail: detail,
+      nim: currentStudent.nim || '-',
+      nama: currentStudent.nama || 'Mahasiswa',
+      pertemuan: pertemuan || 'Pertemuan Umum',
+      aktivitas: aktivitas || 'Aktivitas Kelas',
+      skor: safeSkor,
+      total: safeTotal,
+      persentase: safePersen,
+      detail: safeDetail,
       timestamp: firebase.firestore.FieldValue.serverTimestamp(),
       timestampClient: new Date().toISOString()
     };
@@ -834,8 +847,8 @@ window.saveScoreToCloud = function (pertemuan, aktivitas, skor, total, detail = 
     try {
       // Save to 'quiz' collection
       await dbInstance.collection('quiz').add(record);
-      console.log(`✓ Skor ${aktivitas} ${pertemuan} berhasil tersimpan di Cloud Firestore!`);
-      showCloudToast(`Skor <strong>${aktivitas}</strong> (${skor}/${total}) berhasil tersimpan di Cloud Firestore!`);
+      console.log(`✓ Skor ${record.aktivitas} ${record.pertemuan} berhasil tersimpan di Cloud Firestore!`);
+      showCloudToast(`Skor <strong>${record.aktivitas}</strong> (${safeSkor}/${safeTotal}) berhasil tersimpan di Cloud Firestore!`);
     } catch (err) {
       console.error("Gagal menyimpan skor ke cloud:", err);
       showCloudToast(`Gagal menyimpan ke Cloud: ${err.message}. Periksa tab Rules di Firebase!`, true);

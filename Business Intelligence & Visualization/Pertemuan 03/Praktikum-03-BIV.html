@@ -509,7 +509,10 @@ function completeStep(i) {
     comp.classList.add('show');
     comp.scrollIntoView({ behavior: 'smooth', block: 'start' });
     if (typeof saveScoreToCloud === 'function') {
-      saveScoreToCloud('BIV-P03-LAB', 100, { completedSteps: TOTAL_STEPS });
+      saveScoreToCloud('BIV Lab 02 (P03)', 'Lembar Praktikum Audit Visual & Redesign Power BI', 100, 100, {
+        completedSteps: TOTAL_STEPS,
+        passed: true
+      });
     }
   }
 }
