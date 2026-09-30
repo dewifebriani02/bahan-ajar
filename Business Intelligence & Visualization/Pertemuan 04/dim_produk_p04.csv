@@ -1,0 +1,6 @@
+produk_id,nama_produk,jenis_akad,kategori_akad,deskripsi
+PR01,Pembiayaan Murabahah Mikro,Murabahah,Jual-Beli,Pembiayaan barang dengan margin keuntungan disepakati di awal
+PR02,Pembiayaan Mudharabah Usaha,Mudharabah,Bagi Hasil,Modal usaha dengan skema bagi hasil sesuai nisbah
+PR03,Pembiayaan Musyarakah Modal,Musyarakah,Bagi Hasil,Kerja sama modal patungan antara BMT dan anggota
+PR04,Pembiayaan Ijarah Sewa,Ijarah,Sewa-Jasa,Sewa-menyewa aset atau jasa dengan ujrah (fee)
+PR05,Pembiayaan Qardhul Hasan,Qardhul Hasan,Kebajikan,Pinjaman kebajikan tanpa margin untuk anggota dhuafa

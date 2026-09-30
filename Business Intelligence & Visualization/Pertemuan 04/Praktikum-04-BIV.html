@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Praktikum P04 BIV — Membangun Model Data &amp; Laporan Pertama di Power BI</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+<script src="../../cloud-sync.js?v=20260912b"></script>
+<style>
+:root {
+  --meet-from: #0E0420;
+  --meet-mid: #1A0838;
+  --meet-to: #2A1060;
+  --meet-acc: #C09030;
+  --meet-acc2: #D0A840;
+  --bg: #EDF1F6;
+  --sf: #FFFFFF;
+  --sf2: #F4EFF8;
+  --sf3: #F8F5FC;
+  --bd: #C4CDD8;
+  --bs: #DDE3EC;
+  --tx: #0C1824;
+  --txm: #475569;
+  --txl: #8A9AB0;
+  --pri: #1A0838;
+  --pril: #EAD8F8;
+  --prx: #F4EEF8;
+  --acc: #C09030;
+  --accl: #F8EDD0;
+  --sya: #1F9060;
+  --syal: #D0EEE2;
+  --syab: #40B080;
+  --done-bg: #D0EEE2;
+  --done-bd: #40B080;
+  --done-tx: #0A4020;
+  --lock-bg: #F0F2F6;
+  --lock-bd: #C4CDD8;
+  --code-bg: #1E1E2E;
+  --code-tx: #C9D1D9;
+  --out-bg: #F8FFF4;
+  --out-bd: #40C080;
+  --r: 8px;
+  --rs: 5px;
+  --shadow: 0 4px 20px rgba(26,8,56,.1);
+  --shadow-sm: 0 2px 8px rgba(26,8,56,.06);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme=light]) {
+    --bg: #06030E;
+    --sf: #100818;
+    --sf2: #160C28;
+    --sf3: #0E0618;
+    --bd: #28104A;
+    --bs: #180830;
+    --tx: #E8D8F8;
+    --txm: #8060A8;
+    --txl: #3A1860;
+    --pri: #8050D0;
+    --pril: #18082A;
+    --prx: #0C0418;
+    --acc: #D0A840;
+    --accl: #18100A;
+    --sya: #40C890;
+    --syal: #031410;
+    --done-bg: #031810;
+    --done-bd: #40C890;
+    --done-tx: #40C890;
+    --lock-bg: #040A14;
+    --lock-bd: #0C2840;
+    --out-bg: #021008;
+    --out-bd: #30A060;
+  }
+}
+
+:root[data-theme=dark] {
+  --bg: #06030E;
+  --sf: #100818;
+  --sf2: #160C28;
+  --sf3: #0E0618;
+  --bd: #28104A;
+  --bs: #180830;
+  --tx: #E8D8F8;
+  --txm: #8060A8;
+  --txl: #3A1860;
+  --pri: #8050D0;
+  --pril: #18082A;
+  --prx: #0C0418;
+  --acc: #D0A840;
+  --accl: #18100A;
+  --sya: #40C890;
+  --syal: #031410;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Source Sans 3', system-ui, sans-serif; background: var(--bg); color: var(--tx); font-size: 15px; line-height: 1.65; }
+
+/* ── HEADER ── */
+.hd { background: linear-gradient(160deg, var(--meet-from) 0%, var(--meet-mid) 55%, var(--meet-to) 100%); color: #fff; position: relative; overflow: hidden; }
+.hd-ornament { position: absolute; inset: 0; pointer-events: none; opacity: .1; }
+.hd-inner { max-width: 860px; margin: 0 auto; padding: 32px 24px 12px; position: relative; z-index: 1; }
+.hd-eyebrow { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+.hd-line { width: 24px; height: 1px; background: var(--meet-acc); }
+.hd-eye { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--meet-acc); }
+.hd-badge { font-size: 11px; background: rgba(192,144,48,.15); border: 1px solid rgba(192,144,48,.3); border-radius: 12px; padding: 2px 11px; color: var(--meet-acc2); margin-left: auto; }
+.hd-title { font-family: 'Amiri', serif; font-size: 28px; font-weight: 700; line-height: 1.25; margin-bottom: 5px; }
+.hd-sub { font-size: 13.5px; color: rgba(255,255,255,.6); margin-bottom: 16px; }
+.hd-pills { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 16px; }
+.hpill { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.13); border-radius: 12px; padding: 2px 11px; font-size: 11.5px; color: rgba(255,255,255,.75); }
+.hpill strong { color: #fff; }
+.hd-arch { line-height: 0; }
+.hd-arch svg { display: block; width: 100%; height: 24px; }
+
+/* ── STEP TRACKER ── */
+.tracker-wrap { background: var(--sf); border-bottom: 1px solid var(--bs); position: sticky; top: 0; z-index: 40; box-shadow: var(--shadow-sm); }
+.tracker { max-width: 860px; margin: 0 auto; padding: 8px 20px; display: flex; align-items: center; gap: 6px; overflow-x: auto; }
+.tr-step { display: flex; flex-direction: column; align-items: center; gap: 2px; flex-shrink: 0; }
+.tr-circle { width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--bs); background: var(--sf3); display: flex; align-items: center; justify-content: center; font-size: 11.5px; font-weight: 700; color: var(--txl); transition: all .3s; }
+.tr-circle.active { border-color: var(--acc); background: var(--accl); color: var(--pri); }
+.tr-circle.done { border-color: var(--sya); background: var(--syal); color: var(--sya); }
+.tr-label { font-size: 9.5px; color: var(--txl); white-space: nowrap; text-align: center; max-width: 62px; overflow: hidden; text-overflow: ellipsis; }
+.tr-label.active { color: var(--acc); font-weight: 600; }
+.tr-label.done { color: var(--sya); font-weight: 600; }
+.tr-line { width: 20px; height: 2px; background: var(--bs); border-radius: 1px; flex-shrink: 0; margin-bottom: 10px; }
+.tr-line.done { background: var(--sya); }
+
+/* ── MAIN LAYOUT ── */
+.main { max-width: 860px; margin: 0 auto; padding: 24px 20px 80px; }
+
+/* ── STEP CARD ── */
+.step-card { background: var(--sf); border: 1px solid var(--bs); border-radius: var(--r); margin-bottom: 16px; box-shadow: var(--shadow-sm); overflow: hidden; transition: opacity .3s, filter .3s; }
+.step-card.locked { opacity: .35; filter: grayscale(.5); pointer-events: none; }
+.step-card.unlocked { opacity: 1; filter: none; }
+.step-card.completed { border-color: var(--done-bd); }
+.step-hd { display: flex; align-items: center; gap: 11px; padding: 13px 20px; background: var(--sf3); border-bottom: 1px solid var(--bs); }
+.step-num { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; color: #fff; flex-shrink: 0; background: linear-gradient(135deg, var(--meet-mid), var(--meet-acc)); }
+.step-num.done { background: var(--sya); }
+.step-title { font-family: 'Amiri', serif; font-size: 17px; font-weight: 700; color: var(--pri); }
+.step-est { font-size: 11.5px; color: var(--txl); margin-left: auto; white-space: nowrap; }
+.step-body { padding: 18px 22px; }
+
+/* ── INSTRUCTION BOX ── */
+.inst-box { background: var(--prx); border: 1px solid rgba(192,144,48,.25); border-radius: var(--rs); padding: 14px 16px; margin: 14px 0; }
+.inst-box h4 { font-size: 13.5px; font-weight: 700; color: var(--pri); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+.inst-steps { list-style: none; padding: 0; margin: 0; }
+.inst-steps li { display: flex; gap: 10px; margin-bottom: 8px; font-size: 13.5px; color: var(--txm); align-items: flex-start; }
+.inst-steps li .n { width: 22px; height: 22px; background: var(--meet-mid); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+.inst-steps li:last-child { margin-bottom: 0; }
+
+/* ── SCHEMA MINI DIAGRAM (reuse dari slide, versi ringkas) ── */
+.schema-wrap { display: flex; align-items: center; justify-content: center; gap: 4px; margin: 16px 0; flex-wrap: wrap; }
+.schema-table { background: var(--sf); border: 2px solid var(--bs); border-radius: var(--rs); min-width: 150px; overflow: hidden; box-shadow: var(--shadow-sm); }
+.schema-table.fact { border-color: var(--acc); }
+.schema-table.dim { border-color: #2A7898; }
+.schema-hd { padding: 7px 11px; font-size: 12px; font-weight: 700; color: #fff; }
+.schema-table.fact .schema-hd { background: linear-gradient(135deg, var(--meet-mid), var(--acc)); }
+.schema-table.dim .schema-hd { background: linear-gradient(135deg, #2A7898, #1A5878); }
+.schema-cols { padding: 7px 0; }
+.schema-col { padding: 3px 11px; font-size: 10.5px; color: var(--txm); font-family: 'Source Code Pro', monospace; }
+.schema-col.key { color: var(--pri); font-weight: 700; }
+.schema-conn { display: flex; flex-direction: column; align-items: center; font-size: 10px; color: var(--txl); font-weight: 700; min-width: 44px; }
+.schema-conn .ln { width: 100%; height: 2px; background: var(--acc); margin: 3px 0; }
+@media (max-width: 680px) { .schema-wrap { flex-direction: column; } .schema-conn { flex-direction: row; min-width: 0; width: 100%; justify-content: center; } .schema-conn .ln { width: 26px; height: 2px; margin: 0 6px; } }
+
+/* ── CALLOUT ── */
+.callout { border-radius: var(--rs); padding: 11px 15px; margin: 10px 0; font-size: 13.5px; }
+.callout.tip { background: var(--prx); border-left: 4px solid var(--acc); color: var(--txm); }
+.callout.warn { background: #FEF3E0; border-left: 4px solid #D46020; color: #5A2C04; }
+.callout.sya { background: var(--syal); border-left: 4px solid var(--sya); color: var(--txm); }
+.callout.info { background: var(--sf3); border-left: 4px solid var(--pri); color: var(--txm); }
+
+/* ── OUTPUT WRAP ── */
+.output-wrap { background: var(--out-bg); border: 1px solid var(--out-bd); border-radius: var(--rs); padding: 12px 14px; margin: 10px 0; font-size: 13.5px; line-height: 1.6; color: #1A4030; }
+.output-wrap::before { content: '✓ Hasil yang Diharapkan:'; display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--sya); margin-bottom: 6px; }
+
+/* ── UNLOCK ROW ── */
+.unlock-row { display: flex; align-items: center; gap: 12px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--bs); }
+.btn-unlock { background: linear-gradient(135deg, var(--meet-mid), var(--meet-acc)); color: #fff; border: none; border-radius: 24px; padding: 10px 24px; font-family: inherit; font-size: 13.5px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 7px; transition: opacity .2s; }
+.btn-unlock:hover { opacity: .9; }
+.btn-unlock.done-state { background: var(--sya); cursor: default; }
+.unlock-hint { font-size: 12.5px; color: var(--txl); }
+
+/* ── CHALLENGE BOX ── */
+.challenge-box { background: linear-gradient(135deg, #1A0838, #2A1060); border-radius: var(--r); padding: 18px 20px; color: #fff; margin: 14px 0; }
+.challenge-box h4 { font-family: 'Amiri', serif; font-size: 17px; font-weight: 700; margin-bottom: 12px; color: var(--meet-acc); }
+.challenge-q { background: rgba(255,255,255,.08); border-radius: var(--rs); padding: 10px 14px; margin-bottom: 8px; font-size: 13.5px; color: rgba(255,255,255,.85); }
+.challenge-q strong { color: #fff; }
+
+/* ── COMPLETION ── */
+.completion { display: none; background: linear-gradient(135deg, #1A0838, #2A1060); border-radius: var(--r); padding: 28px; text-align: center; color: #fff; margin-top: 28px; }
+.completion.show { display: block; }
+.completion h2 { font-family: 'Amiri', serif; font-size: 26px; font-weight: 700; margin-bottom: 8px; color: var(--meet-acc); }
+.completion p { color: rgba(255,255,255,.85); max-width: 600px; margin: 0 auto 20px; font-size: 14.5px; }
+.next-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--meet-acc); color: #0E0420; font-weight: 700; padding: 11px 26px; border-radius: 24px; text-decoration: none; }
+
+p { color: var(--txm); margin-bottom: 9px; font-size: 14px; }
+h3.sh { font-family: 'Amiri', serif; font-size: 18px; font-weight: 700; color: var(--pri); margin: 16px 0 9px; display: flex; align-items: center; gap: 8px; }
+h3.sh::before { content: ''; width: 4px; height: 16px; background: var(--meet-acc); border-radius: 2px; flex-shrink: 0; }
+ul.lst { list-style: none; padding: 0; margin-bottom: 12px; }
+ul.lst li { padding: 5px 0 5px 20px; position: relative; color: var(--txm); font-size: 14px; border-bottom: 1px solid var(--bs); }
+ul.lst li:last-child { margin-bottom: 0; border-bottom: none; }
+ul.lst li::before { content: '▸'; position: absolute; left: 0; color: var(--acc); font-size: 11px; top: 7px; }
+ul.lst li strong { color: var(--tx); }
+@media (max-width: 580px) { .main { padding: 14px 12px 60px; } .step-body { padding: 14px 14px; } }
+</style>
+</head>
+<body>
+
+<!-- ╔══ HEADER ══╗ -->
+<header class="hd">
+  <div class="hd-ornament">
+    <svg width="100%" height="100%"><pattern id="grid-p04" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1"/></pattern><rect width="100%" height="100%" fill="url(#grid-p04)"/></svg>
+  </div>
+  <div class="hd-inner">
+    <div class="hd-eyebrow">
+      <div class="hd-line"></div>
+      <span class="hd-eye">BIV-301 · Lembar Praktikum 04</span>
+      <span class="hd-badge">Power BI Desktop · Hands-on Lab</span>
+    </div>
+    <h1 class="hd-title">Membangun Model Data &amp; Laporan Pertama di Power BI</h1>
+    <p class="hd-sub">Praktikum koneksi 3 tabel, membangun relationship fact-dimension, dan visual dasar dashboard pembiayaan BMT Syariah.</p>
+    <div class="hd-pills">
+      <span class="hpill">Tools: <strong>Power BI Desktop</strong></span>
+      <span class="hpill">Dataset: <strong>fact_pembiayaan + 2 dim table</strong></span>
+      <span class="hpill">Fokus: <strong>Model Data &amp; Relationship</strong></span>
+      <span class="hpill">⏱ <strong>~80 menit</strong></span>
+    </div>
+  </div>
+  <div class="hd-arch">
+    <svg viewBox="0 0 1440 24" fill="none" preserveAspectRatio="none">
+      <path d="M0,0 C360,24 1080,24 1440,0 L1440,24 L0,24 Z" fill="var(--bg)"/>
+    </svg>
+  </div>
+</header>
+
+<!-- ╔══ STEP TRACKER (STICKY) ══╗ -->
+<div class="tracker-wrap">
+  <div class="tracker">
+    <div class="tr-step">
+      <div class="tr-circle active" id="tc0">1</div>
+      <div class="tr-label active" id="tl0">Get Data</div>
+    </div>
+    <div class="tr-line" id="tln0"></div>
+    <div class="tr-step">
+      <div class="tr-circle" id="tc1">2</div>
+      <div class="tr-label" id="tl1">Model View</div>
+    </div>
+    <div class="tr-line" id="tln1"></div>
+    <div class="tr-step">
+      <div class="tr-circle" id="tc2">3</div>
+      <div class="tr-label" id="tl2">KPI Card</div>
+    </div>
+    <div class="tr-line" id="tln2"></div>
+    <div class="tr-step">
+      <div class="tr-circle" id="tc3">4</div>
+      <div class="tr-label" id="tl3">Bar &amp; Matrix</div>
+    </div>
+    <div class="tr-line" id="tln3"></div>
+    <div class="tr-step">
+      <div class="tr-circle" id="tc4">5</div>
+      <div class="tr-label" id="tl4">Publish</div>
+    </div>
+    <div class="tr-line" id="tln4"></div>
+    <div class="tr-step">
+      <div class="tr-circle" id="tc5">6</div>
+      <div class="tr-label" id="tl5">Tantangan</div>
+    </div>
+  </div>
+</div>
+
+<main class="main">
+
+<!-- ╔══ LANGKAH 1: GET DATA — IMPORT 3 TABEL ══╗ -->
+<div class="step-card unlocked" id="step0">
+  <div class="step-hd">
+    <div class="step-num" id="sn0">1</div>
+    <div class="step-title">Langkah 1: Get Data — Impor 3 Tabel CSV</div>
+    <span class="step-est">⏱ ~12 menit</span>
+  </div>
+  <div class="step-body">
+    <p>Pada praktikum ini kita menggunakan 3 berkas data portofolio pembiayaan BMT Berkah Mandiri yang <strong>sengaja dipisah</strong> menjadi satu tabel fakta dan dua tabel dimensi — meniru struktur data nyata di lembaga keuangan.</p>
+
+    <div class="callout tip">
+      📥 <strong>Unduh 3 Berkas Dataset:</strong> Pastikan kamu telah mengunduh <code>fact_pembiayaan_p04.csv</code>, <code>dim_cabang_p04.csv</code>, dan <code>dim_produk_p04.csv</code> dari portal pertemuan sebelum memulai.
+    </div>
+
+    <div class="inst-box">
+      <h4>📋 Instruksi Import ke Power BI Desktop</h4>
+      <ol class="inst-steps">
+        <li><span class="n">1</span><span>Buka aplikasi <strong>Power BI Desktop</strong>. Klik <strong>Get Data</strong> ➔ pilih <strong>Text/CSV</strong> ➔ arahkan ke <code>fact_pembiayaan_p04.csv</code> ➔ klik <strong>Load</strong>.</span></li>
+        <li><span class="n">2</span><span>Ulangi <strong>Get Data</strong> ➔ <strong>Text/CSV</strong> untuk <code>dim_cabang_p04.csv</code>, lalu sekali lagi untuk <code>dim_produk_p04.csv</code>. Kamu akan memiliki 3 tabel terpisah.</span></li>
+        <li><span class="n">3</span><span>Buka tab <strong>Data View</strong> (ikon tabel di panel kiri). Periksa: kolom <code>nominal_pembiayaan</code> dan <code>margin_keuntungan</code> pada fact_pembiayaan harus bertipe <strong>Whole Number</strong>, kolom <code>tanggal</code> bertipe <strong>Date</strong>.</span></li>
+        <li><span class="n">4</span><span>Jika ada kolom dengan tipe data keliru, klik header kolom ➔ tab <strong>Column tools</strong> ➔ ubah <strong>Data type</strong> yang sesuai.</span></li>
+      </ol>
+    </div>
+
+    <div class="output-wrap">
+Panel Fields di sisi kanan kini menampilkan 3 tabel: fact_pembiayaan_p04 (60 baris, 8 kolom), dim_cabang_p04 (6 baris, 5 kolom), dan dim_produk_p04 (5 baris, 5 kolom) — namun ketiganya BELUM saling terhubung.
+    </div>
+
+    <div class="unlock-row">
+      <button class="btn-unlock" id="btn0" onclick="completeStep(0)">✓ 3 Tabel Berhasil Dimuat</button>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══ LANGKAH 2: MODEL VIEW — RELATIONSHIP ══╗ -->
+<div class="step-card locked" id="step1">
+  <div class="step-hd">
+    <div class="step-num" id="sn1">2</div>
+    <div class="step-title">Langkah 2: Model View — Membangun Relationship</div>
+    <span class="step-est">⏱ ~15 menit</span>
+  </div>
+  <div class="step-body">
+    <p>Tiga tabel yang berdiri sendiri tidak berguna untuk analisis — Power BI tidak tahu bagaimana menghubungkan transaksi ke nama cabang atau nama produknya. Sekarang kita bangun relationship-nya.</p>
+
+    <h3 class="sh">Target Skema yang Ingin Dibangun</h3>
+    <div class="schema-wrap">
+      <div class="schema-table dim">
+        <div class="schema-hd">📇 dim_cabang_p04</div>
+        <div class="schema-cols">
+          <div class="schema-col key">cabang_id (PK)</div>
+          <div class="schema-col">nama_cabang</div>
+          <div class="schema-col">kota</div>
+        </div>
+      </div>
+      <div class="schema-conn"><span>1</span><div class="ln"></div><span>*</span></div>
+      <div class="schema-table fact">
+        <div class="schema-hd">📊 fact_pembiayaan_p04</div>
+        <div class="schema-cols">
+          <div class="schema-col key">cabang_id (FK)</div>
+          <div class="schema-col key">produk_id (FK)</div>
+          <div class="schema-col">nominal_pembiayaan</div>
+        </div>
+      </div>
+      <div class="schema-conn"><span>*</span><div class="ln"></div><span>1</span></div>
+      <div class="schema-table dim">
+        <div class="schema-hd">📇 dim_produk_p04</div>
+        <div class="schema-cols">
+          <div class="schema-col key">produk_id (PK)</div>
+          <div class="schema-col">nama_produk</div>
+          <div class="schema-col">jenis_akad</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="inst-box">
+      <h4>📋 Langkah Membuat Relationship</h4>
+      <ol class="inst-steps">
+        <li><span class="n">1</span><span>Klik tab <strong>Model View</strong> (ikon diagram tabel di panel kiri).</span></li>
+        <li><span class="n">2</span><span>Atur posisi 3 tabel agar terlihat jelas: <code>dim_cabang_p04</code> di kiri, <code>fact_pembiayaan_p04</code> di tengah, <code>dim_produk_p04</code> di kanan.</span></li>
+        <li><span class="n">3</span><span>Klik kolom <code>cabang_id</code> pada <code>dim_cabang_p04</code>, tahan, lalu <strong>drag</strong> ke kolom <code>cabang_id</code> pada <code>fact_pembiayaan_p04</code>. Lepaskan — garis relationship otomatis muncul.</span></li>
+        <li><span class="n">4</span><span>Ulangi: drag kolom <code>produk_id</code> pada <code>dim_produk_p04</code> ke kolom <code>produk_id</code> pada <code>fact_pembiayaan_p04</code>.</span></li>
+        <li><span class="n">5</span><span>Klik dua kali pada masing-masing garis relationship untuk memeriksa: cardinality harus <strong>"One to many (1:*)"</strong> dan cross filter direction <strong>"Single"</strong>.</span></li>
+      </ol>
+    </div>
+
+    <div class="output-wrap">
+Diagram Model View menampilkan 3 kotak tabel dengan 2 garis penghubung membentuk pola Star Schema — fact_pembiayaan_p04 di tengah terhubung ke dim_cabang_p04 dan dim_produk_p04, masing-masing berlabel "1" di sisi dimensi dan "*" di sisi fakta.
+    </div>
+
+    <div class="callout warn">
+      ⚠️ <strong>Jika Relationship Tidak Muncul Otomatis:</strong> Periksa apakah nama dan tipe data kolom <code>cabang_id</code>/<code>produk_id</code> di kedua tabel benar-benar identik (huruf besar-kecil, spasi tersembunyi). Power BI hanya bisa menghubungkan kolom dengan nilai yang cocok persis.
+    </div>
+
+    <div class="unlock-row">
+      <button class="btn-unlock" id="btn1" onclick="completeStep(1)">✓ Relationship Berhasil Dibangun</button>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══ LANGKAH 3: KPI CARD & TABLE ══╗ -->
+<div class="step-card locked" id="step2">
+  <div class="step-hd">
+    <div class="step-num" id="sn2">3</div>
+    <div class="step-title">Langkah 3: Membangun KPI Card &amp; Table Ringkasan</div>
+    <span class="step-est">⏱ ~12 menit</span>
+  </div>
+  <div class="step-body">
+    <p>Dengan model data siap, mari bangun visual pertama: 2 Card untuk KPI utama dan 1 Table untuk melihat rincian transaksi.</p>
+
+    <div class="inst-box">
+      <h4>📋 Langkah Membuat KPI Card</h4>
+      <ol class="inst-steps">
+        <li><span class="n">1</span><span>Kembali ke tab <strong>Report View</strong>. Pada panel Visualizations, klik ikon <strong>Card</strong>.</span></li>
+        <li><span class="n">2</span><span>Drag kolom <code>nominal_pembiayaan</code> dari <code>fact_pembiayaan_p04</code> ke drop-zone <strong>Fields</strong> pada visual Card. Klik panah kecil di sebelah field ➔ pastikan agregasinya <strong>Sum</strong>.</span></li>
+        <li><span class="n">3</span><span>Klik area kosong canvas, buat Card kedua, lalu drag kolom <code>id_transaksi</code> ➔ ubah agregasi menjadi <strong>Count</strong> untuk menghitung jumlah transaksi.</span></li>
+        <li><span class="n">4</span><span>Buat visual <strong>Table</strong>. Drag <code>id_transaksi</code>, <code>tanggal</code>, <code>nama_cabang</code> (dari dim_cabang), <code>nama_produk</code> (dari dim_produk), dan <code>nominal_pembiayaan</code> ke drop-zone <strong>Columns</strong>.</span></li>
+      </ol>
+    </div>
+
+    <div class="output-wrap">
+Card 1 menampilkan "Rp 1.598.500.000" (Total Pembiayaan), Card 2 menampilkan "60" (Total Transaksi). Table menampilkan 60 baris rincian transaksi lengkap dengan nama cabang dan nama produk — perhatikan bahwa nama-nama ini otomatis tersambung dari tabel dimensi berkat relationship yang kamu bangun di Langkah 2!
+    </div>
+
+    <div class="callout sya">
+      <strong>☾ Ilmu &amp; Amal:</strong> Angka "Rp 1,6 Miliar" pada Card ini bukan sekadar decoration — ia adalah amanah data yang jika salah dibangun relationship-nya, bisa menyesatkan pimpinan BMT dalam mengambil keputusan penyaluran dana berikutnya.
+    </div>
+
+    <div class="unlock-row">
+      <button class="btn-unlock" id="btn2" onclick="completeStep(2)">✓ KPI Card &amp; Table Selesai Dibuat</button>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══ LANGKAH 4: BAR CHART & MATRIX ══╗ -->
+<div class="step-card locked" id="step3">
+  <div class="step-hd">
+    <div class="step-num" id="sn3">4</div>
+    <div class="step-title">Langkah 4: Bar Chart per Cabang &amp; Matrix Silang Cabang-Akad</div>
+    <span class="step-est">⏱ ~15 menit</span>
+  </div>
+  <div class="step-body">
+    <p>Sekarang bangun dua visual analitik: Bar Chart untuk membandingkan cabang, dan Matrix untuk melihat kombinasi cabang × jenis akad sekaligus.</p>
+
+    <div class="inst-box">
+      <h4>📋 Langkah Membuat Clustered Bar Chart</h4>
+      <ol class="inst-steps">
+        <li><span class="n">1</span><span>Klik ikon <strong>Clustered Bar Chart</strong> (batang horizontal) di panel Visualizations.</span></li>
+        <li><span class="n">2</span><span>Drag <code>nama_cabang</code> (dari dim_cabang_p04) ke <strong>Y-axis</strong>.</span></li>
+        <li><span class="n">3</span><span>Drag <code>nominal_pembiayaan</code> (dari fact_pembiayaan_p04) ke <strong>X-axis</strong>.</span></li>
+        <li><span class="n">4</span><span>Klik (⋯) pada visual ➔ <strong>Sort axis</strong> ➔ urutkan descending berdasarkan nominal_pembiayaan.</span></li>
+      </ol>
+    </div>
+
+    <div class="output-wrap">
+Bar chart menampilkan 6 cabang terurut dari Jakarta Pusat (~Rp 510 Jt, terbesar) hingga Tangerang Selatan (~Rp 113 Jt, terkecil) — hasil agregasi otomatis dari relationship cabang_id.
+    </div>
+
+    <div class="inst-box">
+      <h4>📋 Langkah Membuat Matrix Silang</h4>
+      <ol class="inst-steps">
+        <li><span class="n">1</span><span>Klik area kosong canvas ➔ klik ikon <strong>Matrix</strong> di panel Visualizations.</span></li>
+        <li><span class="n">2</span><span>Drag <code>nama_cabang</code> ke drop-zone <strong>Rows</strong>.</span></li>
+        <li><span class="n">3</span><span>Drag <code>jenis_akad</code> (dari dim_produk_p04) ke drop-zone <strong>Columns</strong>.</span></li>
+        <li><span class="n">4</span><span>Drag <code>nominal_pembiayaan</code> ke drop-zone <strong>Values</strong>.</span></li>
+        <li><span class="n">5</span><span>Klik ikon panah kecil di pojok Matrix untuk mencoba fitur <strong>expand/collapse</strong> baris.</span></li>
+      </ol>
+    </div>
+
+    <div class="output-wrap">
+Matrix menampilkan tabel pivot 6 baris (cabang) × 5 kolom (jenis akad), memperlihatkan bahwa Musyarakah (Rp 493,75 Jt total) dan Murabahah (Rp 474,75 Jt total) adalah dua akad dengan penyaluran terbesar — insight yang sulit terlihat hanya dari bar chart tunggal.
+    </div>
+
+    <div class="unlock-row">
+      <button class="btn-unlock" id="btn3" onclick="completeStep(3)">✓ Bar Chart &amp; Matrix Selesai Dibuat</button>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══ LANGKAH 5: PUBLISH KE SERVICE ══╗ -->
+<div class="step-card locked" id="step4">
+  <div class="step-hd">
+    <div class="step-num" id="sn4">5</div>
+    <div class="step-title">Langkah 5: Publish ke Power BI Service</div>
+    <span class="step-est">⏱ ~10 menit</span>
+  </div>
+  <div class="step-body">
+    <p>Laporan yang sudah jadi sekarang siap dipublikasikan agar bisa diakses dari browser maupun ponsel.</p>
+
+    <div class="inst-box">
+      <h4>📋 Langkah Publish</h4>
+      <ol class="inst-steps">
+        <li><span class="n">1</span><span>Klik <strong>File</strong> ➔ <strong>Save As</strong> ➔ simpan dengan nama <strong>P04_ModelData_[NIM]_[Nama].pbix</strong>.</span></li>
+        <li><span class="n">2</span><span>Klik tombol <strong>Publish</strong> pada Home Ribbon.</span></li>
+        <li><span class="n">3</span><span>Masuk (sign in) dengan akun Microsoft/kampus jika diminta, lalu pilih Workspace <strong>"My Workspace"</strong>.</span></li>
+        <li><span class="n">4</span><span>Tunggu proses upload selesai, lalu klik link <strong>"Open '...' in Power BI"</strong> yang muncul untuk melihat laporanmu di browser.</span></li>
+      </ol>
+    </div>
+
+    <div class="callout tip">
+      💡 <strong>Kalau Tidak Ada Akun Microsoft/Lisensi Power BI Pro:</strong> Tidak masalah — langkah publish ini boleh dilewati untuk latihan mandiri di rumah. Yang wajib dikumpulkan adalah file <code>.pbix</code>-nya. Saat sesi lab di kampus, dosen akan mendemonstrasikan Power BI Service dan Power BI Mobile secara langsung dengan akun institusi.
+    </div>
+
+    <div class="unlock-row">
+      <button class="btn-unlock" id="btn4" onclick="completeStep(4)">✓ Publish Selesai / Sudah Memahami Alurnya</button>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══ LANGKAH 6: TANTANGAN MANDIRI ══╗ -->
+<div class="step-card locked" id="step5">
+  <div class="step-hd">
+    <div class="step-num" id="sn5">6</div>
+    <div class="step-title">Langkah 6: Tantangan Mandiri &amp; Pengumpulan Laporan</div>
+    <span class="step-est">⏱ ~16 menit</span>
+  </div>
+  <div class="step-body">
+    <p>Ujilah kemandirianmu dalam memperluas model data dan visual dengan menyelesaikan 3 tantangan berikut:</p>
+
+    <div class="challenge-box">
+      <h4>🎯 3 Tantangan Analitik Mandiri di Power BI</h4>
+      <div class="challenge-q"><strong>Tantangan 1 — Pie Chart Status Kolektibilitas:</strong> Tambahkan visual <strong>Pie Chart</strong> dengan Legend: <code>status_kolektibilitas</code>, Values: <code>id_transaksi</code> (Count). Berapa persentase transaksi berstatus "Macet" dari total 60 transaksi? Apakah angka ini di bawah ambang batas NPF yang sehat (&lt;5%)?</div>
+      <div class="challenge-q"><strong>Tantangan 2 — Line Chart Tren Bulanan:</strong> Buat halaman baru bernama <em>"Tren Waktu"</em>. Tambahkan <strong>Line Chart</strong> dengan X-axis: <code>tanggal</code> (Month), Y-axis: <code>nominal_pembiayaan</code>. Bulan apa yang memiliki penyaluran pembiayaan tertinggi?</div>
+      <div class="challenge-q"><strong>Tantangan 3 — Slicer Interaktif:</strong> Tambahkan visual <strong>Slicer</strong> untuk kolom <code>jenis_akad</code> di pojok kiri atas laporan utama. Uji klik salah satu akad (misal "Qardhul Hasan") dan amati bagaimana Card, Bar Chart, dan Matrix berubah secara serentak.</div>
+    </div>
+
+    <h3 class="sh">Ketentuan Pengumpulan Lab Report</h3>
+    <ul class="lst">
+      <li><strong>Format File:</strong> File Power BI Desktop <code>.pbix</code> dengan nama <code>P04_ModelData_[NIM]_[Nama].pbix</code></li>
+      <li><strong>Isi Wajib:</strong> Model data dengan 3 tabel dan 2 relationship aktif (Langkah 1–2), KPI Card, Table, Bar Chart, Matrix (Langkah 3–4), serta ketiga visual tantangan mandiri</li>
+      <li><strong>Interpretasi Bisnis:</strong> Tambahkan 1 <strong>Text Box</strong> di laporan yang menjelaskan 2 insight utama yang kamu temukan dari matrix dan tren bulanan</li>
+      <li><strong>Refleksi Syariah:</strong> Tulis 1 paragraf singkat di Text Box terpisah: bagaimana relationship data yang akurat menjadi bentuk amanah dalam pelaporan keuangan syariah?</li>
+    </ul>
+
+    <div class="unlock-row">
+      <button class="btn-unlock" id="btn5" onclick="completeStep(5)">✓ Semua Langkah &amp; Tantangan Praktikum Selesai!</button>
+      <span class="unlock-hint">Klik setelah seluruh tantangan selesai dikerjakan</span>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══ COMPLETION BANNER ══╗ -->
+<div class="completion" id="completion">
+  <h2>🎉 Praktikum P04 BIV Selesai!</h2>
+  <p>Selamat! Kamu telah berhasil membangun model data Power BI pertamamu — mulai dari koneksi 3 sumber data, relationship fact-dimension, hingga visual dasar dashboard pembiayaan BMT Syariah.</p>
+  <a class="next-btn" href="Pertemuan-04-BIV.html">← Kembali ke Slide Teori P04</a>
+</div>
+
+</main>
+
+<script>
+const LAB_KEY = 'tazkia-biv-p04-lab-v1';
+const TOTAL_STEPS = 6;
+
+let labState = { done: [] };
+
+function loadLabState() {
+  try {
+    const s = JSON.parse(localStorage.getItem(LAB_KEY));
+    if (s) labState = s;
+  } catch (e) {}
+}
+
+function saveLabState() {
+  try {
+    localStorage.setItem(LAB_KEY, JSON.stringify(labState));
+  } catch (e) {}
+}
+
+function applyLabState() {
+  labState.done.forEach(i => applyDone(i));
+  updateTracker();
+  if (labState.done.length === TOTAL_STEPS) {
+    document.getElementById('completion').classList.add('show');
+  }
+}
+
+function applyDone(i) {
+  const card = document.getElementById('step' + i);
+  if (!card) return;
+  card.className = 'step-card unlocked completed';
+  const num = document.getElementById('sn' + i);
+  if (num) { num.style.background = 'var(--sya)'; num.textContent = '✓'; }
+  const btn = document.getElementById('btn' + i);
+  if (btn) { btn.className = 'btn-unlock done-state'; btn.disabled = true; btn.textContent = '✓ Selesai'; }
+  const next = document.getElementById('step' + (i + 1));
+  if (next) next.className = 'step-card unlocked';
+}
+
+function completeStep(i) {
+  if (!labState.done.includes(i)) {
+    labState.done.push(i);
+    saveLabState();
+  }
+  applyDone(i);
+  updateTracker();
+  const next = document.getElementById('step' + (i + 1));
+  if (next) next.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  if (labState.done.length === TOTAL_STEPS) {
+    const comp = document.getElementById('completion');
+    comp.classList.add('show');
+    comp.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+function updateTracker() {
+  for (let i = 0; i < TOTAL_STEPS; i++) {
+    const c = document.getElementById('tc' + i);
+    const l = document.getElementById('tl' + i);
+    const ln = document.getElementById('tln' + i);
+    if (!c) continue;
+    if (labState.done.includes(i)) {
+      c.className = 'tr-circle done'; c.textContent = '✓';
+      l.className = 'tr-label done';
+      if (ln) ln.className = 'tr-line done';
+    } else if (i === labState.done.length) {
+      c.className = 'tr-circle active';
+      l.className = 'tr-label active';
+    } else {
+      c.className = 'tr-circle';
+      l.className = 'tr-label';
+    }
+  }
+}
+
+// ── INIT ──
+loadLabState();
+applyLabState();
+</script>
+
+</body>
+</html>

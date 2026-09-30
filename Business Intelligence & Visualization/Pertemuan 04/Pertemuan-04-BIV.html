@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIV P04 — Intro Power BI: Connect, Model, Visualize</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+<script src="../../cloud-sync.js?v=20260912b"></script>
+<style>
+/* ── BIV P04 · ROYAL PURPLE & GOLD THEME (konsisten dengan P01–P03) ── */
+:root {
+  --meet-from: #0E0420;
+  --meet-mid: #1A0838;
+  --meet-to: #2A1060;
+  --meet-acc: #C09030;
+  --meet-acc2: #D0A840;
+  --meet-star: #C09030;
+  --bg: #EDF1F6;
+  --sf: #FFFFFF;
+  --sf2: #F4EFF8;
+  --sf3: #F8F5FC;
+  --bd: #C4CDD8;
+  --bs: #DDE3EC;
+  --tx: #0C1824;
+  --txm: #475569;
+  --txl: #8A9AB0;
+  --pri: #1A0838;
+  --pril: #EAD8F8;
+  --prx: #F4EEF8;
+  --acc: #C09030;
+  --accl: #F8EDD0;
+  --acc2: #D0A840;
+  --sya: #1F9060;
+  --syal: #D0EEE2;
+  --syab: #40B080;
+  --danger: #D44040;
+  --danger-bg: #FEE0E0;
+  --danger-tx: #901010;
+  --p0: #6030B0; --p0l: #EEE0FA;
+  --p1: #C09030; --p1l: #F8EDD0;
+  --p2: #1F9060; --p2l: #D0EEE2;
+  --p3: #2A7898; --p3l: #D8EEF6;
+  --p4: #A03020; --p4l: #F8E0D8;
+  --r: 8px;
+  --rs: 5px;
+  --shadow: 0 4px 20px rgba(26,8,56,.1);
+  --shadow-sm: 0 2px 8px rgba(26,8,56,.06);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme=light]) {
+    --bg: #06030E;
+    --sf: #100818;
+    --sf2: #160C28;
+    --sf3: #0E0618;
+    --bd: #28104A;
+    --bs: #180830;
+    --tx: #E8D8F8;
+    --txm: #8060A8;
+    --txl: #3A1860;
+    --pri: #8050D0;
+    --pril: #18082A;
+    --prx: #0C0418;
+    --acc: #D0A840;
+    --accl: #18100A;
+    --sya: #40C890;
+    --syal: #031410;
+    --danger: #FF6B6B;
+    --danger-bg: #280808;
+    --danger-tx: #FFA8A8;
+  }
+}
+
+:root[data-theme=dark] {
+  --bg: #06030E;
+  --sf: #100818;
+  --sf2: #160C28;
+  --sf3: #0E0618;
+  --bd: #28104A;
+  --bs: #180830;
+  --tx: #E8D8F8;
+  --txm: #8060A8;
+  --txl: #3A1860;
+  --pri: #8050D0;
+  --pril: #18082A;
+  --prx: #0C0418;
+  --acc: #D0A840;
+  --accl: #18100A;
+  --sya: #40C890;
+  --syal: #031410;
+  --danger: #FF6B6B;
+  --danger-bg: #280808;
+  --danger-tx: #FFA8A8;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Source Sans 3', system-ui, sans-serif; background: var(--bg); color: var(--tx); font-size: 15px; line-height: 1.65; }
+
+/* ── HEADER ── */
+.hd { background: linear-gradient(160deg, var(--meet-from) 0%, var(--meet-mid) 55%, var(--meet-to) 100%); color: #fff; position: relative; overflow: hidden; }
+.hd-ornament { position: absolute; inset: 0; pointer-events: none; opacity: .12; }
+.hd-inner { max-width: 860px; margin: 0 auto; padding: 38px 28px 12px; position: relative; z-index: 1; }
+.hd-eyebrow { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+.hd-line { width: 28px; height: 1px; background: var(--meet-acc); }
+.hd-eye { font-size: 11px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; color: var(--meet-acc); }
+.hd-kode { font-size: 12px; background: rgba(192,144,48,.15); border: 1px solid rgba(192,144,48,.3); border-radius: 12px; padding: 2px 12px; color: var(--meet-acc2); margin-left: auto; }
+.hd-title { font-family: 'Amiri', serif; font-size: 34px; font-weight: 700; line-height: 1.15; margin-bottom: 6px; }
+.hd-sub { font-size: 14.5px; color: rgba(255,255,255,.65); margin-bottom: 18px; }
+.hd-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
+.hpill { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.14); border-radius: 14px; padding: 3px 12px; font-size: 12px; color: rgba(255,255,255,.75); }
+.hpill strong { color: #fff; }
+.hd-arch { line-height: 0; }
+.hd-arch svg { display: block; width: 100%; height: 28px; }
+
+/* ── PROGRESS BAR ── */
+.prog-wrap { background: var(--sf); border-bottom: 1px solid var(--bs); position: sticky; top: 0; z-index: 40; box-shadow: var(--shadow-sm); }
+.prog-inner { max-width: 860px; margin: 0 auto; padding: 10px 24px; display: flex; align-items: center; gap: 12px; }
+.prog-label { font-size: 12px; font-weight: 700; color: var(--txl); white-space: nowrap; flex-shrink: 0; }
+.prog-steps { display: flex; gap: 5px; flex: 1; }
+.prog-dot { width: 24px; height: 6px; border-radius: 3px; background: var(--bs); transition: background .3s; }
+.prog-dot.done { background: var(--meet-acc); }
+.prog-dot.active { background: rgba(192,144,48,.35); }
+.prog-pct { font-size: 12px; font-weight: 700; color: var(--acc); white-space: nowrap; }
+
+/* ── MAIN LAYOUT ── */
+.main { max-width: 860px; margin: 0 auto; padding: 28px 24px 80px; }
+
+/* ── SECTION CARD ── */
+.sec-card { background: var(--sf); border: 1px solid var(--bs); border-radius: var(--r); margin-bottom: 18px; box-shadow: var(--shadow-sm); overflow: hidden; transition: opacity .3s, filter .3s; }
+.sec-card.locked { opacity: .4; filter: grayscale(.45); pointer-events: none; user-select: none; }
+.sec-card.unlocked { opacity: 1; filter: none; pointer-events: auto; }
+.sec-hd { display: flex; align-items: center; gap: 12px; padding: 15px 22px; background: var(--sf3); border-bottom: 1px solid var(--bs); }
+.sec-num { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, var(--meet-mid), var(--meet-acc)); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+.sec-num.done { background: var(--sya); }
+.sec-title { font-family: 'Amiri', serif; font-size: 19px; font-weight: 700; color: var(--pri); }
+.sec-cpmk { font-size: 11px; color: var(--acc); font-weight: 700; margin-left: auto; background: var(--accl); padding: 2px 9px; border-radius: 10px; white-space: nowrap; }
+.sec-body { padding: 22px 26px; }
+
+/* ── TYPOGRAPHY ── */
+h3.sh { font-family: 'Amiri', serif; font-size: 20px; font-weight: 700; color: var(--pri); margin: 20px 0 10px; display: flex; align-items: center; gap: 9px; }
+h3.sh::before { content: ''; width: 4px; height: 18px; background: var(--meet-acc); border-radius: 2px; flex-shrink: 0; }
+h4.shs { font-size: 14.5px; font-weight: 700; color: var(--tx); margin: 14px 0 7px; }
+p { color: var(--txm); margin-bottom: 11px; font-size: 14.5px; }
+ul.lst { list-style: none; padding: 0; margin-bottom: 14px; }
+ul.lst li { padding: 6px 0 6px 20px; position: relative; color: var(--txm); font-size: 14px; border-bottom: 1px solid var(--bs); }
+ul.lst li:last-child { border-bottom: none; }
+ul.lst li::before { content: '▸'; position: absolute; left: 0; color: var(--acc); font-size: 11px; top: 8px; }
+ul.lst li strong { color: var(--tx); }
+
+.callout { border-radius: var(--rs); padding: 13px 16px; margin: 14px 0; font-size: 13.5px; line-height: 1.6; }
+.callout.info { background: var(--prx); border-left: 4px solid var(--acc); color: var(--txm); }
+.callout.sya { background: var(--syal); border-left: 4px solid var(--sya); color: var(--txm); }
+.callout.warn { background: #FEF3E0; border-left: 4px solid #D46020; color: #5A2C04; }
+.callout.danger { background: var(--danger-bg); border-left: 4px solid var(--danger); color: var(--danger-tx); }
+
+/* ── BUTTONS ── */
+.btn-paham { background: linear-gradient(135deg, var(--meet-mid), var(--meet-acc)); color: #fff; border: none; border-radius: 20px; padding: 10px 22px; font-family: inherit; font-size: 13.5px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; margin-top: 16px; transition: opacity .2s; }
+.btn-paham:hover { opacity: .9; }
+.btn-paham.done { background: var(--sya); cursor: default; }
+
+/* ── INTERFACE MOCKUP (Power BI Desktop panes) ── */
+.mockup-box { background: #1A0838; border-radius: var(--r); padding: 4px; margin: 16px 0; box-shadow: var(--shadow); }
+.mockup-top { display: flex; align-items: center; gap: 6px; padding: 8px 12px; }
+.mockup-dot { width: 9px; height: 9px; border-radius: 50%; }
+.mockup-dot.r { background: #E05050; } .mockup-dot.y { background: #E0B040; } .mockup-dot.g { background: #40C070; }
+.mockup-tabs { display: flex; gap: 4px; margin-left: 12px; }
+.mockup-tab { font-size: 10.5px; font-weight: 700; color: rgba(255,255,255,.5); background: rgba(255,255,255,.06); padding: 3px 10px; border-radius: 5px 5px 0 0; }
+.mockup-tab.active { color: #fff; background: rgba(255,255,255,.14); }
+.mockup-body { background: var(--sf); border-radius: 0 0 6px 6px; padding: 14px; display: grid; grid-template-columns: 1fr 140px; gap: 10px; min-height: 140px; }
+.mockup-canvas { background: var(--sf3); border: 1px dashed var(--bd); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 12px; color: var(--txl); text-align: center; padding: 10px; }
+.mockup-panel { display: flex; flex-direction: column; gap: 6px; }
+.mockup-panel-item { background: var(--sf3); border: 1px solid var(--bs); border-radius: 5px; padding: 6px 8px; font-size: 10.5px; color: var(--txm); display: flex; align-items: center; gap: 5px; }
+
+/* ── SCHEMA / ERD DIAGRAM (Fact & Dimension) ── */
+.schema-wrap { display: flex; align-items: center; justify-content: center; gap: 4px; margin: 20px 0; flex-wrap: wrap; }
+.schema-table { background: var(--sf); border: 2px solid var(--bs); border-radius: var(--rs); min-width: 168px; overflow: hidden; box-shadow: var(--shadow-sm); }
+.schema-table.fact { border-color: var(--acc); }
+.schema-table.dim { border-color: var(--p3); }
+.schema-hd { padding: 8px 12px; font-size: 12.5px; font-weight: 700; color: #fff; }
+.schema-table.fact .schema-hd { background: linear-gradient(135deg, var(--meet-mid), var(--acc)); }
+.schema-table.dim .schema-hd { background: linear-gradient(135deg, var(--p3), #1A5878); }
+.schema-cols { padding: 8px 0; }
+.schema-col { padding: 4px 12px; font-size: 11px; color: var(--txm); font-family: 'Source Code Pro', monospace; }
+.schema-col.key { color: var(--pri); font-weight: 700; }
+.schema-conn { display: flex; flex-direction: column; align-items: center; font-size: 10.5px; color: var(--txl); font-weight: 700; min-width: 50px; }
+.schema-conn .ln { width: 100%; height: 2px; background: var(--acc); position: relative; margin: 4px 0; }
+@media (max-width: 680px) { .schema-wrap { flex-direction: column; } .schema-conn { flex-direction: row; min-width: 0; width: 100%; justify-content: center; } .schema-conn .ln { width: 30px; height: 2px; margin: 0 6px; } }
+
+/* ── VISUAL GALLERY GRID ── */
+.viz-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 16px 0; }
+@media (max-width: 620px) { .viz-grid { grid-template-columns: repeat(2, 1fr); } }
+.viz-card { background: var(--sf3); border: 1px solid var(--bs); border-radius: var(--rs); padding: 12px; text-align: center; }
+.viz-icon { font-size: 26px; margin-bottom: 6px; }
+.viz-name { font-size: 12.5px; font-weight: 700; color: var(--pri); margin-bottom: 3px; }
+.viz-use { font-size: 11px; color: var(--txl); line-height: 1.4; }
+
+/* ── STEP/INSTRUCTION LIST (dipakai juga di slide untuk contoh alur) ── */
+.inst-box { background: var(--prx); border: 1px solid rgba(192,144,48,.25); border-radius: var(--rs); padding: 14px 16px; margin: 14px 0; }
+.inst-box h4 { font-size: 13.5px; font-weight: 700; color: var(--pri); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+.inst-steps { list-style: none; padding: 0; margin: 0; }
+.inst-steps li { display: flex; gap: 10px; margin-bottom: 8px; font-size: 13.5px; color: var(--txm); align-items: flex-start; }
+.inst-steps li .n { width: 22px; height: 22px; background: var(--meet-mid); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+.inst-steps li:last-child { margin-bottom: 0; }
+
+/* ── CONCEPT TABLE ── */
+.concept-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 14px 0; }
+.concept-table th { background: var(--meet-mid); color: #fff; padding: 8px 14px; text-align: left; font-size: 12px; }
+.concept-table td { padding: 8px 14px; border-bottom: 1px solid var(--bs); color: var(--txm); vertical-align: top; }
+.concept-table td:first-child { font-family: 'Source Code Pro', monospace; font-size: 12.5px; color: var(--p0); font-weight: 700; white-space: nowrap; }
+.concept-table tr:nth-child(even) td { background: var(--sf3); }
+.concept-table tr:last-child td { border-bottom: none; }
+
+/* ── QUIZ & MATCHING ── */
+.quiz-sec { margin-top: 10px; }
+.q-item { background: var(--sf3); border: 1px solid var(--bs); border-radius: var(--rs); padding: 16px; margin-bottom: 14px; }
+.q-title { font-size: 14.5px; font-weight: 700; color: var(--tx); margin-bottom: 10px; }
+.q-opts { display: grid; gap: 8px; }
+.q-opt { display: flex; align-items: flex-start; gap: 10px; background: var(--sf); border: 1px solid var(--bs); border-radius: var(--rs); padding: 9px 13px; cursor: pointer; font-size: 13.5px; color: var(--txm); transition: all .15s; }
+.q-opt:hover { border-color: var(--acc); }
+.q-opt.selected { border-color: var(--acc); background: var(--accl); color: var(--pri); font-weight: 600; }
+.q-opt.correct { background: var(--syal) !important; border-color: var(--sya) !important; color: #0A4020 !important; font-weight: 700; }
+.q-opt.wrong { background: var(--danger-bg) !important; border-color: var(--danger) !important; color: var(--danger-tx) !important; }
+.q-opt-letter { width: 22px; height: 22px; border-radius: 50%; background: var(--bs); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; color: var(--tx); }
+.q-opt-text { flex: 1; }
+.opt-fb { display: none; font-size: 12px; margin-top: 6px; padding: 6px 10px; border-radius: 4px; line-height: 1.45; }
+.opt-fb.show { display: block; }
+.opt-fb.correct { background: #E0F4E8; color: #0A4020; }
+.opt-fb.wrong { background: #FDE8E8; color: #7A1010; }
+
+/* ── MATCHING GAME ── */
+.match-container { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 16px 0; }
+@media (max-width: 580px) { .match-container { grid-template-columns: 1fr; } }
+.match-col-hd { font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--txl); margin-bottom: 8px; }
+.match-list { display: grid; gap: 8px; }
+.match-item { background: var(--sf); border: 1.5px solid var(--bs); border-radius: var(--rs); padding: 10px 14px; font-size: 13px; color: var(--txm); cursor: pointer; transition: all .2s; }
+.match-item:hover { border-color: var(--acc); }
+.match-item.selected { border-color: var(--acc); background: var(--accl); color: var(--pri); font-weight: 600; }
+.match-item.paired { background: var(--syal); border-color: var(--sya); color: #0A4020; font-weight: 700; cursor: default; }
+
+/* ── SUBMISSION & COMPLETION ── */
+.quiz-submit-row { display: flex; align-items: center; gap: 14px; margin-top: 20px; }
+.btn-submit { background: linear-gradient(135deg, var(--meet-mid), var(--meet-acc)); color: #fff; border: none; border-radius: 20px; padding: 11px 26px; font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer; }
+.btn-submit:disabled { opacity: .5; cursor: default; }
+.quiz-result { display: none; margin-top: 16px; padding: 16px; border-radius: var(--r); }
+.quiz-result.pass { background: var(--syal); border: 1.5px solid var(--sya); color: #0A4020; }
+.quiz-result.fail { background: #FEF3E0; border: 1.5px solid #D46020; color: #5A2C04; }
+.quiz-result .big { font-family: 'Amiri', serif; font-size: 24px; font-weight: 700; margin-bottom: 4px; }
+
+.completion { display: none; background: linear-gradient(135deg, var(--meet-mid), var(--meet-to)); color: #fff; border-radius: var(--r); padding: 30px; text-align: center; margin-top: 20px; }
+.completion.show { display: block; }
+.completion h2 { font-family: 'Amiri', serif; font-size: 26px; font-weight: 700; margin-bottom: 8px; }
+.completion p { color: rgba(255,255,255,.7); font-size: 14px; }
+.completion .lab-link { display: inline-block; margin-top: 16px; background: var(--meet-acc); color: var(--meet-from); border-radius: 20px; padding: 10px 24px; font-weight: 700; font-size: 14px; text-decoration: none; }
+
+@media (max-width: 600px) {
+  .hd-inner { padding: 28px 18px 10px; }
+  .main { padding: 18px 14px 60px; }
+  .sec-body { padding: 16px 16px; }
+  .hd-title { font-size: 26px; }
+  .match-container { grid-template-columns: 1fr; }
+  .mockup-body { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ╔══ HEADER ══╗ -->
+<header class="hd">
+  <div class="hd-ornament">
+    <svg viewBox="0 0 800 200" width="100%" height="100%" fill="none" stroke="currentColor">
+      <circle cx="100" cy="50" r="80" stroke-width="0.5" stroke="#C09030"/>
+      <circle cx="700" cy="150" r="120" stroke-width="0.5" stroke="#C09030"/>
+      <path d="M 0,100 Q 200,20 400,100 T 800,100" stroke-width="0.7" stroke="rgba(255,255,255,0.1)"/>
+    </svg>
+  </div>
+  <div class="hd-inner">
+    <div class="hd-eyebrow">
+      <div class="hd-line"></div>
+      <span class="hd-eye">Fakultas Ekonomi &amp; Bisnis Islam — Universitas Tazkia</span>
+      <span class="hd-kode">BIV-301 · Pertemuan 04</span>
+    </div>
+    <h1 class="hd-title">Intro Power BI — Connect, Model, Visualize</h1>
+    <p class="hd-sub">Power BI Desktop · Koneksi Sumber Data · Fact &amp; Dimension Table · Relationships · Visual Bawaan · Publish ke Service</p>
+    <div class="hd-pills">
+      <span class="hpill"><strong>CPMK:</strong> CPMK-2</span>
+      <span class="hpill"><strong>Bloom:</strong> C3 — Menerapkan</span>
+      <span class="hpill"><strong>LAB 3</strong></span>
+      <span class="hpill"><strong>Ganjil 2026/2027</strong></span>
+    </div>
+  </div>
+  <div class="hd-arch">
+    <svg viewBox="0 0 1200 28" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,28 L0,16 Q20,4 40,16 Q60,28 80,16 Q100,4 120,16 Q140,28 160,16 Q180,4 200,16 Q220,28 240,16 Q260,4 280,16 Q300,28 320,16 Q340,4 360,16 Q380,28 400,16 Q420,4 440,16 Q460,28 480,16 Q500,4 520,16 Q540,28 560,16 Q580,4 600,16 Q620,28 640,16 Q660,4 680,16 Q700,28 720,16 Q740,4 760,16 Q780,28 800,16 Q820,4 840,16 Q860,28 880,16 Q900,4 920,16 Q940,28 960,16 Q980,4 1000,16 Q1020,28 1040,16 Q1060,4 1080,16 Q1100,28 1120,16 Q1140,4 1160,16 Q1180,28 1200,16 L1200,28 Z" fill="var(--bg)"/>
+    </svg>
+  </div>
+</header>
+
+<!-- ╔══ STICKY PROGRESS ══╗ -->
+<div class="prog-wrap">
+  <div class="prog-inner">
+    <span class="prog-label">Progres Belajar:</span>
+    <div class="prog-steps" id="progSteps">
+      <div class="prog-dot active" id="pd0"></div>
+      <div class="prog-dot" id="pd1"></div>
+      <div class="prog-dot" id="pd2"></div>
+      <div class="prog-dot" id="pd3"></div>
+      <div class="prog-dot" id="pd4"></div>
+      <div class="prog-dot" id="pd5"></div>
+      <div class="prog-dot" id="pd6"></div>
+    </div>
+    <span class="prog-pct" id="progPct">0%</span>
+  </div>
+</div>
+
+<!-- ╔══ MAIN CONTENT ══╗ -->
+<main class="main">
+
+<!-- ── SECTION 0: PENGANTAR & INTERFACE POWER BI DESKTOP ── -->
+<div class="sec-card unlocked" id="sec0">
+  <div class="sec-hd">
+    <div class="sec-num" id="sn0">01</div>
+    <div class="sec-title">Tujuan Pembelajaran &amp; Peta Konsep</div>
+    <div class="sec-cpmk">CPMK-2</div>
+  </div>
+  <div class="sec-body">
+    <p>Sejak P01–P03 kita membahas <strong>teori</strong> di balik visualisasi yang baik: memilih chart yang tepat, prinsip Gestalt, dan menghindari manipulasi data. Sekarang saatnya <strong>Ilmu &amp; Amal</strong> — kita akan membuka Power BI Desktop untuk pertama kalinya dan benar-benar membangun laporan.</p>
+
+    <div class="callout info">
+      <strong>💡 Mengapa Power BI?</strong> Power BI adalah tool BI enterprise paling banyak dipakai di industri (Gartner Magic Quadrant Leader 6 tahun berturut-turut), gratis untuk versi Desktop, dan terintegrasi penuh dengan ekosistem Microsoft (Excel, Azure, Teams) yang umum dipakai lembaga keuangan syariah di Indonesia.</p>
+    </div>
+
+    <h3 class="sh">Setelah pertemuan ini kamu mampu...</h3>
+    <ul class="lst">
+      <li><strong>1. Navigasi Interface:</strong> Membedakan fungsi 3 tampilan utama Power BI Desktop — Report View, Data View, dan Model View.</li>
+      <li><strong>2. Menghubungkan Sumber Data:</strong> Mengimpor data dari Excel, CSV, dan sumber Web ke dalam Power BI.</li>
+      <li><strong>3. Memodelkan Data:</strong> Membedakan Fact Table dan Dimension Table, serta membangun relationship antar tabel.</li>
+      <li><strong>4. Membuat Visual Dasar:</strong> Menggunakan visual bawaan — Bar, Line, Pie, Card, Table, dan Matrix — sesuai konteks data.</li>
+      <li><strong>5. Publikasi Laporan:</strong> Mem-publish report ke Power BI Service dan memahami akses via Power BI Mobile.</li>
+    </ul>
+
+    <h3 class="sh">Tiga Tampilan Utama Power BI Desktop</h3>
+    <div class="mockup-box">
+      <div class="mockup-top">
+        <div class="mockup-dot r"></div><div class="mockup-dot y"></div><div class="mockup-dot g"></div>
+        <div class="mockup-tabs">
+          <div class="mockup-tab active">📊 Report</div>
+          <div class="mockup-tab">🗂️ Data</div>
+          <div class="mockup-tab">🔗 Model</div>
+        </div>
+      </div>
+      <div class="mockup-body">
+        <div class="mockup-canvas">Canvas laporan — tempat visual (chart, card, table) disusun dan dirancang untuk audiens</div>
+        <div class="mockup-panel">
+          <div class="mockup-panel-item">📁 Fields</div>
+          <div class="mockup-panel-item">📈 Visualizations</div>
+          <div class="mockup-panel-item">🎨 Format</div>
+        </div>
+      </div>
+    </div>
+    <ul class="lst">
+      <li><strong>Report View:</strong> Kanvas utama tempat kamu menyusun visual dan mendesain halaman laporan untuk dilihat pengguna akhir.</li>
+      <li><strong>Data View:</strong> Melihat data mentah dalam bentuk tabel — mirip spreadsheet — untuk memeriksa tipe data dan nilai tiap baris.</li>
+      <li><strong>Model View:</strong> Melihat dan mengatur hubungan (relationship) antar tabel dalam bentuk diagram — jantung dari pemodelan data.</li>
+    </ul>
+
+    <button class="btn-paham" id="bp0" onclick="unlockNext(0)">Saya Paham — Lanjut ke Koneksi Data ➔</button>
+  </div>
+</div>
+
+<!-- ── SECTION 1: GET DATA — KONEKSI SUMBER DATA ── -->
+<div class="sec-card locked" id="sec1">
+  <div class="sec-hd">
+    <div class="sec-num" id="sn1">02</div>
+    <div class="sec-title">Koneksi Sumber Data — Get Data</div>
+    <div class="sec-cpmk">CPMK-2</div>
+  </div>
+  <div class="sec-body">
+    <p>Langkah pertama membangun laporan apa pun adalah menghubungkan Power BI ke sumber data. Tombol <strong>Get Data</strong> di Home Ribbon adalah gerbang masuk semua data ke Power BI — mendukung lebih dari 100 jenis konektor, dari file lokal hingga cloud database enterprise.</p>
+
+    <table class="concept-table">
+      <thead><tr><th>Sumber Data</th><th>Kapan Dipakai</th><th>Catatan Penting</th></tr></thead>
+      <tbody>
+        <tr><td>Excel Workbook</td><td>Data operasional harian yang masih dikelola manual (laporan cabang, rekap kasir)</td><td>Pilih sheet/table spesifik, bukan seluruh workbook</td></tr>
+        <tr><td>Text/CSV</td><td>Ekspor data dari sistem lain (SIA, aplikasi core banking, hasil query)</td><td>Periksa delimiter dan encoding (UTF-8) agar karakter tidak rusak</td></tr>
+        <tr><td>Web</td><td>Data publik (kurs, indeks, data BPS) yang diperbarui berkala dari halaman/API web</td><td>Gunakan Refresh terjadwal agar data tidak basi</td></tr>
+        <tr><td>SQL Server / Database</td><td>Data transaksional skala besar milik perusahaan (akan dibahas di Fase 3)</td><td>Pilih mode <em>Import</em> vs <em>DirectQuery</em> sesuai volume data</td></tr>
+      </tbody>
+    </table>
+
+    <div class="inst-box">
+      <h4>📋 Alur Umum Import Data ke Power BI Desktop</h4>
+      <ol class="inst-steps">
+        <li><span class="n">1</span><span>Klik <strong>Get Data</strong> di Home Ribbon ➔ pilih jenis sumber (misal <strong>Text/CSV</strong>).</span></li>
+        <li><span class="n">2</span><span>Arahkan ke lokasi file, lalu klik <strong>Open</strong>. Power BI menampilkan jendela preview data.</span></li>
+        <li><span class="n">3</span><span>Klik <strong>Transform Data</strong> untuk membuka Power Query Editor dan memeriksa/membersihkan tipe data sebelum dimuat.</span></li>
+        <li><span class="n">4</span><span>Klik <strong>Close &amp; Apply</strong> — data resmi masuk ke dalam model Power BI kamu.</span></li>
+      </ol>
+    </div>
+
+    <div class="callout warn">
+      ⚠️ <strong>Kebiasaan Baik:</strong> Selalu klik <strong>Transform Data</strong> dulu sebelum <strong>Load</strong> langsung. Memeriksa tipe data di awal (apakah kolom tanggal terbaca sebagai teks, apakah kolom nominal terbaca sebagai angka) mencegah error yang jauh lebih sulit dilacak setelah model dan visual sudah dibangun.
+    </div>
+
+    <button class="btn-paham" id="bp1" onclick="unlockNext(1)">Saya Paham — Lanjut ke Fact &amp; Dimension Table ➔</button>
+  </div>
+</div>
+
+<!-- ── SECTION 2: FACT & DIMENSION TABLE, RELATIONSHIP ── -->
+<div class="sec-card locked" id="sec2">
+  <div class="sec-hd">
+    <div class="sec-num" id="sn2">03</div>
+    <div class="sec-title">Model Data Dasar: Fact Table, Dimension Table &amp; Relationship</div>
+    <div class="sec-cpmk">CPMK-2</div>
+  </div>
+  <div class="sec-body">
+    <p>Ini adalah konsep <strong>paling penting</strong> di pertemuan ini. Data bisnis yang baik jarang disimpan dalam satu tabel raksasa — melainkan dipecah menjadi beberapa tabel yang saling terhubung, mengikuti pola <strong>Fact Table</strong> dan <strong>Dimension Table</strong>.</p>
+
+    <table class="concept-table">
+      <thead><tr><th>Jenis Tabel</th><th>Isi</th><th>Ciri Khas</th></tr></thead>
+      <tbody>
+        <tr><td>Fact Table</td><td>Peristiwa/transaksi yang terjadi berulang — angka yang bisa dijumlah (nominal, margin, kuantitas)</td><td>Baris sangat banyak, sebagian besar kolom berisi angka dan kunci asing (foreign key) ke tabel dimensi</td></tr>
+        <tr><td>Dimension Table</td><td>Konteks/atribut deskriptif — nama cabang, kategori produk, kota</td><td>Baris relatif sedikit, kolom deskriptif (teks), punya satu kunci utama (primary key)</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="sh">Contoh: Skema Star Schema Pembiayaan BMT</h3>
+    <div class="schema-wrap">
+      <div class="schema-table dim">
+        <div class="schema-hd">📇 dim_cabang</div>
+        <div class="schema-cols">
+          <div class="schema-col key">cabang_id (PK)</div>
+          <div class="schema-col">nama_cabang</div>
+          <div class="schema-col">kota</div>
+          <div class="schema-col">provinsi</div>
+        </div>
+      </div>
+      <div class="schema-conn"><span>1</span><div class="ln"></div><span>*</span></div>
+      <div class="schema-table fact">
+        <div class="schema-hd">📊 fact_pembiayaan</div>
+        <div class="schema-cols">
+          <div class="schema-col">id_transaksi</div>
+          <div class="schema-col">tanggal</div>
+          <div class="schema-col key">cabang_id (FK)</div>
+          <div class="schema-col key">produk_id (FK)</div>
+          <div class="schema-col">nominal_pembiayaan</div>
+          <div class="schema-col">margin_keuntungan</div>
+        </div>
+      </div>
+      <div class="schema-conn"><span>*</span><div class="ln"></div><span>1</span></div>
+      <div class="schema-table dim">
+        <div class="schema-hd">📇 dim_produk</div>
+        <div class="schema-cols">
+          <div class="schema-col key">produk_id (PK)</div>
+          <div class="schema-col">nama_produk</div>
+          <div class="schema-col">jenis_akad</div>
+          <div class="schema-col">kategori_akad</div>
+        </div>
+      </div>
+    </div>
+    <p style="text-align:center;font-size:12.5px;color:var(--txl)">Pola ini disebut <strong>Star Schema</strong> — satu tabel fakta di tengah, dikelilingi beberapa tabel dimensi. Bentuk paling umum dan direkomendasikan dalam pemodelan Power BI.</p>
+
+    <div class="inst-box">
+      <h4>📋 Cara Membangun Relationship di Model View</h4>
+      <ol class="inst-steps">
+        <li><span class="n">1</span><span>Buka tab <strong>Model View</strong> (ikon diagram di panel kiri).</span></li>
+        <li><span class="n">2</span><span>Klik dan tahan kolom <code>cabang_id</code> pada tabel <code>dim_cabang</code>, lalu seret (drag) ke kolom <code>cabang_id</code> pada tabel <code>fact_pembiayaan</code>.</span></li>
+        <li><span class="n">3</span><span>Power BI otomatis membuat garis relationship dengan kardinalitas <strong>1-ke-Banyak (1:*)</strong> — satu cabang punya banyak transaksi.</span></li>
+        <li><span class="n">4</span><span>Ulangi untuk menghubungkan <code>produk_id</code> pada <code>dim_produk</code> ke <code>fact_pembiayaan</code>.</span></li>
+      </ol>
+    </div>
+
+    <div class="callout danger">
+      <strong>⚠️ Kesalahan Pemula Paling Umum:</strong> Menggabungkan semua data ke dalam satu tabel raksasa ("flat table") dengan nama cabang dan nama produk diulang-ulang di setiap baris transaksi. Ini membuat file besar, lambat, sulit dikelola, dan rawan inkonsistensi penulisan (contoh: "Jakarta Pusat" vs "JAKARTA PUSAT" dianggap dua nilai berbeda). Star schema menyelesaikan masalah ini dengan menyimpan nama cabang <strong>hanya sekali</strong> di dimension table.
+    </div>
+
+    <button class="btn-paham" id="bp2" onclick="unlockNext(2)">Saya Paham — Lanjut ke Visual Bawaan ➔</button>
+  </div>
+</div>
+
+<!-- ── SECTION 3: VISUAL BAWAAN POWER BI ── -->
+<div class="sec-card locked" id="sec3">
+  <div class="sec-hd">
+    <div class="sec-num" id="sn3">04</div>
+    <div class="sec-title">Visual Bawaan Power BI — Bar, Line, Pie, Card, Table, Matrix</div>
+    <div class="sec-cpmk">CPMK-2</div>
+  </div>
+  <div class="sec-body">
+    <p>Setelah model data siap (Fact + Dimension terhubung), kita mulai membangun visual di Report View. Panel <strong>Visualizations</strong> menyediakan puluhan jenis chart bawaan — berikut 6 yang paling sering dipakai untuk laporan bisnis pemula.</p>
+
+    <div class="viz-grid">
+      <div class="viz-card">
+        <div class="viz-icon">📊</div>
+        <div class="viz-name">Bar / Column Chart</div>
+        <div class="viz-use">Membandingkan nilai antar kategori (per cabang, per akad)</div>
+      </div>
+      <div class="viz-card">
+        <div class="viz-icon">📈</div>
+        <div class="viz-name">Line Chart</div>
+        <div class="viz-use">Menampilkan tren nilai sepanjang waktu (per bulan)</div>
+      </div>
+      <div class="viz-card">
+        <div class="viz-icon">🥧</div>
+        <div class="viz-name">Pie Chart</div>
+        <div class="viz-use">Komposisi sederhana, maksimal 3–5 kategori (ingat jebakan P03!)</div>
+      </div>
+      <div class="viz-card">
+        <div class="viz-icon">🔢</div>
+        <div class="viz-name">Card</div>
+        <div class="viz-use">Menonjolkan satu angka KPI utama (Total Pembiayaan)</div>
+      </div>
+      <div class="viz-card">
+        <div class="viz-icon">📋</div>
+        <div class="viz-name">Table</div>
+        <div class="viz-use">Rincian data mentah per baris, perlu presisi angka detail</div>
+      </div>
+      <div class="viz-card">
+        <div class="viz-icon">▦</div>
+        <div class="viz-name">Matrix</div>
+        <div class="viz-use">Tabel pivot interaktif — baris x kolom x nilai, bisa expand/collapse</div>
+      </div>
+    </div>
+
+    <h3 class="sh">Cara Kerja Umum Membuat Visual</h3>
+    <div class="inst-box">
+      <h4>📋 Pola Universal Membuat Visual Apa Pun</h4>
+      <ol class="inst-steps">
+        <li><span class="n">1</span><span>Klik ikon jenis visual yang diinginkan di panel <strong>Visualizations</strong> — sebuah placeholder kosong muncul di canvas.</span></li>
+        <li><span class="n">2</span><span>Dari panel <strong>Fields</strong>, drag kolom dimensi (misal <code>nama_cabang</code>) ke drop-zone <strong>Axis</strong> atau <strong>Legend</strong>.</span></li>
+        <li><span class="n">3</span><span>Drag kolom numerik fact table (misal <code>nominal_pembiayaan</code>) ke drop-zone <strong>Values</strong> — Power BI otomatis menjumlahkannya (Sum).</span></li>
+        <li><span class="n">4</span><span>Gunakan tab Format (ikon kuas) untuk menyesuaikan warna, judul, dan data label sesuai prinsip Gestalt yang sudah dipelajari di P02.</span></li>
+      </ol>
+    </div>
+
+    <div class="callout info">
+      💡 <strong>Koneksi ke Materi Sebelumnya:</strong> Prinsip pemilihan chart di P02 (Chart Chooser Framework) dan menghindari jebakan visual di P03 (Lie Factor, 3D distortion) tetap berlaku penuh saat kamu memilih visual di Power BI. Tool hanya alat — kaidah desainnya tetap sama.
+    </div>
+
+    <button class="btn-paham" id="bp3" onclick="unlockNext(3)">Saya Paham — Lanjut ke Publish &amp; Mobile ➔</button>
+  </div>
+</div>
+
+<!-- ── SECTION 4: PUBLISH KE SERVICE & MOBILE ── -->
+<div class="sec-card locked" id="sec4">
+  <div class="sec-hd">
+    <div class="sec-num" id="sn4">05</div>
+    <div class="sec-title">Publikasi ke Power BI Service &amp; Power BI Mobile</div>
+    <div class="sec-cpmk">CPMK-2</div>
+  </div>
+  <div class="sec-body">
+    <p>Laporan yang hanya tersimpan di laptop pribadi (file <code>.pbix</code>) belum bisa dilihat oleh direksi atau tim lain. <strong>Power BI Service</strong> (aplikasi web di app.powerbi.com) adalah tempat laporan dipublikasikan, dibagikan, dan diatur jadwal refresh otomatisnya.</p>
+
+    <div class="inst-box">
+      <h4>📋 Langkah Publish ke Power BI Service</h4>
+      <ol class="inst-steps">
+        <li><span class="n">1</span><span>Di Power BI Desktop, klik <strong>Publish</strong> pada Home Ribbon.</span></li>
+        <li><span class="n">2</span><span>Masuk (sign in) dengan akun Microsoft/organisasi, lalu pilih <strong>Workspace</strong> tujuan (misal "My Workspace" untuk latihan pribadi).</span></li>
+        <li><span class="n">3</span><span>Setelah proses upload selesai, klik link yang muncul untuk membuka laporan langsung di browser Power BI Service.</span></li>
+        <li><span class="n">4</span><span>Atur <strong>Scheduled Refresh</strong> (opsional) agar data di Service otomatis diperbarui dari sumbernya secara berkala.</span></li>
+      </ol>
+    </div>
+
+    <table class="concept-table">
+      <thead><tr><th>Aspek</th><th>Power BI Desktop</th><th>Power BI Service</th></tr></thead>
+      <tbody>
+        <tr><td>Platform</td><td>Aplikasi Windows (install lokal)</td><td>Aplikasi web (app.powerbi.com)</td></tr>
+        <tr><td>Fungsi Utama</td><td>Membangun &amp; mendesain laporan</td><td>Membagikan, memantau, menjadwalkan refresh</td></tr>
+        <tr><td>Kolaborasi</td><td>Satu pengguna, satu file</td><td>Banyak pengguna via Workspace bersama</td></tr>
+        <tr><td>Akses Mobile</td><td>Tidak tersedia</td><td>Tersedia via Power BI Mobile (iOS/Android)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout info">
+      📱 <strong>Power BI Mobile:</strong> Setelah dipublikasikan ke Service, laporan otomatis dapat diakses lewat aplikasi Power BI Mobile — memungkinkan pimpinan lembaga keuangan syariah memantau KPI pembiayaan kapan saja tanpa membuka laptop, lengkap dengan notifikasi data alert jika metrik melewati ambang batas tertentu.
+    </div>
+
+    <button class="btn-paham" id="bp4" onclick="unlockNext(4)">Saya Paham — Lanjut ke Nilai Syariah ➔</button>
+  </div>
+</div>
+
+<!-- ── SECTION 5: INSERSI NILAI SYARIAH: ILMU & AMAL ── -->
+<div class="sec-card locked" id="sec5">
+  <div class="sec-hd">
+    <div class="sec-num" id="sn5">06</div>
+    <div class="sec-title">Insersi Nilai Syariah: Ilmu &amp; Amal — Pengetahuan yang Diimplementasikan</div>
+    <div class="sec-cpmk">CPMK-2 · CPL-S2</div>
+  </div>
+  <div class="sec-body">
+    <div class="callout sya">
+      <strong>☽ Nilai Utama: Ilmu &amp; Amal (Pengetahuan yang Diimplementasikan)</strong><br>
+      Islam menempatkan tingginya derajat orang berilmu — namun ilmu yang bernilai adalah ilmu yang <em>diamalkan</em>, bukan sekadar disimpan sebagai teori.
+    </div>
+
+    <p>Rasulullah ﷺ bersabda:</p>
+    <blockquote style="font-family:'Amiri',serif;font-size:18px;color:var(--pri);padding:10px 18px;border-left:3px solid var(--sya);background:var(--sf3);border-radius:var(--rs);margin-bottom:12px">
+      « فَضْلُ الْعَالِمِ عَلَى الْعَابِدِ كَفَضْلِ الْقَمَرِ عَلَى سَائِرِ الْكَوَاكِبِ »<br>
+      <span style="font-size:14px;font-family:'Source Sans 3',sans-serif;color:var(--txm)">"Keutamaan orang berilmu atas ahli ibadah (yang beribadah tanpa ilmu) seperti keutamaan bulan atas bintang-bintang." (HR. Abu Dawud &amp; Tirmidzi)</span>
+    </blockquote>
+
+    <p>Pertemuan ini adalah <strong>amal pertama</strong> dari ilmu BI yang sudah kamu pelajari sejak P01. Tiga pertemuan sebelumnya membekalimu dengan konsep — Chart Chooser, Gestalt, Anti-Tadlis. Hari ini, konsep itu diwujudkan menjadi laporan nyata yang bisa dipakai orang lain untuk mengambil keputusan.</p>
+
+    <h3 class="sh">Refleksi: Amanah dalam Membangun Model Data</h3>
+    <ul class="lst">
+      <li><strong>Relationship yang Benar adalah Amanah:</strong> Menghubungkan fact table ke dimension table yang salah (misal cabang_id tertukar) akan menghasilkan laporan yang secara teknis "jalan" tapi angkanya keliru — sebuah bentuk kelalaian yang bisa menyesatkan pengambil keputusan tanpa disadari.</li>
+      <li><strong>Sumber Data yang Sah:</strong> Ilmu koneksi data (Get Data) harus dipakai untuk menghubungkan sumber yang sah dan berizin — bukan untuk mengakses data pihak lain tanpa hak.</li>
+      <li><strong>Publikasi sebagai Tanggung Jawab:</strong> Begitu laporan dipublikasikan ke Power BI Service dan bisa diakses banyak orang, tanggung jawab (amanah) atas akurasi angka yang ditampilkan menjadi lebih besar — inilah makna nyata dari "ilmu yang diamalkan."</li>
+    </ul>
+
+    <button class="btn-paham" id="bp5" onclick="unlockNext(5)">Saya Paham — Lanjut ke Kuis &amp; Evaluasi ➔</button>
+  </div>
+</div>
+
+<!-- ── SECTION 6: KUIS & MATCHING GAME ── -->
+<div class="sec-card locked" id="sec6">
+  <div class="sec-hd">
+    <div class="sec-num" id="sn6">07</div>
+    <div class="sec-title">Evaluasi Pemahaman — Kuis &amp; Matching Game P04</div>
+    <div class="sec-cpmk">CPMK-2</div>
+  </div>
+  <div class="sec-body">
+    <p>Uji pemahamanmu tentang interface Power BI, model data, dan visual bawaan dengan menyelesaikan 4 soal kuis dan 1 sesi matching game berikut:</p>
+
+    <!-- KUIS 4 SOAL -->
+    <div class="quiz-sec">
+      <!-- Q1 -->
+      <div class="q-item" id="qi0">
+        <div class="q-title">1. Seorang analis ingin memeriksa dan mengatur hubungan (relationship) antara tabel fact_pembiayaan dengan dim_cabang. Tampilan (view) manakah di Power BI Desktop yang harus dibuka?</div>
+        <div class="q-opts">
+          <div class="q-opt" onclick="pickOpt(0,0)"><div class="q-opt-letter">A</div><div class="q-opt-text">Report View</div></div>
+          <div class="q-opt" onclick="pickOpt(0,1)"><div class="q-opt-letter">B</div><div class="q-opt-text">Data View</div></div>
+          <div class="q-opt" onclick="pickOpt(0,2)"><div class="q-opt-letter">C</div><div class="q-opt-text">Model View</div></div>
+          <div class="q-opt" onclick="pickOpt(0,3)"><div class="q-opt-letter">D</div><div class="q-opt-text">Power BI Service</div></div>
+        </div>
+        <div class="opt-fb" id="qfb0"></div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="q-item" id="qi1">
+        <div class="q-title">2. Sebuah tabel berisi ribuan baris transaksi pembiayaan dengan kolom nominal_pembiayaan dan margin_keuntungan yang terus bertambah setiap hari. Tabel ini paling tepat diklasifikasikan sebagai:</div>
+        <div class="q-opts">
+          <div class="q-opt" onclick="pickOpt(1,0)"><div class="q-opt-letter">A</div><div class="q-opt-text">Dimension Table, karena berisi banyak baris</div></div>
+          <div class="q-opt" onclick="pickOpt(1,1)"><div class="q-opt-letter">B</div><div class="q-opt-text">Fact Table, karena berisi peristiwa/transaksi berulang dengan nilai yang bisa dijumlah</div></div>
+          <div class="q-opt" onclick="pickOpt(1,2)"><div class="q-opt-letter">C</div><div class="q-opt-text">Primary Table, karena menjadi sumber utama laporan</div></div>
+          <div class="q-opt" onclick="pickOpt(1,3)"><div class="q-opt-letter">D</div><div class="q-opt-text">Lookup Table, karena dipakai untuk mencari data lain</div></div>
+        </div>
+        <div class="opt-fb" id="qfb1"></div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="q-item" id="qi2">
+        <div class="q-title">3. Alih-alih membuat satu tabel raksasa yang mengulang nama cabang di setiap baris transaksi, seorang analis memisahkannya menjadi fact_pembiayaan dan dim_cabang yang terhubung lewat cabang_id. Apa keuntungan utama pendekatan ini?</div>
+        <div class="q-opts">
+          <div class="q-opt" onclick="pickOpt(2,0)"><div class="q-opt-letter">A</div><div class="q-opt-text">File menjadi lebih ringkas dan konsisten — nama cabang hanya tersimpan sekali, mengurangi risiko inkonsistensi penulisan</div></div>
+          <div class="q-opt" onclick="pickOpt(2,1)"><div class="q-opt-letter">B</div><div class="q-opt-text">Power BI mewajibkan minimal 2 tabel agar visual bisa dibuat</div></div>
+          <div class="q-opt" onclick="pickOpt(2,2)"><div class="q-opt-letter">C</div><div class="q-opt-text">Agar file .pbix bisa dibuka di Excel</div></div>
+          <div class="q-opt" onclick="pickOpt(2,3)"><div class="q-opt-letter">D</div><div class="q-opt-text">Agar data otomatis diurutkan berdasarkan tanggal</div></div>
+        </div>
+        <div class="opt-fb" id="qfb2"></div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="q-item" id="qi3">
+        <div class="q-title">4. Manajemen ingin memantau KPI total pembiayaan dari ponsel saat berada di luar kantor, tanpa membuka laptop. Fitur Power BI apa yang memungkinkan ini?</div>
+        <div class="q-opts">
+          <div class="q-opt" onclick="pickOpt(3,0)"><div class="q-opt-letter">A</div><div class="q-opt-text">Power Query Editor</div></div>
+          <div class="q-opt" onclick="pickOpt(3,1)"><div class="q-opt-letter">B</div><div class="q-opt-text">Publish ke Power BI Service, lalu diakses lewat Power BI Mobile</div></div>
+          <div class="q-opt" onclick="pickOpt(3,2)"><div class="q-opt-letter">C</div><div class="q-opt-text">Menyimpan file .pbix di email pribadi</div></div>
+          <div class="q-opt" onclick="pickOpt(3,3)"><div class="q-opt-letter">D</div><div class="q-opt-text">Mode DirectQuery pada Model View</div></div>
+        </div>
+        <div class="opt-fb" id="qfb3"></div>
+      </div>
+    </div>
+
+    <!-- MATCHING GAME -->
+    <h3 class="sh" style="margin-top:24px">Matching Challenge: Jenis Visual vs Kegunaan Bisnis</h3>
+    <p style="font-size:13px;color:var(--txm)">Klik 1 kartu Visual di sisi kiri, lalu klik kartu Kegunaan yang cocok di sisi kanan:</p>
+
+    <div class="match-container">
+      <div class="match-list" id="matchLeft">
+        <div class="match-item" data-id="1" onclick="matchClick('left', 1)">1. Bar / Column Chart</div>
+        <div class="match-item" data-id="2" onclick="matchClick('left', 2)">2. Line Chart</div>
+        <div class="match-item" data-id="3" onclick="matchClick('left', 3)">3. Card</div>
+        <div class="match-item" data-id="4" onclick="matchClick('left', 4)">4. Matrix</div>
+      </div>
+      <div class="match-list" id="matchRight">
+        <div class="match-item" data-id="3" onclick="matchClick('right', 3)">A. Menonjolkan satu angka KPI utama, misal Total Pembiayaan</div>
+        <div class="match-item" data-id="1" onclick="matchClick('right', 1)">B. Membandingkan nilai antar cabang atau kategori produk</div>
+        <div class="match-item" data-id="4" onclick="matchClick('right', 4)">C. Tabel pivot interaktif baris × kolom yang bisa expand/collapse</div>
+        <div class="match-item" data-id="2" onclick="matchClick('right', 2)">D. Menampilkan tren nilai pembiayaan bulan per bulan</div>
+      </div>
+    </div>
+
+    <div class="quiz-submit-row">
+      <button class="btn-submit" id="btnSubmitQuiz" onclick="submitAssessment()">Kirim Jawaban &amp; Simpan Nilai ke Cloud</button>
+    </div>
+
+    <div class="quiz-result" id="quizResult"></div>
+
+    <!-- COMPLETION -->
+    <div class="completion" id="completion">
+      <h2>✅ Materi Teori P04 Selesai!</h2>
+      <p>Kamu sudah menguasai interface Power BI Desktop, cara menghubungkan sumber data, pemodelan fact/dimension table beserta relationship, visual bawaan, dan publikasi ke Power BI Service.</p>
+      <p style="margin-top:8px;font-size:12.5px;color:rgba(255,255,255,.5)">Saatnya membuka Power BI Desktop dan membangun model data pertamamu di Lembar Praktikum P04.</p>
+      <a class="lab-link" href="Praktikum-04-BIV.html">Buka Praktikum P04 — Lab 3 ➔</a>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<script>
+const TOTAL_SECS = 7;
+const STATE_KEY = 'tazkia-biv-p04-slide-v1';
+
+let state = {
+  done: [],
+  quizAnswers: {},
+  matchPairs: []
+};
+
+// ── LOAD & SAVE STATE ──
+function loadState() {
+  try {
+    const s = JSON.parse(localStorage.getItem(STATE_KEY));
+    if (s && Array.isArray(s.done)) {
+      state = s;
+    }
+  } catch (e) {}
+}
+
+function saveState() {
+  try {
+    localStorage.setItem(STATE_KEY, JSON.stringify(state));
+  } catch (e) {}
+}
+
+function applyState() {
+  for (let i = 0; i < TOTAL_SECS; i++) {
+    const card = document.getElementById('sec' + i);
+    const dot = document.getElementById('pd' + i);
+    const btn = document.getElementById('bp' + i);
+    const sn = document.getElementById('sn' + i);
+    if (!card) continue;
+
+    if (i === 0 || state.done.includes(i - 1)) {
+      card.className = 'sec-card unlocked';
+    } else {
+      card.className = 'sec-card locked';
+    }
+
+    if (state.done.includes(i)) {
+      if (dot) dot.className = 'prog-dot done';
+      if (btn) { btn.className = 'btn-paham done'; btn.textContent = '✓ Selesai Dipelajari'; }
+      if (sn) sn.className = 'sec-num done';
+    } else if (i === state.done.length) {
+      if (dot) dot.className = 'prog-dot active';
+    }
+  }
+  updateProgress();
+  if (state.done.length >= TOTAL_SECS - 1) {
+    document.getElementById('completion').classList.add('show');
+  }
+}
+
+function updateProgress() {
+  const pct = Math.round((state.done.length / (TOTAL_SECS - 1)) * 100);
+  const el = document.getElementById('progPct');
+  if (el) el.textContent = pct + '%';
+}
+
+function unlockNext(i) {
+  if (!state.done.includes(i)) state.done.push(i);
+  saveState();
+  applyState();
+  const nextCard = document.getElementById('sec' + (i + 1));
+  if (nextCard) nextCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ── QUIZ LOGIC ──
+const QUIZ_DATA = [
+  { correct: 2, explanation: 'Model View adalah tampilan khusus untuk membangun dan memeriksa relationship antar tabel dalam bentuk diagram visual.' },
+  { correct: 1, explanation: 'Tabel dengan baris peristiwa/transaksi berulang yang nilainya bisa dijumlah (nominal, margin) adalah ciri khas Fact Table.' },
+  { correct: 0, explanation: 'Star schema (fact + dimension) menghindari duplikasi data deskriptif, membuat file lebih ringkas dan konsisten — inilah inti pemodelan data yang baik.' },
+  { correct: 1, explanation: 'Publish ke Power BI Service membuat laporan bisa diakses lewat Power BI Mobile kapan saja tanpa laptop, lengkap dengan notifikasi data alert.' }
+];
+
+function pickOpt(qIdx, optIdx) {
+  state.quizAnswers[qIdx] = optIdx;
+  const qCard = document.getElementById('qi' + qIdx);
+  if (!qCard) return;
+  const opts = qCard.querySelectorAll('.q-opt');
+  opts.forEach((o, idx) => {
+    o.className = idx === optIdx ? 'q-opt selected' : 'q-opt';
+  });
+}
+
+// ── MATCHING LOGIC ──
+let selectedLeft = null;
+let selectedRight = null;
+
+function matchClick(side, id) {
+  if (side === 'left') {
+    document.querySelectorAll('#matchLeft .match-item').forEach(el => el.classList.remove('selected'));
+    const target = document.querySelector(`#matchLeft .match-item[data-id="${id}"]`);
+    if (target && !target.classList.contains('paired')) {
+      target.classList.add('selected');
+      selectedLeft = id;
+    }
+  } else {
+    document.querySelectorAll('#matchRight .match-item').forEach(el => el.classList.remove('selected'));
+    const target = document.querySelector(`#matchRight .match-item[data-id="${id}"]`);
+    if (target && !target.classList.contains('paired')) {
+      target.classList.add('selected');
+      selectedRight = id;
+    }
+  }
+
+  if (selectedLeft !== null && selectedRight !== null) {
+    if (selectedLeft === selectedRight) {
+      const lEl = document.querySelector(`#matchLeft .match-item[data-id="${selectedLeft}"]`);
+      const rEl = document.querySelector(`#matchRight .match-item[data-id="${selectedRight}"]`);
+      if (lEl) { lEl.className = 'match-item paired'; lEl.innerHTML += ' ✓'; }
+      if (rEl) { rEl.className = 'match-item paired'; rEl.innerHTML += ' ✓'; }
+      if (!state.matchPairs.includes(selectedLeft)) state.matchPairs.push(selectedLeft);
+    } else {
+      const lEl = document.querySelector(`#matchLeft .match-item[data-id="${selectedLeft}"]`);
+      const rEl = document.querySelector(`#matchRight .match-item[data-id="${selectedRight}"]`);
+      if (lEl) lEl.classList.remove('selected');
+      if (rEl) rEl.classList.remove('selected');
+    }
+    selectedLeft = null;
+    selectedRight = null;
+  }
+}
+
+// ── SUBMIT ASSESSMENT ──
+function submitAssessment() {
+  let score = 0;
+  let total = QUIZ_DATA.length;
+
+  for (let i = 0; i < total; i++) {
+    const qCard = document.getElementById('qi' + i);
+    const fb = document.getElementById('qfb' + i);
+    const userAns = state.quizAnswers[i];
+    const item = QUIZ_DATA[i];
+
+    if (userAns === undefined) {
+      alert('Harap jawab semua 4 pertanyaan kuis terlebih dahulu!');
+      return;
+    }
+
+    const opts = qCard.querySelectorAll('.q-opt');
+    opts.forEach((o, idx) => {
+      if (idx === item.correct) o.className = 'q-opt correct';
+      else if (idx === userAns) o.className = 'q-opt wrong';
+    });
+
+    if (userAns === item.correct) {
+      score++;
+      fb.className = 'opt-fb show correct';
+      fb.innerHTML = '<strong>Tepat!</strong> ' + item.explanation;
+    } else {
+      fb.className = 'opt-fb show wrong';
+      fb.innerHTML = '<strong>Kurang Tepat.</strong> ' + item.explanation;
+    }
+  }
+
+  const matchBonus = (state.matchPairs.length === 4) ? 20 : (state.matchPairs.length * 5);
+  const quizScore = Math.round((score / total) * 80);
+  const finalTotal = quizScore + matchBonus;
+
+  const resDiv = document.getElementById('quizResult');
+  resDiv.style.display = 'block';
+
+  if (finalTotal >= 70) {
+    resDiv.className = 'quiz-result pass';
+    resDiv.innerHTML = `<div class="big">🎉 Mumtaz! Skor Evaluasi: ${finalTotal}/100</div>
+    <p>Selamat! Kamu telah menguasai dasar interface, model data, dan visual bawaan Power BI.</p>`;
+  } else {
+    resDiv.className = 'quiz-result fail';
+    resDiv.innerHTML = `<div class="big">⚠️ Skor Evaluasi: ${finalTotal}/100</div>
+    <p>Silakan pelajari kembali konsep Fact vs Dimension Table dan coba perbaiki jawabanmu.</p>`;
+  }
+
+  if (typeof saveScoreToCloud === 'function') {
+    saveScoreToCloud('BIV Pertemuan 04', 'Kuis Intro Power BI: Connect, Model, Visualize', finalTotal, 100, {
+      quizScore: quizScore,
+      matchPairs: state.matchPairs.length,
+      passed: finalTotal >= 70
+    });
+  }
+
+  if (!state.done.includes(TOTAL_SECS - 1)) state.done.push(TOTAL_SECS - 1);
+  saveState();
+  applyState();
+  resDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ── INIT ──
+loadState();
+applyState();
+</script>
+
+</body>
+</html>

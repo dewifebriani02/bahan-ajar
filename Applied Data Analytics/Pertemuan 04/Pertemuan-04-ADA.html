@@ -1,0 +1,870 @@
+<meta charset="UTF-8">
+<title>ADA P04 — Exploratory Data Analysis (EDA) Terstruktur</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="../../cloud-sync.js?v=20260912b"></script>
+<style>
+/* ── ADA P04 · TEAL DATA SCIENCE (konsisten dengan P01–P03) ── */
+:root{
+  --meet-from:#041820;--meet-mid:#082840;--meet-to:#104060;
+  --meet-acc:#20C8D0;--meet-acc2:#30D8E0;
+  --bg:#EDF1F6;--sf:#fff;--sf2:#E8F6F8;--sf3:#F4FAFB;
+  --bd:#C4CDD8;--bs:#DDE3EC;
+  --tx:#0C1824;--txm:#475569;--txl:#8A9AB0;
+  --pri:#082840;--pril:#D8EEF6;--prx:#EAF6F8;
+  --acc:#20C8D0;--accl:#D0F4F6;
+  --sya:#1F9060;--syal:#D0EEE2;--syab:#40B080;
+  --p0:#1B7898;--p0l:#D8EEF6;
+  --p1:#D46020;--p1l:#FCEBD8;
+  --p2:#1F9060;--p2l:#D0EEE2;
+  --p3:#7040B0;--p3l:#EEE0FA;
+  --p4:#2A50B0;--p4l:#D8E4F8;
+  --r:8px;--rs:5px;
+  --shadow:0 4px 20px rgba(8,40,64,.1);--shadow-sm:0 2px 8px rgba(8,40,64,.06);
+}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){
+  --bg:#030E18;--sf:#071828;--sf2:#071C28;--sf3:#041220;
+  --bd:#0C2840;--bs:#081830;
+  --tx:#C8E8F8;--txm:#6090B0;--txl:#2A5070;
+  --pri:#20C8D0;--pril:#051830;--prx:#040E18;
+  --acc:#20C8D0;--accl:#041820;
+  --sya:#40C890;--syal:#031410;
+  --p0l:#0A2030;--p1l:#180A00;--p2l:#041410;--p3l:#0E0820;--p4l:#060C20;
+}}
+:root[data-theme=dark]{
+  --bg:#030E18;--sf:#071828;--sf2:#071C28;--sf3:#041220;
+  --bd:#0C2840;--bs:#081830;
+  --tx:#C8E8F8;--txm:#6090B0;--txl:#2A5070;
+  --pri:#20C8D0;--pril:#051830;--prx:#040E18;
+  --acc:#20C8D0;--accl:#041820;
+  --sya:#40C890;--syal:#031410;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Source Sans 3',system-ui,sans-serif;background:var(--bg);color:var(--tx);font-size:15px;line-height:1.65}
+
+/* ── HEADER ── */
+.hd{background:linear-gradient(160deg,var(--meet-from) 0%,var(--meet-mid) 55%,var(--meet-to) 100%);color:#fff;position:relative;overflow:hidden}
+.hd-ornament{position:absolute;inset:0;pointer-events:none;opacity:.12}
+.hd-inner{max-width:860px;margin:0 auto;padding:38px 28px 12px;position:relative;z-index:1}
+.hd-eyebrow{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.hd-line{width:28px;height:1px;background:var(--meet-acc)}
+.hd-eye{font-size:11px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--meet-acc)}
+.hd-kode{font-size:12px;background:rgba(32,200,208,.15);border:1px solid rgba(32,200,208,.3);border-radius:12px;padding:2px 12px;color:var(--meet-acc2);margin-left:auto}
+.hd-title{font-family:'Amiri',serif;font-size:34px;font-weight:700;line-height:1.15;margin-bottom:6px}
+.hd-sub{font-size:14.5px;color:rgba(255,255,255,.55);margin-bottom:18px}
+.hd-pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px}
+.hpill{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:3px 12px;font-size:12px;color:rgba(255,255,255,.7)}
+.hpill strong{color:#fff}
+.hd-arch{line-height:0}
+.hd-arch svg{display:block;width:100%;height:28px}
+
+/* ── PROGRESS BAR ── */
+.prog-wrap{background:var(--sf);border-bottom:1px solid var(--bs);position:sticky;top:0;z-index:40;box-shadow:var(--shadow-sm)}
+.prog-inner{max-width:860px;margin:0 auto;padding:10px 24px;display:flex;align-items:center;gap:12px}
+.prog-label{font-size:12px;font-weight:700;color:var(--txl);white-space:nowrap;flex-shrink:0}
+.prog-steps{display:flex;gap:5px;flex:1}
+.prog-dot{width:28px;height:6px;border-radius:3px;background:var(--bs);transition:background .3s}
+.prog-dot.done{background:var(--meet-acc)}
+.prog-dot.active{background:rgba(32,200,208,.4)}
+.prog-pct{font-size:12px;font-weight:700;color:var(--acc);white-space:nowrap}
+
+.main{max-width:860px;margin:0 auto;padding:28px 24px 80px}
+
+.sec-card{background:var(--sf);border:1px solid var(--bs);border-radius:var(--r);margin-bottom:16px;box-shadow:var(--shadow-sm);overflow:hidden;transition:opacity .3s,filter .3s}
+.sec-card.locked{opacity:.45;filter:grayscale(.4);pointer-events:none}
+.sec-card.unlocked{opacity:1;filter:none;pointer-events:auto}
+.sec-hd{display:flex;align-items:center;gap:12px;padding:15px 22px;background:var(--sf3);border-bottom:1px solid var(--bs)}
+.sec-num{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--meet-mid),var(--meet-acc));color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.sec-num.done{background:var(--sya)}
+.sec-title{font-family:'Amiri',serif;font-size:19px;font-weight:700;color:var(--pri)}
+.sec-cpmk{font-size:11px;color:var(--acc);font-weight:700;margin-left:auto;background:var(--accl);padding:2px 9px;border-radius:10px;white-space:nowrap}
+.sec-body{padding:22px 26px}
+
+h3.sh{font-family:'Amiri',serif;font-size:20px;font-weight:700;color:var(--pri);margin:22px 0 10px;display:flex;align-items:center;gap:9px}
+h3.sh::before{content:'';width:4px;height:18px;background:var(--meet-acc);border-radius:2px;flex-shrink:0}
+h4.shs{font-size:14.5px;font-weight:700;color:var(--tx);margin:16px 0 8px}
+p{color:var(--txm);margin-bottom:10px;font-size:14.5px}
+ul.lst{list-style:none;padding:0;margin-bottom:12px}
+ul.lst li{padding:6px 0 6px 22px;position:relative;color:var(--txm);font-size:14px;border-bottom:1px solid var(--bs)}
+ul.lst li:last-child{border-bottom:none}
+ul.lst li::before{content:'▸';position:absolute;left:0;color:var(--acc);font-size:11px;top:8px}
+ul.lst li strong{color:var(--tx)}
+.callout{border-radius:var(--rs);padding:12px 16px;margin:12px 0;font-size:13.5px}
+.callout.info{background:var(--prx);border-left:4px solid var(--acc);color:var(--txm)}
+.callout.sya{background:var(--syal);border-left:4px solid var(--sya);color:var(--txm)}
+.callout.warn{background:#FEF3E0;border-left:4px solid #D46020;color:#5A2C04}
+.callout.tip{background:var(--sf3);border-left:4px solid var(--p3);color:var(--txm)}
+
+.cpmk-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:14px}
+.cpmk-table th{background:var(--meet-mid);color:#fff;padding:7px 12px;text-align:left;font-size:11.5px}
+.cpmk-table td{padding:7px 12px;border-bottom:1px solid var(--bs);color:var(--txm)}
+.cpmk-table tr:last-child td{border-bottom:none}
+.cpmk-table tr:nth-child(even) td{background:var(--sf3)}
+.badge{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:9px}
+.badge-c3{background:#E8E0FA;color:#5020A0}
+
+.sec-map{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}
+@media(max-width:480px){.sec-map{grid-template-columns:1fr 1fr}}
+.sec-map-item{background:var(--sf3);border:1px solid var(--bs);border-radius:var(--rs);padding:10px 13px;display:flex;align-items:center;gap:9px}
+.sec-map-item .ico{font-size:20px;flex-shrink:0}
+.sec-map-item .lbl{font-size:12.5px;font-weight:600;color:var(--tx);line-height:1.3}
+.sec-map-item .sub{font-size:11px;color:var(--txl);margin-top:2px}
+
+/* CODE BLOCK */
+.code-wrap{margin:14px 0}
+.code-hd{display:flex;align-items:center;justify-content:space-between;background:#082840;padding:8px 14px;border-radius:var(--rs) var(--rs) 0 0}
+.code-hd span{font-size:11px;font-weight:700;color:#4090C0;letter-spacing:.06em;text-transform:uppercase}
+.code-hd .copy-btn{font-size:11px;background:rgba(32,200,208,.12);border:1px solid rgba(32,200,208,.25);border-radius:8px;padding:2px 9px;color:var(--acc);cursor:pointer;font-family:inherit}
+.code-hd .copy-btn:hover{background:rgba(32,200,208,.22)}
+pre.code{background:#1E2C38;border-radius:0 0 var(--rs) var(--rs);padding:16px 18px;overflow-x:auto;margin:0;font-family:'Source Code Pro','Courier New',monospace;font-size:13.5px;line-height:1.75;color:#C9D8E0}
+.kw{color:#20C8D0}.fn{color:#79D0FF}.st{color:#A5E6FF}.cm{color:#4A7090;font-style:italic}.nm{color:#F8C555}.op{color:#E0A060}.va{color:#D4C0A0}
+
+.out-wrap{background:#F4FAFC;border:1px solid #A0D8E0;border-radius:var(--rs);padding:12px 16px;margin:8px 0;font-size:13px;line-height:1.6;color:#0A2830;font-family:'Source Code Pro',monospace}
+.out-wrap::before{content:'▶ Output:';display:block;font-family:'Source Sans 3',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--acc);margin-bottom:7px}
+
+/* COMPARISON GRID */
+.cmp-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
+@media(max-width:500px){.cmp-grid{grid-template-columns:1fr}}
+.cmp-card{border-radius:var(--r);padding:16px;border:1px solid var(--bs)}
+.cmp-card.bad{background:#FFF5F5;border-color:#E57373}
+.cmp-card.good{background:var(--prx);border-color:var(--acc)}
+.cmp-card h4{font-size:14.5px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.cmp-card.bad h4{color:#C62828}
+.cmp-card.good h4{color:var(--pri)}
+.cmp-row{display:flex;align-items:flex-start;gap:7px;margin-bottom:7px;font-size:13px;color:var(--txm)}
+
+/* CONCEPT TABLE */
+.concept-table{width:100%;border-collapse:collapse;font-size:13px;margin:14px 0}
+.concept-table th{background:var(--meet-mid);color:#fff;padding:8px 14px;text-align:left;font-size:12px}
+.concept-table td{padding:8px 14px;border-bottom:1px solid var(--bs);color:var(--txm);vertical-align:top}
+.concept-table td:first-child{font-family:'Source Code Pro',monospace;font-size:12.5px;color:var(--p0);font-weight:700;white-space:nowrap}
+.concept-table tr:nth-child(even) td{background:var(--sf3)}
+.concept-table tr:last-child td{border-bottom:none}
+
+/* FLOW DIAGRAM */
+.flow-wrap{display:flex;gap:6px;align-items:center;margin:14px 0;flex-wrap:wrap}
+.flow-box{background:var(--sf3);border:1.5px solid var(--bs);border-radius:var(--rs);padding:10px 14px;font-size:13px;text-align:center;min-width:110px}
+.flow-box strong{display:block;font-size:12px;color:var(--tx);margin-bottom:3px}
+.flow-box span{font-size:11px;color:var(--txl)}
+.flow-box.hl{border-color:var(--acc);background:var(--accl)}
+.flow-box.hl strong{color:var(--pri)}
+.flow-arr{font-size:18px;color:var(--txl);flex-shrink:0}
+
+/* NILAI SYARIAH */
+.nilai-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
+@media(max-width:500px){.nilai-grid{grid-template-columns:1fr}}
+.nilai-card{background:var(--sf3);border:1px solid var(--bs);border-radius:var(--r);padding:16px;border-top:3px solid var(--sya)}
+.nilai-name{font-family:'Amiri',serif;font-size:18px;font-weight:700;color:var(--sya);margin-bottom:4px}
+.nilai-ar{font-family:'Amiri',serif;font-size:22px;color:var(--tx);text-align:right;direction:rtl;margin:10px 0;line-height:1.8}
+.nilai-tr{font-size:13px;color:var(--txm);font-style:italic;margin-bottom:8px}
+.nilai-ref{font-size:11.5px;color:var(--syab);font-weight:600}
+.nilai-app{font-size:13px;color:var(--txm);margin-top:8px;border-top:1px solid var(--bs);padding-top:8px}
+
+/* QUIZ */
+.quiz-head{background:linear-gradient(135deg,var(--meet-mid),var(--meet-to));color:#fff;padding:16px 22px;border-radius:var(--r) var(--r) 0 0;display:flex;align-items:center;gap:10px}
+.quiz-head h3{font-family:'Amiri',serif;font-size:18px;font-weight:700}
+.quiz-head .q-info{font-size:12.5px;color:rgba(255,255,255,.6);margin-left:auto}
+.quiz-body{background:var(--sf);border:1px solid var(--bs);border-radius:0 0 var(--r) var(--r);padding:22px}
+.q-block{margin-bottom:22px;padding-bottom:22px;border-bottom:1px solid var(--bs)}
+.q-block:last-of-type{border-bottom:none}
+.q-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--acc);margin-bottom:6px}
+.q-text{font-size:14.5px;font-weight:600;color:var(--tx);margin-bottom:12px;line-height:1.5}
+.q-code{font-family:'Source Code Pro',monospace;font-size:12.5px;background:#1E2C38;color:#A5E6FF;border-radius:var(--rs);padding:8px 14px;margin:8px 0;display:block;overflow-x:auto}
+.q-opts{display:flex;flex-direction:column;gap:7px}
+.q-opt{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border:1.5px solid var(--bs);border-radius:var(--rs);cursor:pointer;transition:all .18s;font-size:13.5px;color:var(--txm);background:var(--sf3)}
+.q-opt:hover{border-color:var(--acc);background:var(--accl)}
+.q-opt.selected{border-color:var(--acc);background:var(--accl);color:var(--tx)}
+.q-opt.correct{border-color:var(--sya)!important;background:var(--syal)!important;color:var(--sya)!important}
+.q-opt.wrong{border-color:#D44040!important;background:#FEE0E0!important;color:#A01010!important}
+.q-opt-letter{width:22px;height:22px;border-radius:50%;background:var(--bs);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--txl);flex-shrink:0;margin-top:1px}
+.q-opt.selected .q-opt-letter{background:var(--acc);color:#fff}
+.q-feedback{font-size:13px;color:var(--txm);background:var(--prx);border-radius:var(--rs);padding:10px 14px;margin-top:10px;display:none;border-left:3px solid var(--acc)}
+.q-feedback.show{display:block}
+.match-wrap{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+@media(max-width:500px){.match-wrap{grid-template-columns:1fr}}
+.match-col-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--txl);margin-bottom:7px}
+.match-items{display:flex;flex-direction:column;gap:7px}
+.match-term,.match-def{padding:10px 14px;border:1.5px solid var(--bs);border-radius:var(--rs);cursor:pointer;font-size:13px;color:var(--txm);background:var(--sf3);transition:all .18s;line-height:1.45;user-select:none}
+.match-term:hover,.match-def:hover{border-color:var(--acc);background:var(--accl)}
+.match-term.selected,.match-def.selected{border-color:var(--acc)!important;box-shadow:0 0 0 2px var(--accl)}
+.match-term strong{display:block;font-size:12px;color:var(--tx);margin-bottom:2px}
+.match-hint{font-size:12.5px;color:var(--txl);margin-bottom:10px}
+.quiz-submit-row{display:flex;align-items:center;gap:12px;margin-top:20px}
+.btn-submit{background:linear-gradient(135deg,var(--meet-mid),var(--meet-acc));color:#fff;border:none;border-radius:var(--r);padding:12px 28px;font-family:'Source Sans 3',sans-serif;font-size:14.5px;font-weight:700;cursor:pointer;transition:opacity .2s}
+.btn-submit:hover{opacity:.88}
+.quiz-score{font-size:14px;color:var(--txm);display:none}
+.quiz-result{display:none;margin-top:16px;border-radius:var(--r);padding:16px 20px;text-align:center}
+.quiz-result.pass{background:var(--syal);border:1.5px solid var(--sya)}
+.quiz-result.fail{background:#FEE8D8;border:1.5px solid #D46020}
+.quiz-result .big{font-family:'Amiri',serif;font-size:28px;font-weight:700}
+.quiz-result.pass .big{color:var(--sya)}
+.quiz-result.fail .big{color:#A04010}
+.quiz-result p{font-size:13.5px;color:var(--txm);margin-top:6px}
+
+.paham-row{display:flex;justify-content:flex-end;margin-top:22px}
+.btn-paham{background:linear-gradient(135deg,var(--meet-mid),var(--meet-acc));color:#fff;border:none;border-radius:24px;padding:11px 28px;font-family:'Source Sans 3',sans-serif;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:7px;transition:opacity .2s}
+.btn-paham:hover{opacity:.88}
+.btn-paham.done{background:var(--sya);cursor:default}
+
+.completion{display:none;background:linear-gradient(135deg,var(--meet-mid),var(--meet-to));color:#fff;border-radius:var(--r);padding:30px;text-align:center;margin-top:20px}
+.completion.show{display:block}
+.completion h2{font-family:'Amiri',serif;font-size:26px;font-weight:700;margin-bottom:8px}
+.completion p{color:rgba(255,255,255,.7);font-size:14px}
+.completion .lab-link{display:inline-block;margin-top:16px;background:var(--meet-acc);color:var(--meet-from);border-radius:20px;padding:10px 24px;font-weight:700;font-size:14px;text-decoration:none}
+
+@media(max-width:600px){
+  .hd-inner{padding:28px 18px 10px}
+  .main{padding:18px 14px 60px}
+  .sec-body{padding:16px 16px}
+  .hd-title{font-size:26px}
+  .cmp-grid,.nilai-grid,.match-wrap{grid-template-columns:1fr}
+}
+</style>
+
+<!-- HEADER -->
+<div class="hd">
+  <svg class="hd-ornament" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs><pattern id="mesh" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M30,0 L60,30 L30,60 L0,30 Z" fill="none" stroke="#20C8D0" stroke-width="1"/>
+      <circle cx="30" cy="30" r="2.5" fill="#20C8D0" opacity=".6"/>
+      <circle cx="0" cy="30" r="1.5" fill="#20C8D0" opacity=".4"/>
+      <circle cx="60" cy="30" r="1.5" fill="#20C8D0" opacity=".4"/>
+    </pattern></defs>
+    <rect width="100%" height="100%" fill="url(#mesh)"/>
+  </svg>
+  <div class="hd-inner">
+    <div class="hd-eyebrow">
+      <div class="hd-line"></div>
+      <span class="hd-eye">Applied Data Analytics · Universitas Tazkia</span>
+      <span class="hd-kode">DTA-402 · P04</span>
+    </div>
+    <h1 class="hd-title">Exploratory Data Analysis (EDA) Terstruktur —<br>Membiarkan Data Berbicara</h1>
+    <p class="hd-sub">Statistical Summary · Univariate · Bivariate · Multivariate · Pandas Profiling · Tafakkur</p>
+    <div class="hd-pills">
+      <span class="hpill"><strong>CPMK-2</strong></span>
+      <span class="hpill">Bloom C3 — Menerapkan</span>
+      <span class="hpill">LAB 3</span>
+      <span class="hpill">Ganjil 2026/2027</span>
+    </div>
+  </div>
+  <div class="hd-arch"><svg viewBox="0 0 1200 28" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0,28 L0,16 Q20,4 40,16 Q60,28 80,16 Q100,4 120,16 Q140,28 160,16 Q180,4 200,16 Q220,28 240,16 Q260,4 280,16 Q300,28 320,16 Q340,4 360,16 Q380,28 400,16 Q420,4 440,16 Q460,28 480,16 Q500,4 520,16 Q540,28 560,16 Q580,4 600,16 Q620,28 640,16 Q660,4 680,16 Q700,28 720,16 Q740,4 760,16 Q780,28 800,16 Q820,4 840,16 Q860,28 880,16 Q900,4 920,16 Q940,28 960,16 Q980,4 1000,16 Q1020,28 1040,16 Q1060,4 1080,16 Q1100,28 1120,16 Q1140,4 1160,16 Q1180,28 1200,16 L1200,28 Z" fill="var(--bg)"/>
+  </svg></div>
+</div>
+
+<!-- PROGRESS -->
+<div class="prog-wrap">
+  <div class="prog-inner">
+    <span class="prog-label">Progress P04</span>
+    <div class="prog-steps" id="progSteps">
+      <div class="prog-dot active" id="pd0"></div>
+      <div class="prog-dot" id="pd1"></div>
+      <div class="prog-dot" id="pd2"></div>
+      <div class="prog-dot" id="pd3"></div>
+      <div class="prog-dot" id="pd4"></div>
+      <div class="prog-dot" id="pd5"></div>
+      <div class="prog-dot" id="pd6"></div>
+    </div>
+    <span class="prog-pct" id="progPct">0%</span>
+  </div>
+</div>
+
+<div class="main">
+
+<!-- ╔══ SEKSI 1: TUJUAN PEMBELAJARAN ══╗ -->
+<div class="sec-card unlocked" id="sec0">
+  <div class="sec-hd">
+    <div class="sec-num" id="sn0">1</div>
+    <div class="sec-title">Tujuan Pembelajaran &amp; Peta Konsep</div>
+    <span class="sec-cpmk">CPMK-2</span>
+  </div>
+  <div class="sec-body">
+    <p>John Tukey, bapak <em>Exploratory Data Analysis</em>, berkata: <strong>"The greatest value of a picture is when it forces us to notice what we never expected to see."</strong> EDA bukan sekadar menjalankan <code>.describe()</code> lalu selesai — EDA adalah proses sistematis <strong>mendengarkan apa yang data katakan</strong> sebelum kita memaksakan model atau kesimpulan bisnis kepadanya.</p>
+
+    <p>Setelah P03 membersihkan dataset transaksi e-commerce halal, minggu ini kita menggali <strong>pola, distribusi, dan hubungan</strong> di dalamnya — tiga lapis pemahaman yang wajib dilalui sebelum data layak dijadikan dasar keputusan.</p>
+
+    <h3 class="sh">Setelah pertemuan ini kamu mampu...</h3>
+    <table class="cpmk-table">
+      <thead><tr><th>Sub-CPMK</th><th>Bloom</th><th>Kemampuan Kunci</th></tr></thead>
+      <tbody>
+        <tr><td><strong>C3.1</strong></td><td><span class="badge badge-c3">C3</span></td><td>Menghitung dan menginterpretasikan <em>statistical summary</em> (mean, median, std, skewness, kurtosis) secara bermakna bagi bisnis</td></tr>
+        <tr><td><strong>C3.2</strong></td><td><span class="badge badge-c3">C3</span></td><td>Menganalisis distribusi <em>univariate</em> tiap variabel — numerik (histogram, boxplot) maupun kategorikal (<code>value_counts</code>)</td></tr>
+        <tr><td><strong>C3.3</strong></td><td><span class="badge badge-c3">C3</span></td><td>Menganalisis hubungan <em>bivariate</em> antar dua variabel menggunakan korelasi, scatter plot, dan <code>groupby</code> cross-tab</td></tr>
+        <tr><td><strong>C3.4</strong></td><td><span class="badge badge-c3">C3</span></td><td>Menganalisis pola <em>multivariate</em> menggunakan correlation heatmap dan pairplot seluruh variabel sekaligus</td></tr>
+        <tr><td><strong>C3.5</strong></td><td><span class="badge badge-c3">C3</span></td><td>Memformulasikan pertanyaan bisnis strategis dari temuan EDA, dibantu laporan EDA otomatis (<em>pandas profiling</em>)</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="sh">Peta 6 Pilar EDA Terstruktur P04</h3>
+    <div class="sec-map">
+      <div class="sec-map-item"><div class="ico">📊</div><div><div class="lbl">Statistical Summary</div><div class="sub">Seksi 2 · describe(), skew, kurt</div></div></div>
+      <div class="sec-map-item"><div class="ico">📈</div><div><div class="lbl">Analisis Univariate</div><div class="sub">Seksi 3 · Histogram &amp; Boxplot</div></div></div>
+      <div class="sec-map-item"><div class="ico">🔗</div><div><div class="lbl">Bivariate &amp; Multivariate</div><div class="sub">Seksi 4 · Korelasi, Heatmap, Pairplot</div></div></div>
+      <div class="sec-map-item"><div class="ico">🤖</div><div><div class="lbl">EDA Otomatis</div><div class="sub">Seksi 5 · Pandas Profiling</div></div></div>
+      <div class="sec-map-item"><div class="ico">🕊️</div><div><div class="lbl">Tafakkur &amp; Nilai Syariah</div><div class="sub">Seksi 6 · Nilai Syariah</div></div></div>
+      <div class="sec-map-item"><div class="ico">📝</div><div><div class="lbl">Uji Pemahaman</div><div class="sub">Seksi 7 · Kuis Interaktif</div></div></div>
+    </div>
+
+    <div class="callout info">
+      <strong>📦 Dataset Studi Kasus:</strong> <code>dataset-ecommerce-eda-p04.csv</code> — 100 baris transaksi e-commerce produk halal &amp; Muslim lifestyle Indonesia, hasil pembersihan tuntas di P03 (nol missing value, nol outlier liar). Dataset ini <strong>sama persis</strong> dengan <code>dataset-ecommerce-clean-p03.csv</code> yang kamu hasilkan sendiri minggu lalu — sekarang giliran kita menggalinya untuk insight.
+    </div>
+    <div class="paham-row"><button class="btn-paham" id="bp0" onclick="unlock(0)">Saya Paham — Lanjut ▸</button></div>
+  </div>
+</div>
+
+<!-- ╔══ SEKSI 2: STATISTICAL SUMMARY BERMAKNA ══╗ -->
+<div class="sec-card locked" id="sec1">
+  <div class="sec-hd">
+    <div class="sec-num" id="sn1">2</div>
+    <div class="sec-title">Ringkasan Statistik yang Bermakna</div>
+    <span class="sec-cpmk">C3.1</span>
+  </div>
+  <div class="sec-body">
+    <p><code>df.describe()</code> memang menghasilkan angka dalam sekejap — tapi analis yang baik tidak berhenti di situ. Setiap angka punya <strong>cerita bisnis</strong> di baliknya, dan <em>skewness</em> (kemiringan distribusi) adalah kunci untuk membaca cerita itu dengan benar.</p>
+
+    <h3 class="sh">Statistical Summary Lengkap</h3>
+    <div class="code-wrap">
+      <div class="code-hd"><span>Python · Ringkasan Statistik &amp; Kemiringan Distribusi</span><button class="copy-btn" onclick="copyCode(0)">Copy</button></div>
+      <pre class="code"><span class="kw">import</span> pandas <span class="kw">as</span> pd
+
+df = pd.read_csv(<span class="st">'dataset-ecommerce-eda-p04.csv'</span>)
+
+<span class="cm"># Ringkasan lima angka + mean/std untuk kolom numerik</span>
+<span class="fn">print</span>(df[[<span class="st">'price'</span>, <span class="st">'quantity'</span>, <span class="st">'total_amount'</span>, <span class="st">'customer_rating'</span>]].describe().round(<span class="nm">2</span>))
+
+<span class="cm"># Skewness: >0 miring kanan (ekor panjang ke nilai besar), <0 miring kiri</span>
+<span class="fn">print</span>(<span class="st">"\nSkewness:\n"</span>, df[[<span class="st">'price'</span>, <span class="st">'quantity'</span>, <span class="st">'total_amount'</span>, <span class="st">'customer_rating'</span>]].skew().round(<span class="nm">3</span>))</pre>
+    </div>
+    <div class="out-wrap">             price   quantity  total_amount  customer_rating
+count   100.00      100.00        100.00           100.00
+mean  126670.00        3.26     421710.00             3.74
+std    87358.90        2.46     406138.81             1.14
+min    25000.00        1.00      25000.00             1.00
+25%    75000.00        1.75     157500.00             3.00
+50%    98000.00        3.00     287500.00             4.00
+75%   145000.00        4.25     480000.00             4.25
+max   350000.00       10.00    2470000.00             5.00
+
+Skewness:
+ price              1.409
+quantity            1.388
+total_amount        2.053
+customer_rating    -1.046
+dtype: float64</div>
+
+    <table class="concept-table">
+      <thead><tr><th>Statistik</th><th>Makna Bisnis</th><th>Kapan Jadi Perhatian Utama</th></tr></thead>
+      <tbody>
+        <tr><td>mean vs median</td><td>Jika mean jauh &gt; median, ada segelintir transaksi bernilai sangat besar yang menarik rata-rata ke atas</td><td>Laporan "rata-rata omset per transaksi" bisa menyesatkan manajemen</td></tr>
+        <tr><td>std (deviasi)</td><td>Seberapa lebar sebaran nilai di sekitar rata-rata</td><td>std besar → prediksi/perencanaan stok jadi berisiko tinggi</td></tr>
+        <tr><td>skewness &gt; 1</td><td>Distribusi miring kanan kuat — banyak transaksi kecil, sedikit transaksi besar (ekor panjang)</td><td>Jangan pakai mean sebagai representasi "transaksi khas"; pakai median</td></tr>
+        <tr><td>skewness &lt; 0</td><td>Distribusi miring kiri — mayoritas nilai tinggi, minoritas nilai rendah menarik rata-rata turun</td><td>Contoh: rating pelanggan — mayoritas puas (4–5), minoritas sangat kecewa (1) menurunkan mean</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout tip">
+      💡 <strong>Membaca <code>total_amount</code> skew = 2.053:</strong> Angka ini <em>sangat</em> miring kanan. Median (Rp 287.500) jauh lebih representatif sebagai "nilai transaksi khas" dibanding mean (Rp 421.710) — yang tertarik naik oleh beberapa transaksi borongan bernilai jutaan. Kalau kamu melapor "rata-rata belanja pelanggan Rp 421 ribu" ke manajemen tanpa catatan ini, kesimpulannya bisa keliru.
+    </div>
+
+    <div class="paham-row"><button class="btn-paham" id="bp1" onclick="unlock(1)">Saya Paham — Lanjut ke Analisis Univariate ▸</button></div>
+  </div>
+</div>
+
+<!-- ╔══ SEKSI 3: ANALISIS UNIVARIATE ══╗ -->
+<div class="sec-card locked" id="sec2">
+  <div class="sec-hd">
+    <div class="sec-num" id="sn2">3</div>
+    <div class="sec-title">Analisis Univariate — Distribusi Setiap Variabel</div>
+    <span class="sec-cpmk">C3.2</span>
+  </div>
+  <div class="sec-body">
+    <p><strong>Univariate</strong> berarti menganalisis <em>satu</em> variabel secara terpisah untuk memahami bentuk sebaran nilainya, sebelum mencari hubungan antar variabel. Untuk numerik kita pakai histogram &amp; boxplot; untuk kategorikal kita pakai <code>value_counts()</code> dan bar chart.</p>
+
+    <div class="cmp-grid">
+      <div class="cmp-card good">
+        <h4>📊 Histogram — Bentuk Distribusi</h4>
+        <div class="cmp-row"><span>•</span><span>Menunjukkan <strong>di mana</strong> mayoritas nilai terkonsentrasi</span></div>
+        <div class="cmp-row"><span>•</span><span>Mengungkap apakah distribusi simetris, miring kanan, atau miring kiri</span></div>
+        <div class="cmp-row"><span>•</span><span>Cocok untuk variabel kontinu: <code>price</code>, <code>total_amount</code></span></div>
+      </div>
+      <div class="cmp-card good">
+        <h4>📦 Boxplot — Sebaran &amp; Outlier</h4>
+        <div class="cmp-row"><span>•</span><span>Menampilkan Q1, median, Q3, serta whisker batas wajar sekaligus</span></div>
+        <div class="cmp-row"><span>•</span><span>Titik di luar whisker = kandidat outlier (kali ini untuk <em>pemahaman</em>, bukan pembersihan seperti P03)</span></div>
+        <div class="cmp-row"><span>•</span><span>Ideal untuk membandingkan sebaran antar kategori (<em>grouped boxplot</em>)</span></div>
+      </div>
+    </div>
+
+    <h3 class="sh">Histogram &amp; Boxplot Variabel Numerik</h3>
+    <div class="code-wrap">
+      <div class="code-hd"><span>Python · Univariate Numerik — matplotlib &amp; seaborn</span><button class="copy-btn" onclick="copyCode(1)">Copy</button></div>
+      <pre class="code"><span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
+<span class="kw">import</span> seaborn <span class="kw">as</span> sns
+
+fig, axes = plt.subplots(<span class="nm">1</span>, <span class="nm">2</span>, figsize=(<span class="nm">11</span>, <span class="nm">4</span>))
+
+<span class="cm"># Histogram distribusi harga produk</span>
+sns.histplot(df[<span class="st">'price'</span>], bins=<span class="nm">15</span>, kde=<span class="kw">True</span>, ax=axes[<span class="nm">0</span>], color=<span class="st">'#20C8D0'</span>)
+axes[<span class="nm">0</span>].set_title(<span class="st">'Distribusi Harga Produk'</span>)
+
+<span class="cm"># Boxplot total_amount untuk melihat sebaran & outlier visual</span>
+sns.boxplot(x=df[<span class="st">'total_amount'</span>], ax=axes[<span class="nm">1</span>], color=<span class="st">'#20C8D0'</span>)
+axes[<span class="nm">1</span>].set_title(<span class="st">'Sebaran Total Nilai Transaksi'</span>)
+
+plt.tight_layout()
+plt.show()</pre>
+    </div>
+    <div class="out-wrap">[Menampilkan 2 grafik berdampingan]
+Histogram 'price': puncak tinggi di rentang Rp 50.000–100.000, ekor panjang
+memanjang ke kanan hingga Rp 350.000 — mengonfirmasi skew = 1.409.
+
+Boxplot 'total_amount': median di ~Rp 287.500, whisker atas berhenti di
+sekitar Rp 950.000, dengan beberapa titik individual di atasnya —
+transaksi borongan bernilai tinggi namun sah (bukan anomali, sudah
+diverifikasi bersih sejak P03).</div>
+
+    <h3 class="sh">Distribusi Variabel Kategorikal</h3>
+    <div class="code-wrap">
+      <div class="code-hd"><span>Python · Univariate Kategorikal — value_counts()</span><button class="copy-btn" onclick="copyCode(2)">Copy</button></div>
+      <pre class="code"><span class="fn">print</span>(df[<span class="st">'product_category'</span>].value_counts())
+<span class="fn">print</span>()
+<span class="fn">print</span>(df[<span class="st">'order_status'</span>].value_counts(normalize=<span class="kw">True</span>).mul(<span class="nm">100</span>).round(<span class="nm">1</span>))</pre>
+    </div>
+    <div class="out-wrap">Fashion Muslim         28
+Kuliner Halal          25
+Perlengkapan Ibadah    17
+Herbal & Suplemen      16
+Kosmetik Halal         14
+Name: count, dtype: int64
+
+Delivered      39.0
+Cancelled      21.0
+Processing     18.0
+Refunded       15.0
+Shipped         7.0
+Name: proportion, dtype: float64</div>
+
+    <div class="callout warn">
+      ⚠️ <strong>Temuan Penting:</strong> 21% pesanan berstatus <em>Cancelled</em> dan 15% <em>Refunded</em> — total <strong>36% transaksi tidak tuntas sebagai penjualan riil</strong>. Angka ini baru terlihat karena kita melihat distribusi <code>order_status</code> secara utuh, bukan hanya menjumlah total omset yang tercatat.
+    </div>
+
+    <div class="paham-row"><button class="btn-paham" id="bp2" onclick="unlock(2)">Saya Paham — Lanjut ke Bivariate &amp; Multivariate ▸</button></div>
+  </div>
+</div>
+
+<!-- ╔══ SEKSI 4: BIVARIATE & MULTIVARIATE ══╗ -->
+<div class="sec-card locked" id="sec3">
+  <div class="sec-hd">
+    <div class="sec-num" id="sn3">4</div>
+    <div class="sec-title">Analisis Bivariate &amp; Multivariate</div>
+    <span class="sec-cpmk">C3.3, C3.4</span>
+  </div>
+  <div class="sec-body">
+    <p>Setelah memahami satu variabel, langkah berikutnya adalah mencari <strong>hubungan</strong> — antara dua variabel (<em>bivariate</em>), atau antara banyak variabel sekaligus (<em>multivariate</em>).</p>
+
+    <h3 class="sh">Bivariate: Korelasi &amp; Scatter Plot</h3>
+    <div class="code-wrap">
+      <div class="code-hd"><span>Python · Korelasi Pearson Antar Variabel Numerik</span><button class="copy-btn" onclick="copyCode(3)">Copy</button></div>
+      <pre class="code">num_cols = [<span class="st">'price'</span>, <span class="st">'quantity'</span>, <span class="st">'shipping_cost'</span>, <span class="st">'total_amount'</span>, <span class="st">'customer_rating'</span>]
+<span class="fn">print</span>(df[num_cols].corr().round(<span class="nm">3</span>)[<span class="st">'total_amount'</span>])
+
+<span class="cm"># Scatter plot price vs total_amount</span>
+plt.figure(figsize=(<span class="nm">6</span>, <span class="nm">4.5</span>))
+sns.scatterplot(data=df, x=<span class="st">'price'</span>, y=<span class="st">'total_amount'</span>, hue=<span class="st">'product_category'</span>)
+plt.title(<span class="st">'Hubungan Harga Satuan vs Total Nilai Transaksi'</span>)
+plt.show()</pre>
+    </div>
+    <div class="out-wrap">price              0.674
+quantity           0.605
+shipping_cost      0.022
+customer_rating   -0.031
+total_amount       1.000
+Name: total_amount, dtype: float64
+
+[Scatter plot menunjukkan sebaran naik ke kanan-atas antara price dan
+total_amount, mengonfirmasi korelasi positif sedang-kuat r = 0.674]</div>
+
+    <div class="callout warn">
+      ⚠️ <strong>Korelasi Bukan Sebab-Akibat (Causation):</strong> <code>r = 0.674</code> antara <code>price</code> dan <code>total_amount</code> memang kuat — tapi wajar, karena <code>total_amount = (price × quantity) + shipping_cost</code>. Korelasi ini bersifat <em>struktural</em> (hasil rumus), bukan temuan bisnis baru. Analis yang cermat harus bisa membedakan korelasi yang "memang seharusnya ada secara matematis" dari korelasi yang benar-benar mengungkap pola bisnis baru.
+    </div>
+
+    <h3 class="sh">Multivariate: Correlation Heatmap &amp; Pairplot</h3>
+    <div class="code-wrap">
+      <div class="code-hd"><span>Python · Heatmap &amp; Pairplot — Melihat Semua Hubungan Sekaligus</span><button class="copy-btn" onclick="copyCode(4)">Copy</button></div>
+      <pre class="code"><span class="cm"># Heatmap korelasi seluruh variabel numerik</span>
+plt.figure(figsize=(<span class="nm">6</span>, <span class="nm">5</span>))
+sns.heatmap(df[num_cols].corr(), annot=<span class="kw">True</span>, cmap=<span class="st">'coolwarm'</span>, center=<span class="nm">0</span>, fmt=<span class="st">'.2f'</span>)
+plt.title(<span class="st">'Heatmap Korelasi Variabel Numerik'</span>)
+plt.show()
+
+<span class="cm"># Pairplot: scatter + histogram semua pasangan sekaligus, dipecah per kategori</span>
+sns.pairplot(df[num_cols + [<span class="st">'product_category'</span>]], hue=<span class="st">'product_category'</span>, diag_kind=<span class="st">'hist'</span>)
+plt.show()</pre>
+    </div>
+    <div class="out-wrap">[Heatmap]: sel price–customer_rating hampir putih/netral (r=-0.02) —
+artinya harga TIDAK berkorelasi dengan kepuasan pelanggan. Produk mahal
+tidak otomatis dinilai lebih baik oleh pembeli.
+
+[Pairplot]: grid 5×5 menampilkan scatter tiap pasangan variabel plus
+histogram diagonal, seluruhnya diwarnai per kategori produk — cara
+tercepat menangkap pola tersembunyi tanpa menulis 10 baris kode scatter
+satu per satu.</div>
+
+    <table class="concept-table">
+      <thead><tr><th>Rentang |r|</th><th>Kekuatan Hubungan</th><th>Catatan</th></tr></thead>
+      <tbody>
+        <tr><td>0.00 – 0.19</td><td>Sangat lemah / tidak ada</td><td>Contoh: price vs customer_rating (r=-0.02)</td></tr>
+        <tr><td>0.20 – 0.39</td><td>Lemah</td><td>Perlu variabel kontrol tambahan sebelum disimpulkan</td></tr>
+        <tr><td>0.40 – 0.69</td><td>Sedang</td><td>Contoh: quantity vs total_amount (r=0.605)</td></tr>
+        <tr><td>0.70 – 1.00</td><td>Kuat</td><td>Cek dulu apakah ini korelasi struktural (rumus) seperti kasus price vs total_amount</td></tr>
+      </tbody>
+    </table>
+
+    <div class="paham-row"><button class="btn-paham" id="bp3" onclick="unlock(3)">Saya Paham — Lanjut ke EDA Otomatis ▸</button></div>
+  </div>
+</div>
+
+<!-- ╔══ SEKSI 5: EDA OTOMATIS & PERTANYAAN BISNIS ══╗ -->
+<div class="sec-card locked" id="sec4">
+  <div class="sec-hd">
+    <div class="sec-num" id="sn4">5</div>
+    <div class="sec-title">EDA Otomatis (Pandas Profiling) &amp; Formulasi Pertanyaan Bisnis</div>
+    <span class="sec-cpmk">C3.5</span>
+  </div>
+  <div class="sec-body">
+    <p>Menulis semua kode di Seksi 2–4 satu per satu sangat mendidik untuk belajar — tapi di dunia kerja, langkah pertama analis biasanya adalah menjalankan <strong>EDA otomatis</strong> untuk mendapatkan gambaran cepat menyeluruh, baru kemudian mendalami bagian yang menarik secara manual.</p>
+
+    <h3 class="sh">Laporan EDA Otomatis dengan ydata-profiling</h3>
+    <div class="code-wrap">
+      <div class="code-hd"><span>Python · Satu Baris Kode, Laporan EDA Lengkap</span><button class="copy-btn" onclick="copyCode(5)">Copy</button></div>
+      <pre class="code"><span class="op">!</span>pip install ydata-profiling -q
+
+<span class="kw">from</span> ydata_profiling <span class="kw">import</span> ProfileReport
+
+profile = ProfileReport(df, title=<span class="st">"EDA Report — E-Commerce Halal P04"</span>, explorative=<span class="kw">True</span>)
+profile.to_notebook_iframe()  <span class="cm"># Tampil langsung di Colab</span>
+
+<span class="cm"># Atau ekspor sebagai file HTML untuk dibagikan ke tim non-teknis</span>
+profile.to_file(<span class="st">"laporan_eda_p04.html"</span>)</pre>
+    </div>
+    <div class="out-wrap">[Laporan interaktif otomatis berisi:]
+• Overview: jumlah baris/kolom, tipe data, duplikasi, missing (0%)
+• Variables: histogram + statistik tiap kolom (seperti Seksi 2–3, otomatis)
+• Interactions: scatter plot tiap pasangan variabel (seperti pairplot)
+• Correlations: heatmap Pearson, Spearman, dan Cramér's V untuk kategorikal
+• Alerts: peringatan otomatis (mis. "total_amount sangat skewed",
+  "price berkorelasi tinggi dengan total_amount")</div>
+
+    <div class="callout tip">
+      💡 <strong>Kapan Pakai EDA Otomatis vs Manual?</strong> Gunakan <code>ProfileReport</code> di <strong>awal</strong> eksplorasi untuk memetakan area yang layak didalami (seperti daftar isi buku). Tapi laporan otomatis tidak tahu konteks bisnismu — ia tidak bisa bilang "36% cancelled itu masalah serius buat UMKM ini." Interpretasi bisnis tetap tugas manusia.
+    </div>
+
+    <h3 class="sh">Dari Temuan EDA Menjadi Pertanyaan Bisnis</h3>
+    <table class="concept-table">
+      <thead><tr><th>Temuan EDA</th><th>Pertanyaan Bisnis yang Muncul</th></tr></thead>
+      <tbody>
+        <tr><td>skew(total_amount) = 2.05, sangat miring kanan</td><td>Siapa segelintir pelanggan "borongan" yang mendorong omset? Apakah mereka reseller?</td></tr>
+        <tr><td>36% order Cancelled/Refunded</td><td>Metode bayar atau kategori produk apa yang paling banyak dibatalkan? Ada pola operasional yang bisa diperbaiki?</td></tr>
+        <tr><td>corr(price, customer_rating) ≈ 0</td><td>Kalau harga tidak memengaruhi rating, faktor apa (kategori? kota? metode kirim?) yang justru berkorelasi dengan kepuasan?</td></tr>
+        <tr><td>Fashion Muslim: omset tertinggi, tapi Perlengkapan Ibadah: rating tertinggi (4.06)</td><td>Haruskah strategi marketing tetap fokus pada omset, atau mulai menyeimbangkan dengan kepuasan pelanggan?</td></tr>
+      </tbody>
+    </table>
+
+    <div class="paham-row"><button class="btn-paham" id="bp4" onclick="unlock(4)">Saya Paham — Lanjut ke Nilai Syariah ▸</button></div>
+  </div>
+</div>
+
+<!-- ╔══ SEKSI 6: NILAI SYARIAH ══╗ -->
+<div class="sec-card locked" id="sec5">
+  <div class="sec-hd">
+    <div class="sec-num" id="sn5">6</div>
+    <div class="sec-title">Integrasi Nilai Syariah — Tafakkur dalam Membaca Data</div>
+    <span class="sec-cpmk">Integritas &amp; Etika</span>
+  </div>
+  <div class="sec-body">
+    <p>EDA pada dasarnya adalah aktivitas <strong>merenung dan memahami</strong> — mengamati pola di balik ribuan angka untuk menangkap realitas yang sebelumnya tersembunyi. Islam memiliki konsep yang persis menggambarkan aktivitas ini: <em>Tafakkur</em>.</p>
+
+    <div class="nilai-grid">
+      <div class="nilai-card">
+        <div class="nilai-name">1. Tafakkur — Merenung dan Memahami Pola</div>
+        <div class="nilai-ar">إِنَّ فِي خَلْقِ السَّمَاوَاتِ وَالْأَرْضِ وَاخْتِلَافِ اللَّيْلِ وَالنَّهَارِ لَآيَاتٍ لِّأُولِي الْأَلْبَابِ</div>
+        <div class="nilai-tr">"Sesungguhnya dalam penciptaan langit dan bumi, dan silih bergantinya malam dan siang, terdapat tanda-tanda bagi orang-orang yang berakal (yang senantiasa memikirkan/bertafakkur)."</div>
+        <div class="nilai-ref">QS. Ali Imran: 190–191</div>
+        <div class="nilai-app"><strong>Refleksi Analitik:</strong> Seperti alam yang menyimpan tanda-tanda (<em>ayat</em>) bagi yang mau merenung, dataset transaksi menyimpan pola bisnis bagi analis yang mau bersabar mengamatinya — bukan sekadar menjalankan kode dan melihat angka tanpa dipikirkan maknanya. Histogram, korelasi, dan heatmap adalah "kacamata" untuk melihat tanda-tanda tersebut.</div>
+      </div>
+
+      <div class="nilai-card">
+        <div class="nilai-name">2. Husnuzhan dalam Interpretasi Data (Tidak Terburu Menyimpulkan)</div>
+        <div class="nilai-ar">يَا أَيُّهَا الَّذِينَ آمَنُوا اجْتَنِبُوا كَثِيرًا مِّنَ الظَّنِّ إِنَّ بَعْضَ الظَّنِّ إِثْمٌ</div>
+        <div class="nilai-tr">"Wahai orang-orang yang beriman! Jauhilah banyak dari prasangka, sesungguhnya sebagian prasangka itu dosa."</div>
+        <div class="nilai-ref">QS. Al-Hujurat: 12</div>
+        <div class="nilai-app"><strong>Refleksi Analitik:</strong> Menyimpulkan bahwa korelasi otomatis berarti sebab-akibat (seperti kasus <code>price</code> vs <code>total_amount</code> di Seksi 4) adalah bentuk <em>prasangka analitik</em> yang tergesa-gesa. Seorang analis yang berhati-hati menahan diri dari kesimpulan prematur sampai bukti cukup kuat — sikap yang sejalan dengan perintah menjauhi banyak prasangka.</div>
+      </div>
+    </div>
+
+    <div class="paham-row"><button class="btn-paham" id="bp5" onclick="unlock(5)">Saya Paham — Lanjut ke Kuis Pemahaman ▸</button></div>
+  </div>
+</div>
+
+<!-- ╔══ SEKSI 7: KUIS ══╗ -->
+<div class="sec-card locked" id="sec6">
+  <div class="sec-hd">
+    <div class="sec-num" id="sn6">7</div>
+    <div class="sec-title">Uji Pemahaman — Kuis P04</div>
+    <span class="sec-cpmk">C3.1–C3.5</span>
+  </div>
+  <div class="sec-body">
+    <div class="quiz-head">
+      <h3>Kuis Pertemuan 04 — Exploratory Data Analysis (EDA) Terstruktur</h3>
+      <span class="q-info">3 MCQ + 1 Matching · Skor Kelulusan 75%</span>
+    </div>
+    <div class="quiz-body">
+
+      <!-- MCQ 1 -->
+      <div class="q-block">
+        <div class="q-label">Pertanyaan 1 dari 3</div>
+        <div class="q-text">Sebuah kolom <code>total_amount</code> memiliki mean = Rp 421.710 namun median hanya Rp 287.500, dengan nilai skewness = 2.05. Kondisi ini mengindikasikan distribusi <code>total_amount</code>...</div>
+        <div class="q-opts" id="mcq0">
+          <div class="q-opt" onclick="selectMCQ(0,0)"><div class="q-opt-letter">A</div>Simetris sempurna, mean dan median seharusnya identik</div>
+          <div class="q-opt" onclick="selectMCQ(0,1)"><div class="q-opt-letter">B</div>Miring ke kanan (right-skewed) — ada segelintir transaksi bernilai sangat besar yang menarik mean ke atas</div>
+          <div class="q-opt" onclick="selectMCQ(0,2)"><div class="q-opt-letter">C</div>Miring ke kiri (left-skewed), mayoritas transaksi bernilai besar</div>
+          <div class="q-opt" onclick="selectMCQ(0,3)"><div class="q-opt-letter">D</div>Tidak dapat disimpulkan apa pun dari mean, median, dan skewness</div>
+        </div>
+        <div class="q-feedback" id="fb0">✅ <strong>Benar! Jawaban B.</strong> Skewness positif dan mean &gt; median adalah dua sinyal konsisten bahwa distribusi miring kanan — mayoritas transaksi bernilai kecil-sedang, namun beberapa transaksi besar ("ekor panjang") menarik rata-rata ke atas.</div>
+      </div>
+
+      <!-- MCQ 2 -->
+      <div class="q-block">
+        <div class="q-label">Pertanyaan 2 dari 3</div>
+        <div class="q-text">Nilai korelasi Pearson antara <code>price</code> dan <code>total_amount</code> pada dataset transaksi adalah r = 0.674. Manakah interpretasi yang PALING tepat?</div>
+        <div class="q-opts" id="mcq1">
+          <div class="q-opt" onclick="selectMCQ(1,0)"><div class="q-opt-letter">A</div>Tidak ada hubungan sama sekali antara kedua variabel</div>
+          <div class="q-opt" onclick="selectMCQ(1,1)"><div class="q-opt-letter">B</div>Hubungan negatif kuat — semakin mahal produk, semakin kecil total transaksi</div>
+          <div class="q-opt" onclick="selectMCQ(1,2)"><div class="q-opt-letter">C</div>Hubungan positif sedang-kuat, namun perlu ditelusuri dulu apakah ini korelasi struktural (karena total_amount memang dihitung dari price) sebelum diklaim sebagai temuan bisnis baru</div>
+          <div class="q-opt" onclick="selectMCQ(1,3)"><div class="q-opt-letter">D</div>Korelasi 0.674 otomatis membuktikan price MENYEBABKAN total_amount naik</div>
+        </div>
+        <div class="q-feedback" id="fb1">✅ <strong>Benar! Jawaban C.</strong> Karena <code>total_amount = (price × quantity) + shipping_cost</code>, korelasi ini sebagian besar bersifat struktural/matematis — bukan pola bisnis tersembunyi. Analis yang cermat selalu mengecek asal-usul variabel sebelum menafsirkan korelasi sebagai insight baru.</div>
+      </div>
+
+      <!-- MCQ 3 -->
+      <div class="q-block">
+        <div class="q-label">Pertanyaan 3 dari 3</div>
+        <div class="q-text">Seorang analis ingin melihat sekaligus scatter plot, histogram diagonal, dan pola hubungan antar SEMUA pasangan variabel numerik dalam satu visualisasi grid, dipecah per kategori produk. Fungsi seaborn manakah yang paling tepat?</div>
+        <div class="q-opts" id="mcq2">
+          <div class="q-opt" onclick="selectMCQ(2,0)"><div class="q-opt-letter">A</div><code>sns.histplot()</code></div>
+          <div class="q-opt" onclick="selectMCQ(2,1)"><div class="q-opt-letter">B</div><code>sns.boxplot()</code></div>
+          <div class="q-opt" onclick="selectMCQ(2,2)"><div class="q-opt-letter">C</div><code>sns.pairplot()</code></div>
+          <div class="q-opt" onclick="selectMCQ(2,3)"><div class="q-opt-letter">D</div><code>sns.barplot()</code></div>
+        </div>
+        <div class="q-feedback" id="fb2">✅ <strong>Benar! Jawaban C.</strong> <code>sns.pairplot()</code> secara otomatis membuat grid scatter plot untuk setiap pasangan variabel numerik plus histogram diagonal — dan bisa diwarnai per kategori dengan parameter <code>hue</code>, seperti dicontohkan di Seksi 4.</div>
+      </div>
+
+      <!-- MATCHING -->
+      <div class="q-block">
+        <div class="q-label">Matching — Pasangkan Fungsi EDA dengan Kegunaannya</div>
+        <div class="match-hint">Klik satu item di kolom kiri, lalu klik pasangannya di kolom kanan. Pasangan yang cocok akan diberi warna yang sama.</div>
+        <div class="match-wrap">
+          <div>
+            <div class="match-col-label">Fungsi / Metode</div>
+            <div class="match-items" id="terms">
+              <div class="match-term" data-idx="0" onclick="selectTerm(0)"><strong>df.describe()</strong>Statistical Summary</div>
+              <div class="match-term" data-idx="1" onclick="selectTerm(1)"><strong>df.skew()</strong>Kemiringan Distribusi</div>
+              <div class="match-term" data-idx="2" onclick="selectTerm(2)"><strong>sns.heatmap(df.corr())</strong>Korelasi Multivariate</div>
+              <div class="match-term" data-idx="3" onclick="selectTerm(3)"><strong>pd.crosstab() / groupby</strong>Relasi Dua Kategorikal</div>
+              <div class="match-term" data-idx="4" onclick="selectTerm(4)"><strong>ProfileReport(df)</strong>EDA Otomatis</div>
+            </div>
+          </div>
+          <div>
+            <div class="match-col-label">Kegunaan</div>
+            <div class="match-items" id="defs">
+              <div class="match-def" data-idx="0" onclick="selectDef(0)">Mengukur kemiringan (asimetri) distribusi suatu variabel numerik</div>
+              <div class="match-def" data-idx="1" onclick="selectDef(1)">Menghasilkan laporan EDA otomatis lengkap hanya dalam satu baris kode</div>
+              <div class="match-def" data-idx="2" onclick="selectDef(2)">Menampilkan ringkasan statistik (mean, std, kuartil) tiap kolom numerik</div>
+              <div class="match-def" data-idx="3" onclick="selectDef(3)">Menghitung tabel frekuensi hubungan antara dua variabel kategorikal</div>
+              <div class="match-def" data-idx="4" onclick="selectDef(4)">Memvisualisasikan kekuatan korelasi antar semua variabel numerik sekaligus dalam satu grid warna</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="quiz-submit-row">
+        <button class="btn-submit" onclick="submitQuiz()">Submit Jawaban</button>
+        <span class="quiz-score" id="quizScore"></span>
+      </div>
+      <div class="quiz-result" id="quizResult">
+        <div class="big" id="quizBig"></div>
+        <p id="quizMsg"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- COMPLETION -->
+<div class="completion" id="completion">
+  <h2>✅ Materi Teori P04 Selesai!</h2>
+  <p>Kamu sudah menguasai kerangka EDA terstruktur: statistical summary bermakna, analisis univariate, bivariate, multivariate, EDA otomatis, serta nilai syariah Tafakkur dan Husnuzhan dalam interpretasi data.</p>
+  <p style="margin-top:8px;font-size:12.5px;color:rgba(255,255,255,.5)">Saatnya menerapkan seluruh teknik ini langsung pada dataset transaksi e-commerce di Lembar Praktikum P04.</p>
+  <a class="lab-link" href="Praktikum-04-ADA.html">Buka Praktikum P04 — Lab 3 ▸</a>
+</div>
+
+</div><!-- end .main -->
+
+<script>
+const STORAGE_KEY = 'tazkia-ada-p04-v1';
+const TOTAL_SEC = 7;
+const MCQ_ANSWERS = [1, 2, 2]; // B, C, C
+
+// MATCH: term idx → correct def idx
+// describe→2, skew→0, heatmap→4, crosstab→3, ProfileReport→1
+const MATCH_CORRECT = {0:2, 1:0, 2:4, 3:3, 4:1};
+const MATCH_COLORS = ['#20C8D0','#D46020','#1F9060','#7040B0','#C09030'];
+
+let state = {done:[], mcqSel:[null,null,null], matchPairs:{}, matchTerm:null, submitted:false};
+function load(){try{const s=JSON.parse(localStorage.getItem(STORAGE_KEY));if(s)state=s;}catch(e){}}
+function save(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(e){}}
+
+function unlock(i){
+  if(state.done.includes(i)) return;
+  state.done.push(i);
+  save();
+  const btn=document.getElementById('bp'+i);
+  if(btn){btn.className='btn-paham done';btn.disabled=true;btn.textContent='✓ Selesai';}
+  const sn=document.getElementById('sn'+i);if(sn) sn.className='sec-num done';
+  const next=document.getElementById('sec'+(i+1));
+  if(next) next.className='sec-card unlocked';
+  updateProg();
+  if(next) next.scrollIntoView({behavior:'smooth',block:'start'});
+  if(state.done.length===TOTAL_SEC-1) document.getElementById('completion').classList.add('show');
+}
+
+function updateProg(){
+  const pct=Math.round((state.done.length/(TOTAL_SEC-1))*100);
+  document.getElementById('progPct').textContent=pct+'%';
+  for(let i=0;i<TOTAL_SEC;i++){
+    const d=document.getElementById('pd'+i);if(!d)continue;
+    if(i<state.done.length) d.className='prog-dot done';
+    else if(i===state.done.length) d.className='prog-dot active';
+    else d.className='prog-dot';
+  }
+}
+
+function selectMCQ(q,opt){
+  if(state.submitted) return;
+  state.mcqSel[q]=opt; save();
+  document.querySelectorAll('#mcq'+q+' .q-opt').forEach((el,i)=>{
+    el.className='q-opt'+(i===opt?' selected':'');
+  });
+  document.getElementById('fb'+q).className='q-feedback';
+}
+
+let matchSel={term:null,def:null};
+function selectTerm(i){
+  if(state.submitted) return;
+  matchSel.term=i;
+  document.querySelectorAll('#terms .match-term').forEach((el,j)=>el.className='match-term'+(j===i?' selected':''));
+  tryMatch();
+}
+function selectDef(i){
+  if(state.submitted) return;
+  matchSel.def=i;
+  document.querySelectorAll('#defs .match-def').forEach((el,j)=>el.className='match-def'+(j===i?' selected':''));
+  tryMatch();
+}
+function tryMatch(){
+  if(matchSel.term===null||matchSel.def===null) return;
+  state.matchPairs[matchSel.term]=matchSel.def; save();
+  const color=MATCH_COLORS[matchSel.term];
+  document.querySelectorAll('#terms .match-term')[matchSel.term].style.borderColor=color;
+  document.querySelectorAll('#terms .match-term')[matchSel.term].style.background=color+'22';
+  document.querySelectorAll('#defs .match-def')[matchSel.def].style.borderColor=color;
+  document.querySelectorAll('#defs .match-def')[matchSel.def].style.background=color+'22';
+  matchSel={term:null,def:null};
+  document.querySelectorAll('#terms .match-term, #defs .match-def').forEach(el=>el.classList.remove('selected'));
+}
+
+function submitQuiz(){
+  state.submitted=true; save();
+  let score=0, total=MCQ_ANSWERS.length+Object.keys(MATCH_CORRECT).length;
+  MCQ_ANSWERS.forEach((ans,q)=>{
+    const opts=document.querySelectorAll('#mcq'+q+' .q-opt');
+    const sel=state.mcqSel[q];
+    if(sel===null) return;
+    opts[ans].className='q-opt correct';
+    if(sel!==ans) opts[sel].className='q-opt wrong'; else score++;
+    document.getElementById('fb'+q).className='q-feedback show';
+  });
+  let matchScore=0;
+  Object.keys(MATCH_CORRECT).forEach(t=>{
+    const correct=MATCH_CORRECT[t];
+    const chosen=state.matchPairs[t];
+    if(chosen===correct) matchScore++;
+  });
+  score+=matchScore;
+  const pct=Math.round((score/total)*100);
+  const res=document.getElementById('quizResult');
+  const big=document.getElementById('quizBig');
+  const msg=document.getElementById('quizMsg');
+  document.getElementById('quizScore').style.display='block';
+  document.getElementById('quizScore').textContent=score+'/'+total+' benar';
+  res.style.display='block';
+
+  // Sinkronisasi Nilai Kuis ke Cloud Firestore
+  if (window.saveScoreToCloud) {
+    window.saveScoreToCloud('ADA Pertemuan 04', 'Kuis Exploratory Data Analysis (EDA)', score, total, { percentage: pct, passed: pct >= 75 });
+  }
+
+  if(pct>=75){
+    res.className='quiz-result pass';
+    big.textContent=pct+'% — Luar Biasa! 🎉';
+    msg.textContent='Pemahaman teori EDA kamu sangat baik. Lanjutkan ke Lembar Praktikum P04 untuk menggali insight dari dataset transaksi e-commerce secara langsung!';
+    if(!state.done.includes(TOTAL_SEC-1)) unlock(TOTAL_SEC-1);
+  } else {
+    res.className='quiz-result fail';
+    big.textContent=pct+'% — Perlu Ditingkatkan';
+    msg.textContent='Skor minimal 75%. Pelajari kembali perbedaan skewness positif/negatif, interpretasi kekuatan korelasi, dan kapan menggunakan pairplot vs heatmap.';
+  }
+}
+
+const CODE_TEXTS = [
+  `import pandas as pd\n\ndf = pd.read_csv('dataset-ecommerce-eda-p04.csv')\n\nprint(df[['price', 'quantity', 'total_amount', 'customer_rating']].describe().round(2))\nprint("\\nSkewness:\\n", df[['price', 'quantity', 'total_amount', 'customer_rating']].skew().round(3))`,
+  `import matplotlib.pyplot as plt\nimport seaborn as sns\n\nfig, axes = plt.subplots(1, 2, figsize=(11, 4))\nsns.histplot(df['price'], bins=15, kde=True, ax=axes[0], color='#20C8D0')\naxes[0].set_title('Distribusi Harga Produk')\nsns.boxplot(x=df['total_amount'], ax=axes[1], color='#20C8D0')\naxes[1].set_title('Sebaran Total Nilai Transaksi')\nplt.tight_layout()\nplt.show()`,
+  `print(df['product_category'].value_counts())\nprint()\nprint(df['order_status'].value_counts(normalize=True).mul(100).round(1))`,
+  `num_cols = ['price', 'quantity', 'shipping_cost', 'total_amount', 'customer_rating']\nprint(df[num_cols].corr().round(3)['total_amount'])\n\nplt.figure(figsize=(6, 4.5))\nsns.scatterplot(data=df, x='price', y='total_amount', hue='product_category')\nplt.title('Hubungan Harga Satuan vs Total Nilai Transaksi')\nplt.show()`,
+  `plt.figure(figsize=(6, 5))\nsns.heatmap(df[num_cols].corr(), annot=True, cmap='coolwarm', center=0, fmt='.2f')\nplt.title('Heatmap Korelasi Variabel Numerik')\nplt.show()\n\nsns.pairplot(df[num_cols + ['product_category']], hue='product_category', diag_kind='hist')\nplt.show()`,
+  `!pip install ydata-profiling -q\n\nfrom ydata_profiling import ProfileReport\n\nprofile = ProfileReport(df, title="EDA Report — E-Commerce Halal P04", explorative=True)\nprofile.to_notebook_iframe()\n\nprofile.to_file("laporan_eda_p04.html")`
+];
+
+function copyCode(i){
+  navigator.clipboard.writeText(CODE_TEXTS[i]).then(()=>{
+    const btns=document.querySelectorAll('.copy-btn');
+    const btn=btns[i];
+    const old=btn.textContent;btn.textContent='✓ Copied!';
+    setTimeout(()=>btn.textContent=old,1500);
+  });
+}
+
+function applyState(){
+  state.done.forEach(i=>{
+    const btn=document.getElementById('bp'+i);
+    if(btn){btn.className='btn-paham done';btn.disabled=true;btn.textContent='✓ Selesai';}
+    const sn=document.getElementById('sn'+i);if(sn) sn.className='sec-num done';
+    const next=document.getElementById('sec'+(i+1));
+    if(next) next.className='sec-card unlocked';
+  });
+  state.mcqSel.forEach((sel,q)=>{
+    if(sel===null) return;
+    document.querySelectorAll('#mcq'+q+' .q-opt')[sel]?.classList.add('selected');
+  });
+  Object.entries(state.matchPairs).forEach(([t,d])=>{
+    const color=MATCH_COLORS[t];
+    const termEl=document.querySelectorAll('#terms .match-term')[t];
+    const defEl=document.querySelectorAll('#defs .match-def')[d];
+    if(termEl){termEl.style.borderColor=color;termEl.style.background=color+'22';}
+    if(defEl){defEl.style.borderColor=color;defEl.style.background=color+'22';}
+  });
+  if(state.submitted) submitQuiz();
+  updateProg();
+  if(state.done.length>=TOTAL_SEC-1) document.getElementById('completion').classList.add('show');
+}
+
+load(); applyState();
+</script>

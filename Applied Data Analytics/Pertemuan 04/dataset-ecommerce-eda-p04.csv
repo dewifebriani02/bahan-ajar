@@ -1,0 +1,101 @@
+order_id,order_date,customer_id,customer_name,customer_city,product_category,product_name,price,quantity,shipping_cost,total_amount,payment_method,order_status,customer_rating
+TRX-2026001,2026-02-21,CUST-109,Fajar Ramadhan,Yogyakarta,Fashion Muslim,Koko Kurta Pria Modern,175000.0,2,30000.0,380000.0,Transfer Bank Syariah,Refunded,4.0
+TRX-2026002,2026-10-15,CUST-101,Dewi Sartika,Bogor,Kuliner Halal,Kopi Arabika Gayo Halal 250g,75000.0,5,10000.0,385000.0,COD (Bayar di Tempat),Cancelled,5.0
+TRX-2026003,2026-06-01,CUST-113,Khadijah Putri,Yogyakarta,Kosmetik Halal,Facial Wash Tea Tree 100ml,48000.0,2,0.0,96000.0,BSI Mobile,Processing,5.0
+TRX-2026004,2026-06-06,CUST-122,Maryam Jameelah,Yogyakarta,Kuliner Halal,Kurma Ajwa Madinah 500g,120000.0,4,30000.0,510000.0,QRIS,Processing,4.0
+TRX-2026005,2026-06-26,CUST-103,Farhan Maulana,Bogor,Kuliner Halal,Madu Habbatussauda Murni 250ml,85000.0,1,20000.0,105000.0,QRIS,Cancelled,3.0
+TRX-2026006,2026-07-19,CUST-105,Muhammad Rizki,Jakarta Timur,Fashion Muslim,Abaya Dubai Bordir,350000.0,1,30000.0,380000.0,Paylater Syariah,Cancelled,4.0
+TRX-2026007,2026-09-22,CUST-125,Nurul Hidayah,Bandung,Perlengkapan Ibadah,Sajadah Bulu Tebal Turki,145000.0,7,0.0,1015000.0,QRIS,Delivered,4.0
+TRX-2026008,2026-05-06,CUST-118,Raihan Pratama,Yogyakarta,Kosmetik Halal,Sunscreen SPF 50 Halal 50ml,79000.0,1,0.0,79000.0,QRIS,Delivered,1.0
+TRX-2026009,2026-12-03,CUST-103,Zahra Amalia,Jakarta Timur,Perlengkapan Ibadah,Tasbih Digital Led,25000.0,8,0.0,200000.0,Transfer Bank Syariah,Refunded,5.0
+TRX-2026010,2026-09-15,CUST-108,Hasan Basri,Surabaya,Kuliner Halal,Kripik Tempe Oven Halal 200g,35000.0,1,10000.0,45000.0,COD (Bayar di Tempat),Delivered,4.0
+TRX-2026011,2026-10-24,CUST-108,Salma Nabila,Jakarta Timur,Herbal & Suplemen,Kapsul Spirulina Organik 100ct,95000.0,1,10000.0,105000.0,Transfer Bank Syariah,Delivered,4.0
+TRX-2026012,2026-09-07,CUST-114,Yusuf Habibi,Jakarta Selatan,Perlengkapan Ibadah,Sajadah Bulu Tebal Turki,145000.0,3,0.0,435000.0,BSI Mobile,Processing,5.0
+TRX-2026013,2026-07-07,CUST-106,Aisyah Humaira,Palembang,Perlengkapan Ibadah,Sajadah Bulu Tebal Turki,145000.0,1,0.0,145000.0,Transfer Bank Syariah,Shipped,4.0
+TRX-2026014,2026-12-19,CUST-124,Siti Maryam,Surabaya,Perlengkapan Ibadah,Al-Qur'an Terjemah Tajwid A5,98000.0,2,10000.0,206000.0,QRIS,Cancelled,4.0
+TRX-2026015,2026-11-14,CUST-117,Umar Al-Faruq,Semarang,Kosmetik Halal,Sunscreen SPF 50 Halal 50ml,79000.0,3,10000.0,247000.0,Transfer Bank Syariah,Cancelled,4.0
+TRX-2026016,2026-05-17,CUST-112,Fathimah Azzahra,Bandung,Perlengkapan Ibadah,Sajadah Bulu Tebal Turki,145000.0,3,10000.0,445000.0,Transfer Bank Syariah,Refunded,4.0
+TRX-2026017,2026-09-02,CUST-124,Umar Al-Faruq,Bandung,Kosmetik Halal,Sunscreen SPF 50 Halal 50ml,79000.0,9,10000.0,721000.0,BSI Mobile,Processing,4.0
+TRX-2026018,2026-05-21,CUST-115,Salma Nabila,Jakarta Timur,Fashion Muslim,Koko Kurta Pria Modern,175000.0,9,25000.0,1600000.0,Transfer Bank Syariah,Delivered,2.0
+TRX-2026019,2026-12-04,CUST-122,Taufiq Hidayat,Tangerang,Fashion Muslim,Abaya Dubai Bordir,350000.0,3,0.0,1050000.0,Transfer Bank Syariah,Refunded,3.0
+TRX-2026020,2026-11-26,CUST-108,Lukman Hakim,Jakarta Selatan,Perlengkapan Ibadah,Tasbih Digital Led,25000.0,1,15000.0,40000.0,Transfer Bank Syariah,Delivered,4.0
+TRX-2026021,2026-05-25,CUST-117,Zahra Amalia,Jakarta Selatan,Fashion Muslim,Mukena Dewasa Katun Rayon,195000.0,1,10000.0,205000.0,E-Wallet Syariah,Processing,4.0
+TRX-2026022,2026-10-13,CUST-102,Ahmad Fauzi,Palembang,Kuliner Halal,Madu Habbatussauda Murni 250ml,85000.0,1,50000.0,135000.0,COD (Bayar di Tempat),Delivered,5.0
+TRX-2026023,2026-07-22,CUST-123,Fajar Ramadhan,Yogyakarta,Herbal & Suplemen,Minyak Zaitun Extra Virgin 500ml,110000.0,1,15000.0,125000.0,E-Wallet Syariah,Cancelled,5.0
+TRX-2026024,2026-04-22,CUST-124,Muhammad Rizki,Yogyakarta,Kosmetik Halal,Sunscreen SPF 50 Halal 50ml,79000.0,10,15000.0,805000.0,Transfer Bank Syariah,Delivered,4.0
+TRX-2026025,2026-07-15,CUST-119,Lukman Hakim,Depok,Kuliner Halal,Kripik Tempe Oven Halal 200g,35000.0,1,0.0,35000.0,QRIS,Refunded,4.0
+TRX-2026026,2026-02-28,CUST-115,Zahra Amalia,Makassar,Perlengkapan Ibadah,Sajadah Bulu Tebal Turki,145000.0,2,0.0,290000.0,Paylater Syariah,Processing,5.0
+TRX-2026027,2026-04-21,CUST-103,Fathimah Azzahra,Bogor,Fashion Muslim,Koko Kurta Pria Modern,175000.0,2,0.0,350000.0,BSI Mobile,Delivered,4.0
+TRX-2026028,2026-07-27,CUST-125,Lukman Hakim,Makassar,Herbal & Suplemen,Minyak Zaitun Extra Virgin 500ml,110000.0,4,0.0,440000.0,E-Wallet Syariah,Refunded,4.0
+TRX-2026029,2026-04-16,CUST-UNKNOWN,Hasan Basri,Palembang,Herbal & Suplemen,Minyak Zaitun Extra Virgin 500ml,110000.0,1,0.0,110000.0,Transfer Bank Syariah,Shipped,2.0
+TRX-2026030,2026-07-21,CUST-115,Umar Al-Faruq,Bandung,Perlengkapan Ibadah,Sajadah Bulu Tebal Turki,145000.0,7,0.0,1015000.0,E-Wallet Syariah,Delivered,2.0
+TRX-2026031,2026-12-04,CUST-125,Siti Maryam,Bandung,Kuliner Halal,Madu Habbatussauda Murni 250ml,85000.0,4,15000.0,355000.0,Paylater Syariah,Processing,4.0
+TRX-2026032,2026-06-01,CUST-104,Khadijah Putri,Depok,Herbal & Suplemen,Minyak Zaitun Extra Virgin 500ml,110000.0,2,20000.0,240000.0,BSI Mobile,Cancelled,5.0
+TRX-2026033,2026-06-22,CUST-121,Salma Nabila,Jakarta Timur,Herbal & Suplemen,Kapsul Spirulina Organik 100ct,95000.0,10,15000.0,965000.0,Transfer Bank Syariah,Delivered,4.0
+TRX-2026034,2026-08-25,CUST-124,Hasan Basri,Jakarta Selatan,Kuliner Halal,Kopi Arabika Gayo Halal 250g,75000.0,4,25000.0,325000.0,COD (Bayar di Tempat),Delivered,5.0
+TRX-2026035,2026-12-20,CUST-UNKNOWN,Ali Imran,Medan,Herbal & Suplemen,Kapsul Spirulina Organik 100ct,95000.0,4,25000.0,405000.0,Paylater Syariah,Delivered,4.0
+TRX-2026036,2026-10-11,CUST-116,Zaidan Arifin,Medan,Kosmetik Halal,Sunscreen SPF 50 Halal 50ml,79000.0,3,15000.0,252000.0,COD (Bayar di Tempat),Cancelled,2.0
+TRX-2026037,2026-12-07,CUST-124,Taufiq Hidayat,Bogor,Fashion Muslim,Mukena Dewasa Katun Rayon,195000.0,3,30000.0,615000.0,QRIS,Delivered,2.0
+TRX-2026038,2026-08-21,CUST-101,Ibrahim Malik,Bogor,Kuliner Halal,Kurma Ajwa Madinah 500g,120000.0,5,0.0,600000.0,E-Wallet Syariah,Cancelled,4.0
+TRX-2026039,2026-10-26,CUST-103,Nurul Hidayah,Tangerang,Kuliner Halal,Kripik Tempe Oven Halal 200g,35000.0,1,30000.0,65000.0,E-Wallet Syariah,Cancelled,4.0
+TRX-2026040,2026-04-25,CUST-109,Dewi Sartika,Surabaya,Fashion Muslim,Koko Kurta Pria Modern,175000.0,4,15000.0,715000.0,QRIS,Refunded,4.0
+TRX-2026041,2026-09-11,CUST-107,Zahra Amalia,Jakarta Timur,Kuliner Halal,Kopi Arabika Gayo Halal 250g,75000.0,3,20000.0,245000.0,Paylater Syariah,Refunded,5.0
+TRX-2026042,2026-09-17,CUST-103,Salma Nabila,Yogyakarta,Kuliner Halal,Kopi Arabika Gayo Halal 250g,75000.0,1,0.0,75000.0,Transfer Bank Syariah,Refunded,4.0
+TRX-2026043,2026-09-16,CUST-109,Farhan Maulana,Tangerang Selatan,Fashion Muslim,Koko Kurta Pria Modern,175000.0,1,0.0,175000.0,COD (Bayar di Tempat),Shipped,1.0
+TRX-2026044,2026-09-27,CUST-103,Hasan Basri,Makassar,Herbal & Suplemen,Minyak Zaitun Extra Virgin 500ml,110000.0,4,15000.0,455000.0,Transfer Bank Syariah,Processing,4.0
+TRX-2026045,2026-07-05,CUST-110,Lukman Hakim,Jakarta Selatan,Kuliner Halal,Kripik Tempe Oven Halal 200g,35000.0,4,10000.0,150000.0,Paylater Syariah,Refunded,5.0
+TRX-2026046,2026-12-17,CUST-116,Fathimah Azzahra,Jakarta Timur,Herbal & Suplemen,Minyak Zaitun Extra Virgin 500ml,110000.0,2,0.0,220000.0,QRIS,Processing,1.0
+TRX-2026047,2026-05-17,CUST-110,Farhan Maulana,Yogyakarta,Perlengkapan Ibadah,Tasbih Digital Led,25000.0,3,25000.0,100000.0,Paylater Syariah,Processing,3.0
+TRX-2026048,2026-07-08,CUST-124,Aisyah Humaira,Yogyakarta,Fashion Muslim,Abaya Dubai Bordir,350000.0,3,0.0,1050000.0,Paylater Syariah,Processing,4.0
+TRX-2026049,2026-03-08,CUST-109,Lukman Hakim,Jakarta Selatan,Kosmetik Halal,Sunscreen SPF 50 Halal 50ml,79000.0,4,0.0,316000.0,Transfer Bank Syariah,Delivered,1.0
+TRX-2026050,2026-12-08,CUST-104,Lukman Hakim,Tangerang Selatan,Kuliner Halal,Kurma Ajwa Madinah 500g,120000.0,1,20000.0,140000.0,E-Wallet Syariah,Cancelled,2.0
+TRX-2026051,2026-03-06,CUST-113,Fathimah Azzahra,Surabaya,Fashion Muslim,Abaya Dubai Bordir,350000.0,3,25000.0,1075000.0,QRIS,Delivered,1.0
+TRX-2026052,2026-05-19,CUST-114,Yusuf Habibi,Bandung,Herbal & Suplemen,Minyak Zaitun Extra Virgin 500ml,110000.0,3,20000.0,350000.0,Transfer Bank Syariah,Refunded,4.0
+TRX-2026053,2026-12-20,CUST-110,Fathimah Azzahra,Depok,Kuliner Halal,Kripik Tempe Oven Halal 200g,35000.0,2,10000.0,80000.0,QRIS,Delivered,2.0
+TRX-2026054,2026-10-06,CUST-106,Zahra Amalia,Depok,Perlengkapan Ibadah,Al-Qur'an Terjemah Tajwid A5,98000.0,4,0.0,392000.0,QRIS,Delivered,4.0
+TRX-2026055,2026-05-04,CUST-124,Aisyah Humaira,Palembang,Kosmetik Halal,Facial Wash Tea Tree 100ml,48000.0,1,20000.0,68000.0,E-Wallet Syariah,Delivered,4.0
+TRX-2026056,2026-09-20,CUST-120,Muhammad Rizki,Tangerang Selatan,Kosmetik Halal,Lip Cream Matte Halal,59000.0,1,25000.0,84000.0,BSI Mobile,Cancelled,5.0
+TRX-2026057,2026-12-19,CUST-114,Ibrahim Malik,Bogor,Fashion Muslim,Hijab Voal Segiempat,65000.0,2,0.0,130000.0,BSI Mobile,Delivered,4.0
+TRX-2026058,2026-07-02,CUST-104,Yusuf Habibi,Bandung,Fashion Muslim,Gamis Syar'i Premium,285000.0,2,0.0,570000.0,QRIS,Processing,4.0
+TRX-2026059,2026-11-03,CUST-UNKNOWN,Fajar Ramadhan,Surabaya,Kuliner Halal,Kopi Arabika Gayo Halal 250g,75000.0,6,15000.0,465000.0,Transfer Bank Syariah,Delivered,2.0
+TRX-2026060,2026-02-24,CUST-125,Farhan Maulana,Surabaya,Kuliner Halal,Kripik Tempe Oven Halal 200g,35000.0,10,25000.0,375000.0,Transfer Bank Syariah,Shipped,4.0
+TRX-2026061,2026-12-16,CUST-103,Hasan Basri,Jakarta Selatan,Fashion Muslim,Abaya Dubai Bordir,350000.0,3,30000.0,1080000.0,Transfer Bank Syariah,Cancelled,4.0
+TRX-2026062,2026-11-28,CUST-125,Ali Imran,Bandung,Herbal & Suplemen,Kapsul Spirulina Organik 100ct,95000.0,1,20000.0,115000.0,QRIS,Delivered,4.0
+TRX-2026063,2026-02-27,CUST-104,Zaidan Arifin,Surabaya,Fashion Muslim,Hijab Voal Segiempat,65000.0,1,25000.0,90000.0,Transfer Bank Syariah,Cancelled,4.0
+TRX-2026064,2026-11-05,CUST-104,Zahra Amalia,Makassar,Kuliner Halal,Kopi Arabika Gayo Halal 250g,75000.0,1,20000.0,95000.0,Transfer Bank Syariah,Refunded,1.0
+TRX-2026065,2026-01-12,CUST-105,Aisyah Humaira,Medan,Fashion Muslim,Gamis Syar'i Premium,285000.0,4,15000.0,1155000.0,COD (Bayar di Tempat),Delivered,4.0
+TRX-2026066,2026-03-02,CUST-UNKNOWN,Muhammad Rizki,Yogyakarta,Herbal & Suplemen,Kapsul Spirulina Organik 100ct,95000.0,2,0.0,190000.0,BSI Mobile,Delivered,3.0
+TRX-2026067,2026-11-17,CUST-108,Bilal Santoso,Bandung,Kosmetik Halal,Lip Cream Matte Halal,59000.0,7,10000.0,423000.0,Paylater Syariah,Delivered,4.0
+TRX-2026068,2026-09-17,CUST-112,Nadia Syahrini,Jakarta Selatan,Perlengkapan Ibadah,Sajadah Bulu Tebal Turki,145000.0,4,0.0,580000.0,E-Wallet Syariah,Processing,5.0
+TRX-2026069,2026-12-27,CUST-103,Nurul Hidayah,Surabaya,Herbal & Suplemen,Minyak Zaitun Extra Virgin 500ml,110000.0,10,20000.0,1120000.0,QRIS,Refunded,5.0
+TRX-2026070,2026-12-12,CUST-121,Fathimah Azzahra,Bogor,Kuliner Halal,Madu Habbatussauda Murni 250ml,85000.0,10,25000.0,875000.0,Paylater Syariah,Processing,3.0
+TRX-2026071,2026-11-28,CUST-115,Yusuf Habibi,Palembang,Kuliner Halal,Kopi Arabika Gayo Halal 250g,75000.0,3,10000.0,235000.0,Transfer Bank Syariah,Delivered,4.0
+TRX-2026072,2026-02-28,CUST-117,Farhan Maulana,Palembang,Fashion Muslim,Hijab Voal Segiempat,65000.0,2,25000.0,155000.0,Transfer Bank Syariah,Delivered,3.0
+TRX-2026073,2026-02-23,CUST-UNKNOWN,Lukman Hakim,Tangerang Selatan,Perlengkapan Ibadah,Al-Qur'an Terjemah Tajwid A5,98000.0,1,20000.0,118000.0,Transfer Bank Syariah,Refunded,5.0
+TRX-2026074,2026-10-05,CUST-122,Bilal Santoso,Bogor,Fashion Muslim,Koko Kurta Pria Modern,175000.0,1,25000.0,200000.0,QRIS,Delivered,5.0
+TRX-2026075,2026-03-27,CUST-124,Raihan Pratama,Yogyakarta,Herbal & Suplemen,Kapsul Spirulina Organik 100ct,95000.0,2,50000.0,240000.0,COD (Bayar di Tempat),Shipped,4.0
+TRX-2026076,2026-03-05,CUST-104,Zahra Amalia,Surabaya,Fashion Muslim,Hijab Voal Segiempat,65000.0,4,15000.0,275000.0,QRIS,Delivered,2.0
+TRX-2026077,2026-10-15,CUST-124,Fathimah Azzahra,Bogor,Perlengkapan Ibadah,Tasbih Digital Led,25000.0,1,0.0,25000.0,Paylater Syariah,Processing,4.0
+TRX-2026078,2026-04-27,CUST-105,Siti Maryam,Depok,Fashion Muslim,Mukena Dewasa Katun Rayon,195000.0,2,30000.0,420000.0,QRIS,Delivered,5.0
+TRX-2026079,2026-01-12,CUST-113,Fathimah Azzahra,Jakarta Selatan,Kosmetik Halal,Facial Wash Tea Tree 100ml,48000.0,1,0.0,48000.0,COD (Bayar di Tempat),Processing,4.0
+TRX-2026080,2026-12-16,CUST-125,Yusuf Habibi,Jakarta Selatan,Fashion Muslim,Gamis Syar'i Premium,285000.0,4,20000.0,1160000.0,QRIS,Delivered,5.0
+TRX-2026081,2026-03-02,CUST-116,Ahmad Fauzi,Surabaya,Kuliner Halal,Kripik Tempe Oven Halal 200g,35000.0,3,25000.0,130000.0,QRIS,Delivered,4.0
+TRX-2026082,2026-08-13,CUST-113,Umar Al-Faruq,Depok,Fashion Muslim,Koko Kurta Pria Modern,175000.0,1,0.0,175000.0,COD (Bayar di Tempat),Delivered,2.0
+TRX-2026083,2026-11-27,CUST-123,Dewi Sartika,Jakarta Selatan,Perlengkapan Ibadah,Sajadah Bulu Tebal Turki,145000.0,2,0.0,290000.0,COD (Bayar di Tempat),Cancelled,3.0
+TRX-2026084,2026-09-01,CUST-107,Taufiq Hidayat,Yogyakarta,Kosmetik Halal,Sunscreen SPF 50 Halal 50ml,79000.0,4,0.0,316000.0,E-Wallet Syariah,Delivered,5.0
+TRX-2026085,2026-02-26,CUST-103,Dewi Sartika,Bogor,Fashion Muslim,Mukena Dewasa Katun Rayon,195000.0,4,25000.0,805000.0,QRIS,Delivered,3.0
+TRX-2026086,2026-07-20,CUST-102,Hamzah Perkasa,Surabaya,Kuliner Halal,Kurma Ajwa Madinah 500g,120000.0,4,10000.0,490000.0,QRIS,Delivered,1.0
+TRX-2026087,2026-10-02,CUST-115,Zaidan Arifin,Jakarta Selatan,Fashion Muslim,Abaya Dubai Bordir,350000.0,3,10000.0,1060000.0,Transfer Bank Syariah,Shipped,4.0
+TRX-2026088,2026-04-05,CUST-123,Bilal Santoso,Tangerang Selatan,Kuliner Halal,Madu Habbatussauda Murni 250ml,85000.0,2,0.0,170000.0,Paylater Syariah,Processing,3.0
+TRX-2026089,2026-06-22,CUST-118,Khadijah Putri,Semarang,Kuliner Halal,Kurma Ajwa Madinah 500g,120000.0,2,0.0,240000.0,QRIS,Delivered,5.0
+TRX-2026090,2026-09-26,CUST-103,Aisyah Humaira,Medan,Perlengkapan Ibadah,Tasbih Digital Led,25000.0,5,20000.0,145000.0,BSI Mobile,Refunded,4.0
+TRX-2026091,2026-03-25,CUST-102,Raihan Pratama,Bandung,Kuliner Halal,Kurma Ajwa Madinah 500g,120000.0,3,0.0,360000.0,QRIS,Cancelled,4.0
+TRX-2026092,2026-11-17,CUST-119,Maryam Jameelah,Yogyakarta,Kosmetik Halal,Sunscreen SPF 50 Halal 50ml,79000.0,1,50000.0,129000.0,QRIS,Processing,4.0
+TRX-2026093,2026-11-16,CUST-121,Ibrahim Malik,Palembang,Herbal & Suplemen,Minyak Zaitun Extra Virgin 500ml,110000.0,2,25000.0,245000.0,Paylater Syariah,Cancelled,4.0
+TRX-2026094,2026-06-01,CUST-112,Fajar Ramadhan,Surabaya,Fashion Muslim,Mukena Dewasa Katun Rayon,195000.0,4,10000.0,790000.0,Transfer Bank Syariah,Shipped,4.0
+TRX-2026095,2026-06-27,CUST-124,Taufiq Hidayat,Surabaya,Perlengkapan Ibadah,Sajadah Bulu Tebal Turki,145000.0,1,50000.0,195000.0,Transfer Bank Syariah,Delivered,4.0
+TRX-2026096,2026-10-08,CUST-121,Khadijah Putri,Jakarta Timur,Herbal & Suplemen,Kapsul Spirulina Organik 100ct,95000.0,8,25000.0,785000.0,Transfer Bank Syariah,Delivered,5.0
+TRX-2026097,2026-08-17,CUST-109,Bilal Santoso,Jakarta Timur,Fashion Muslim,Abaya Dubai Bordir,350000.0,7,20000.0,2470000.0,QRIS,Cancelled,4.0
+TRX-2026098,2026-12-05,CUST-116,Fajar Ramadhan,Surabaya,Fashion Muslim,Abaya Dubai Bordir,350000.0,4,0.0,1400000.0,QRIS,Cancelled,5.0
+TRX-2026099,2026-01-16,CUST-122,Salma Nabila,Palembang,Fashion Muslim,Gamis Syar'i Premium,285000.0,1,0.0,285000.0,QRIS,Cancelled,5.0
+TRX-2026100,2026-11-05,CUST-119,Nurul Hidayah,Tangerang Selatan,Kosmetik Halal,Sunscreen SPF 50 Halal 50ml,79000.0,4,25000.0,341000.0,Transfer Bank Syariah,Cancelled,5.0

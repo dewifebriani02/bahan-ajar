@@ -1,0 +1,7 @@
+cabang_id,nama_cabang,kota,provinsi,tipe_cabang
+CB01,Jakarta Pusat,Jakarta,DKI Jakarta,Cabang Utama
+CB02,Bogor Barat,Bogor,Jawa Barat,Cabang Madya
+CB03,Bandung Juanda,Bandung,Jawa Barat,Cabang Madya
+CB04,Depok Timur,Depok,Jawa Barat,Cabang Mikro
+CB05,Tangerang Selatan,Tangerang Selatan,Banten,Cabang Mikro
+CB06,Bekasi Kota,Bekasi,Jawa Barat,Cabang Mikro
