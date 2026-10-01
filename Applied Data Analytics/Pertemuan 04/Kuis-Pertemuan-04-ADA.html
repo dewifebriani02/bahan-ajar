@@ -527,7 +527,11 @@ const GAMES = [
   {id:2,name:'Kartu Memori Fungsi Pandas',max:800,color:'#1F9060'},
   {id:3,name:'Detektif Data Kotor',max:800,color:'#7040B0'}
 ];
-const scores = [0,0,0,0], finished = [false,false,false,false], submitted = [false,false,false,false];
+const scores = [0,0,0,0], finished = [false,false,false,false];
+// Tiebreaker tracking: how many times each game was (re)started, and how long the run that
+// just finished took. Every completed playthrough is submitted to the gradebook (not just the
+// first) so Klasemen P04 can rank ties by fewest attempts, then fastest time.
+const GAME_ATTEMPTS = [0,0,0,0], GAME_START = [0,0,0,0];
 
 function setScore(g, val){
   // Hard cap: a game can never report more than its own stated max (prevents >100% scores
@@ -545,13 +549,16 @@ function setScore(g, val){
 }
 function markDone(g){
   finished[g] = true;
-  // Only the FIRST completion of each game is recorded to the gradebook. Replaying (for
-  // practice) keeps updating the live in-page score, but never creates duplicate quiz
-  // entries — so the leaderboard always shows exactly one row per student per game.
-  if(submitted[g]) { sbRender(); return; }
-  submitted[g] = true;
+  // Every completed playthrough is submitted (replaying is allowed for practice/a better
+  // score). Klasemen P04 dedupes to each student's single best attempt itself, using
+  // attempt count and duration as tiebreakers — so recording every run here is what makes
+  // that tiebreaking possible, not a duplicate-data problem.
+  const durationSec = GAME_START[g] ? Math.max(1, Math.round((Date.now()-GAME_START[g])/1000)) : null;
   if(window.saveScoreToCloud){
-    saveScoreToCloud('ADA Outing Class (Review P01-P03)', GAMES[g].name, scores[g], GAMES[g].max);
+    saveScoreToCloud('ADA Outing Class (Review P01-P03)', GAMES[g].name, scores[g], GAMES[g].max, {
+      attempt: GAME_ATTEMPTS[g] || 1,
+      durationSec: durationSec || 0
+    });
   }
   sbRender();
 }
@@ -704,6 +711,7 @@ function g1Draw(){
 function g1DoSpin(){
   if(g1Spinning) return;
   if(g1Round >= G1_CASES.length){ g1Restart(); return; }
+  if(g1Round === 0){ GAME_ATTEMPTS[0]++; GAME_START[0] = Date.now(); }
   g1Spinning = true;
   document.getElementById('g1Spin').disabled = true;
   document.getElementById('g1QuizBox').style.display = 'none';
@@ -817,6 +825,7 @@ const G2_CASES = [
 ];
 let g2Placed = [null,null,null,null], g2Score = 0, g2Idx = 0, g2State = [], g2Timer = null, g2Sel = null;
 function g2Reset(){
+  GAME_ATTEMPTS[1] = 1; GAME_START[1] = Date.now(); // G2 punya satu alur saja, tidak bisa diulang
   g2Placed = [null,null,null,null]; g2Sel = null;
   const pool = document.getElementById('g2Pool'); pool.innerHTML = '';
   shuffle(G2_STAGES).forEach(st=>{
@@ -929,6 +938,7 @@ const G3_PAIRS = [
 ];
 let g3Deck = [], g3Open = [], g3Match = 0, g3Score = 0, g3Timer = null, g3Tries = 0, g3Lock = false;
 function g3Start(){
+  GAME_ATTEMPTS[2]++; GAME_START[2] = Date.now();
   g3Match = 0; g3Tries = 0; g3Score = 0; g3Open = []; g3Lock = false;
   setScore(2,0);
   document.getElementById('g3Pairs').textContent = '0/8';
@@ -999,6 +1009,7 @@ const G4_CASES = [
 const G4_LABELS = ['🕳️ Missing Value','📈 Outlier','👯 Duplikat','🔤 Tipe Data Salah'];
 let g4Idx = 0, g4Score = 0, g4State = [], g4Timer = null;
 function g4Start(){
+  GAME_ATTEMPTS[3]++; GAME_START[3] = Date.now();
   g4Idx = 0; g4Score = 0; g4State = [];
   setScore(3,0);
   document.getElementById('g4StartBtn').textContent = '🔄 Ulangi Patroli';
@@ -1219,25 +1230,46 @@ function renderQuizTabs(){
 }
 function setQuizTab(i){ quizActiveTab = i; renderQuizTabs(); renderQuizLeaderboard(); }
 
+function fmtDuration(sec){
+  if(!sec || sec <= 0) return '—';
+  if(sec < 60) return sec + 's';
+  const m = Math.floor(sec/60), s = sec%60;
+  return m + 'm ' + s + 's';
+}
+
 function renderQuizLeaderboard(){
   const box = document.getElementById('quizLeaderboardList');
   if(!box) return;
   const game = GAMES[quizActiveTab];
 
-  // Dedupe: kalau ada beberapa dokumen untuk mahasiswa+game yang sama (misal dari replay
-  // sebelum perbaikan anti-duplikat), yang dipakai cuma SKOR TERBAIK satu baris per mahasiswa.
+  // Setiap percobaan (replay) memang tersimpan sebagai dokumen tersendiri di gradebook —
+  // di sini kita pilih SATU baris terbaik per mahasiswa untuk ditampilkan, dengan urutan
+  // tiebreak: skor tertinggi → jumlah percobaan tersedikit → waktu pengerjaan tercepat.
+  // Dokumen lama (sebelum fitur ini ada) tidak punya attempt/durationSec; diberi nilai
+  // "tidak diketahui" (attempt besar, durasi tak terhingga) supaya selalu kalah di tiebreak
+  // melawan data yang lengkap, tapi tetap muncul kalau memang skornya lebih tinggi.
   const bestPerStudent = new Map();
   quizRawRows.forEach(d=>{
     if((d.aktivitas||'') !== game.name) return;
     const key = d.nim;
     const skor = Math.min(Number(d.skor)||0, game.max); // jaga-jaga data lama yang belum di-cap
+    const detail = d.detail || {};
+    const attempt = Number.isFinite(detail.attempt) && detail.attempt > 0 ? detail.attempt : 999;
+    const durationSec = Number.isFinite(detail.durationSec) && detail.durationSec > 0 ? detail.durationSec : Infinity;
+    const candidate = { nim:d.nim, nama:d.nama||'Mahasiswa', skor, attempt, durationSec };
     const prev = bestPerStudent.get(key);
-    if(!prev || skor > prev.skor){
-      bestPerStudent.set(key, { nim:d.nim, nama:d.nama||'Mahasiswa', skor });
-    }
+    if(!prev) { bestPerStudent.set(key, candidate); return; }
+    const better = skor > prev.skor
+      || (skor === prev.skor && attempt < prev.attempt)
+      || (skor === prev.skor && attempt === prev.attempt && durationSec < prev.durationSec);
+    if(better) bestPerStudent.set(key, candidate);
   });
 
-  const ranked = Array.from(bestPerStudent.values()).sort((a,b)=>b.skor - a.skor);
+  const ranked = Array.from(bestPerStudent.values()).sort((a,b)=>{
+    if(b.skor !== a.skor) return b.skor - a.skor;
+    if(a.attempt !== b.attempt) return a.attempt - b.attempt;
+    return a.durationSec - b.durationSec;
+  });
 
   if(!ranked.length){
     box.innerHTML = `<div style="color:var(--txl);font-size:12.5px;text-align:center;padding:16px 0">Belum ada yang menyelesaikan <strong>${game.name}</strong>.</div>`;
@@ -1249,6 +1281,8 @@ function renderQuizLeaderboard(){
   box.innerHTML = ranked.map((s,i)=>{
     const isMe = myNim && s.nim === myNim;
     const pct = game.max ? Math.round((s.skor/game.max)*100) : 0;
+    const attemptTxt = s.attempt >= 999 ? '—' : ('Percobaan ke-' + s.attempt);
+    const durTxt = Number.isFinite(s.durationSec) ? fmtDuration(s.durationSec) : '—';
     return `
     <div style="background:#061218;border:1px solid ${isMe?'#F97316':'var(--bd)'};border-radius:8px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;${isMe?'box-shadow:0 0 12px rgba(249,115,22,.2);background:rgba(249,115,22,.04)':''}">
       <div style="display:flex;align-items:center;gap:10px">
@@ -1258,7 +1292,7 @@ function renderQuizLeaderboard(){
             ${s.nama}
             ${isMe?'<span style="font-size:10px;background:#F97316;color:#fff;padding:1px 6px;border-radius:4px;font-weight:800">ANDA</span>':''}
           </div>
-          <div style="font-size:11px;color:var(--txl)">NIM: ${s.nim}</div>
+          <div style="font-size:11px;color:var(--txl)">NIM: ${s.nim} · 🔁 ${attemptTxt} · ⏱ ${durTxt}</div>
         </div>
       </div>
       <div style="text-align:right">
