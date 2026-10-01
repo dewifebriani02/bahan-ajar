@@ -174,99 +174,14 @@ function listenMeetingLocks() {
 }
 
 function isMeetingUnlocked(courseCode, pNum) {
-  const pCode = 'P' + String(pNum).padStart(2, '0');
-  const key = `${courseCode}_${pCode}`;
-  if (key in activeMeetingLocks) {
-    return activeMeetingLocks[key] === true;
-  }
-  return pNum <= 2;
+  // Meeting lock system disabled — every meeting for every course is always open.
+  return true;
 }
 window.isMeetingUnlocked = isMeetingUnlocked;
 
 function applyMeetingLocksToUI() {
-  const info = detectCurrentCourseInfo();
-  if (!info || info.code === 'DOSEN') return;
-
-  const isDosenUser = currentStudent.nim === '0206015';
-  const meetingCards = document.querySelectorAll('.meeting-card');
-  if (meetingCards.length === 0) return;
-
-  meetingCards.forEach((card, idx) => {
-    const titleEl = card.querySelector('.meeting-title');
-    const href = card.getAttribute('href') || '';
-    let pNum = idx + 1;
-    const match = (titleEl ? titleEl.textContent : href).match(/Pertemuan\s*(\d{1,2})/i);
-    if (match) {
-      pNum = parseInt(match[1], 10);
-    }
-
-    const unlocked = isMeetingUnlocked(info.code, pNum);
-
-    if (isDosenUser) {
-      let badge = card.querySelector('.dosen-preview-badge');
-      if (!badge) {
-        badge = document.createElement('span');
-        badge.className = 'dosen-preview-badge';
-        badge.style.cssText = 'font-size:11px;padding:2px 8px;border-radius:6px;font-weight:700;margin-left:8px;display:inline-flex;align-items:center;gap:4px';
-        const header = card.querySelector('.meeting-header');
-        if (header) header.appendChild(badge);
-      }
-      if (unlocked) {
-        badge.innerHTML = '🟢 Akses Terbuka';
-        badge.style.background = 'rgba(16,185,129,.15)';
-        badge.style.border = '1px solid rgba(16,185,129,.35)';
-        badge.style.color = '#6EE7B7';
-      } else {
-        badge.innerHTML = '🔒 Terkunci (Dosen Override)';
-        badge.style.background = 'rgba(239,68,68,.15)';
-        badge.style.border = '1px solid rgba(239,68,68,.35)';
-        badge.style.color = '#FCA5A5';
-      }
-      return;
-    }
-
-    // Student view
-    if (!unlocked) {
-      card.classList.add('meeting-card-locked');
-      card.style.opacity = '0.65';
-      card.style.borderColor = 'rgba(239, 68, 68, 0.4)';
-      card.style.borderStyle = 'dashed';
-      card.style.background = 'rgba(18, 24, 38, 0.6)';
-
-      const icon = card.querySelector('.meeting-icon');
-      if (icon) icon.textContent = '🔒';
-
-      const badge = card.querySelector('.meeting-badge');
-      if (badge) {
-        badge.innerHTML = '🔒 Belum Dibuka';
-        badge.style.background = 'rgba(239, 68, 68, 0.15)';
-        badge.style.borderColor = 'rgba(239, 68, 68, 0.35)';
-        badge.style.color = '#FCA5A5';
-      }
-
-      const btn = card.querySelector('.meeting-btn');
-      if (btn) {
-        btn.innerHTML = '🔒 Terkunci';
-        btn.style.background = '#1E293B';
-        btn.style.borderColor = 'rgba(239, 68, 68, 0.3)';
-        btn.style.color = '#FCA5A5';
-        btn.style.cursor = 'not-allowed';
-      }
-
-      card.onclick = function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        showMeetingLockedAlert(info.name, pNum);
-      };
-    } else {
-      card.classList.remove('meeting-card-locked');
-      card.style.opacity = '';
-      card.style.borderColor = '';
-      card.style.borderStyle = '';
-      card.style.background = '';
-      card.onclick = null;
-    }
-  });
+  // Meeting lock system disabled — no badges, no locked styling, no click interception.
+  return;
 }
 
 function showMeetingLockedAlert(courseName, pNum) {
@@ -294,24 +209,9 @@ function showMeetingLockedAlert(courseName, pNum) {
 }
 
 function checkDirectMeetingPageLock() {
-  const path = decodeURIComponent(window.location.pathname);
-  const match = path.match(/Pertemuan\s*(\d{1,2})/i);
-  if (!match) return;
-
-  const pNum = parseInt(match[1], 10);
-  const info = detectCurrentCourseInfo();
-  if (!info || info.code === 'DOSEN') return;
-
-  const isDosenUser = currentStudent.nim === '0206015';
-  if (isDosenUser) return;
-
-  const unlocked = isMeetingUnlocked(info.code, pNum);
-  if (!unlocked) {
-    renderFullscreenMeetingLockGate(info.name, pNum);
-  } else {
-    const gate = document.getElementById('fullscreenMeetingLockGate');
-    if (gate) gate.remove();
-  }
+  // Meeting lock system disabled — never gate a meeting page.
+  const gate = document.getElementById('fullscreenMeetingLockGate');
+  if (gate) gate.remove();
 }
 
 function renderFullscreenMeetingLockGate(courseName, pNum) {

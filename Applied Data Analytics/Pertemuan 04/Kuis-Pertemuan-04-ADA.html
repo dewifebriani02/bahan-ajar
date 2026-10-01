@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arena Game &amp; Kuis Live — ADA Outing Class (Review P01–P03)</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;600&display=swap">
+<script src="../../cloud-sync.js?v=20260912b"></script>
+<style>
+:root{
+  --meet-from:#030E14; --meet-mid:#06202A; --meet-to:#0A3442;
+  --meet-acc:#20C8D0;  --meet-acc2:#30D8E0; --meet-gold:#F0A830;
+  --bg:#07131A; --sf:#0D222C; --sf2:#123038; --sf3:#091A22;
+  --bd:#1A3C46; --bs:#14323C;
+  --tx:#E2F4F6; --txm:#8FB4BC; --txl:#5A828C;
+  --pri:#30D8E0; --acc:#F97316; --sya:#10B981; --warn:#EF4444;
+  --accl:rgba(249,115,22,0.15); --okl:rgba(16,185,129,0.15);
+  --r:14px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Source Sans 3',system-ui,sans-serif;
+  background:var(--bg);
+  color:var(--tx);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  line-height:1.6;
+}
+
+/* ── TOPBAR HUD ── */
+.topbar{
+  background:linear-gradient(135deg, #051A20 0%, #0D222C 100%);
+  border-bottom:1px solid var(--bd);
+  padding:12px 20px;
+  position:sticky;
+  top:0;
+  z-index:100;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+  box-shadow:0 4px 20px rgba(0,0,0,.4);
+}
+.nav-back{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  color:#30D8E0;
+  text-decoration:none;
+  font-size:13px;
+  font-weight:600;
+  padding:5px 12px;
+  background:rgba(32,200,208,0.08);
+  border:1px solid rgba(32,200,208,0.25);
+  border-radius:8px;
+  transition:all .15s;
+}
+.nav-back:hover{ background:rgba(32,200,208,0.2); transform:translateX(-2px); }
+.hud-stats{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.hud-pill{
+  display:inline-flex; align-items:center; gap:6px;
+  background:var(--sf2); border:1px solid var(--bd);
+  padding:4px 12px; border-radius:20px;
+  font-size:12px; font-weight:700; font-family:'Source Code Pro',monospace;
+}
+.hud-score{ background:linear-gradient(135deg,rgba(249,115,22,.2),rgba(234,88,12,.1)); border-color:rgba(249,115,22,.4); color:#FFB885; }
+.hud-rank-btn{ background:linear-gradient(135deg,rgba(240,168,48,.18),rgba(217,119,6,.1)); border-color:rgba(240,168,48,.4); color:#FBBF24; cursor:pointer; transition:all .15s; }
+.hud-rank-btn:hover{ transform:scale(1.03); box-shadow:0 0 12px rgba(240,168,48,.3); }
+.hud-wheel-btn{ cursor:pointer; background:linear-gradient(135deg,rgba(239,68,68,.18),rgba(185,28,28,.1)); border-color:rgba(239,68,68,.4); color:#FCA5A5; }
+.hud-wheel-btn:hover{ transform:scale(1.03); }
+
+/* ── HEADER ── */
+.hd{
+  background:linear-gradient(180deg,#0A2630 0%,#07131A 100%);
+  padding:30px 24px 22px;
+  border-bottom:1px solid var(--bd);
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.hd-glow{
+  position:absolute; top:-60px; left:50%; transform:translateX(-50%);
+  width:460px; height:200px;
+  background:radial-gradient(circle,rgba(32,200,208,.18) 0%,rgba(0,0,0,0) 70%);
+  pointer-events:none;
+}
+.hd-badge{
+  display:inline-block; background:rgba(32,200,208,.15); border:1px solid rgba(32,200,208,.35);
+  color:#7DEEF2; padding:3px 12px; border-radius:20px; font-size:11.5px; font-weight:700;
+  letter-spacing:.06em; text-transform:uppercase; margin-bottom:8px;
+}
+.hd-title{ font-family:'Amiri',serif; font-size:30px; font-weight:700; color:#fff; line-height:1.25; }
+.hd-desc{ font-size:14px; color:var(--txm); max-width:760px; margin:6px auto 0; }
+
+/* ── GAME TABS ── */
+.tab-nav{ max-width:980px; margin:20px auto 0; display:flex; gap:8px; overflow-x:auto; padding:4px 2px 10px; }
+.g-tab{
+  display:inline-flex; align-items:center; gap:8px;
+  background:var(--sf); border:1px solid var(--bd); color:var(--txm);
+  padding:8px 16px; border-radius:10px; font-size:13px; font-weight:600;
+  cursor:pointer; white-space:nowrap; transition:all .15s;
+}
+.g-tab:hover{ background:var(--sf2); color:#fff; border-color:rgba(48,216,224,.4); }
+.g-tab.active{
+  background:linear-gradient(135deg,rgba(234,88,12,.2),rgba(217,119,6,.2));
+  color:#fff; border-color:#F97316; box-shadow:0 4px 14px rgba(249,115,22,.25); font-weight:700;
+}
+
+/* ── MAIN STAGE ── */
+.main{ max-width:980px; margin:0 auto; padding:24px 20px 60px; flex:1; width:100%; }
+.game-pane{ display:none; }
+.game-pane.active{ display:block; animation:fadeIn .25s ease; }
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── GAME CARD ── */
+.gcard{ background:var(--sf); border:1px solid var(--bd); border-radius:var(--r); overflow:hidden; box-shadow:0 8px 30px rgba(0,0,0,.35); }
+.ghd{
+  background:linear-gradient(135deg,rgba(255,255,255,.04) 0%,rgba(255,255,255,0) 100%);
+  border-bottom:1px solid var(--bd); padding:18px 24px;
+  display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;
+}
+.gtitle{ font-family:'Amiri',serif; font-size:21px; font-weight:700; color:#fff; }
+.gsub{ font-size:13px; color:var(--txm); }
+.gmeta{ display:flex; gap:8px; flex-wrap:wrap; }
+.gchip{
+  font-family:'Source Code Pro',monospace; font-size:11.5px; background:var(--sf3);
+  border:1px solid var(--bd); padding:3px 10px; border-radius:6px; color:#8FB4BC; font-weight:600;
+}
+.gbody{ padding:24px; }
+
+/* ── WHEEL STAGE ── */
+.wheel-stage{ display:flex; flex-direction:column; align-items:center; text-align:center; padding:12px 0 20px; }
+.wheel-holder{ position:relative; display:inline-block; margin:10px 0; }
+.wheel-ptr{ position:absolute; top:-16px; left:50%; transform:translateX(-50%); font-size:24px; z-index:10; filter:drop-shadow(0 2px 4px rgba(0,0,0,.6)); }
+.wheel-hub{
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  width:44px; height:44px; border-radius:50%; background:#0A2630; border:3px solid #20C8D0;
+  display:flex; align-items:center; justify-content:center; font-size:18px; box-shadow:0 0 14px rgba(0,0,0,.7);
+}
+.wheel-result{ font-size:14px; color:var(--txm); margin:12px 0; min-height:26px; }
+.btn-spin{
+  background:linear-gradient(135deg,#0E7A82,#20C8D0); color:#07131A; border:1px solid #30D8E0;
+  border-radius:8px; padding:11px 26px; font-size:14px; font-weight:700; cursor:pointer;
+  box-shadow:0 4px 16px rgba(32,200,208,.35); transition:all .15s;
+}
+.btn-spin:hover:not(:disabled){ transform:translateY(-1px); box-shadow:0 6px 22px rgba(32,200,208,.55); }
+.btn-spin:disabled{ opacity:.5; cursor:not-allowed; }
+.btn-spin.danger{ background:linear-gradient(135deg,#D46020,#EA580C); color:#fff; border-color:#F97316; }
+
+/* ── QUIZ & OPTIONS BOX ── */
+.qbox{ background:#061218; border:1px solid var(--bd); border-radius:10px; padding:18px 20px; margin-top:16px; }
+.qtag{ font-size:11px; font-weight:700; letter-spacing:.08em; color:#30D8E0; text-transform:uppercase; margin-bottom:6px; }
+.qtext{ font-family:'Amiri',serif; font-size:18px; font-weight:700; color:#fff; line-height:1.4; margin-bottom:6px; }
+.qcode{ font-family:'Source Code Pro',monospace; font-size:13px; background:#0A1A22; color:#7DEEF2; border-radius:6px; padding:8px 12px; margin:8px 0; display:block; overflow-x:auto; }
+.qmeta{ font-size:12.5px; color:var(--txm); margin-bottom:16px; }
+.opts-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+@media(max-width:640px){ .opts-grid{grid-template-columns:1fr} }
+.opt-btn{
+  background:var(--sf); border:1px solid var(--bd); border-radius:8px; padding:12px 14px;
+  color:var(--tx); text-align:left; font-size:13.5px; cursor:pointer;
+  display:flex; align-items:center; gap:10px; transition:all .15s;
+}
+.opt-btn:hover:not(:disabled){ background:var(--sf2); border-color:rgba(48,216,224,.4); transform:translateY(-1px); }
+.opt-btn .okey{
+  font-family:'Source Code Pro',monospace; font-size:11px; font-weight:700; background:rgba(255,255,255,.08);
+  width:22px; height:22px; border-radius:4px; display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.opt-btn.correct{ background:rgba(16,185,129,.2)!important; border-color:#10B981!important; color:#6EE7B7!important; }
+.opt-btn.wrong{ background:rgba(239,68,68,.2)!important; border-color:#EF4444!important; color:#FCA5A5!important; }
+
+/* ── PROGRESS DOTS & FEEDBACK ── */
+.pdots{ display:flex; gap:5px; align-items:center; }
+.pdot{ width:10px; height:10px; border-radius:50%; background:rgba(255,255,255,.15); transition:all .2s; }
+.pdot.now{background:#30D8E0;transform:scale(1.2)}
+.pdot.done{background:#10B981}
+.pdot.miss{background:#EF4444}
+.fb{ margin-top:14px; padding:12px 16px; border-radius:8px; font-size:13.5px; line-height:1.5; display:none; }
+.fb.show{display:block;animation:fadeIn .2s ease}
+.fb.good{background:rgba(16,185,129,.15);border:1px solid rgba(16,185,129,.35);color:#6EE7B7}
+.fb.bad{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.35);color:#FCA5A5}
+
+/* ── DRAG CHIPS (TEMA 2) ── */
+.chip-pool{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px; }
+.drag-slots{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+@media(max-width:680px){ .drag-slots{grid-template-columns:repeat(2,1fr)} }
+
+/* ── MEMORY CARD (TEMA 3) ── */
+.mem-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+@media(max-width:600px){.mem-grid{grid-template-columns:repeat(2,1fr)}}
+.mem-card{ height:92px; perspective:600px; cursor:pointer; }
+.mem-inner{ position:relative; width:100%; height:100%; transition:transform .4s; transform-style:preserve-3d; border-radius:8px; }
+.mem-card.flip .mem-inner{transform:rotateY(180deg)}
+.mem-face{ position:absolute; inset:0; border-radius:8px; backface-visibility:hidden; display:flex; align-items:center; justify-content:center; padding:10px; text-align:center; }
+.mem-back{ background:var(--sf2); border:1px solid var(--bd); font-size:24px; }
+.mem-front{ background:#0D3038; border:1px solid #30D8E0; color:#fff; transform:rotateY(180deg); font-size:11px; font-weight:600; line-height:1.3; }
+.mem-card.matched .mem-front{ background:rgba(16,185,129,.25); border-color:#10B981; color:#A7F3D0; }
+
+/* ── MODALS ── */
+.modal-overlay{ position:fixed; inset:0; background:rgba(0,0,0,.75); backdrop-filter:blur(4px); z-index:999; display:none; align-items:center; justify-content:center; padding:20px; }
+.modal-overlay.show{display:flex}
+.modal-box{ background:#0D222C; border:1px solid var(--bd); border-radius:var(--r); width:100%; max-width:540px; max-height:90vh; overflow-y:auto; box-shadow:0 14px 40px rgba(0,0,0,.6); }
+.modal-hd{ padding:16px 20px; border-bottom:1px solid var(--bd); display:flex; align-items:center; justify-content:space-between; }
+.modal-title{ font-family:'Amiri',serif; font-size:20px; font-weight:700; color:#fff; }
+.modal-close{ background:none; border:none; color:var(--txl); font-size:20px; cursor:pointer; }
+.modal-body{padding:20px}
+
+/* ── FOOTER ── */
+.ft{ background:#040D12; border-top:1px solid var(--bd); padding:20px; text-align:center; font-size:13px; color:var(--txl); }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR HUD -->
+<div class="topbar">
+  <div style="display:flex;align-items:center;gap:10px">
+    <a href="index.html" class="nav-back">← Portal P04 ADA</a>
+    <span style="font-family:'Amiri',serif;font-size:18px;font-weight:700;color:#fff">Arena Outing Class ADA</span>
+  </div>
+  <div class="hud-stats">
+    <button class="hud-pill hud-rank-btn" onclick="openLeaderboardModal()">🏆 Klasemen <span id="hudRank">#—</span></button>
+    <div class="hud-pill hud-score">🏅 <span id="grandTotal">0</span> pts</div>
+    <button class="hud-pill hud-wheel-btn" onclick="openForfeitModal()">🎪 Roda Tantangan</button>
+    <button class="hud-pill" style="cursor:pointer" onclick="toggleSound()" id="soundBtn">🔊 ON</button>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="hd">
+  <div class="hd-glow"></div>
+  <span class="hd-badge">ADA-301 · Outing Class · 4 Game Arena</span>
+  <h1 class="hd-title">Review Seru P01–P03: Setup, Pandas &amp; Data Cleaning</h1>
+  <p class="hd-desc">Sebelum lanjut ke materi EDA baru, uji pemahamanmu lewat 4 game interaktif — putar roda, rakit alur analisis, buka kartu memori, dan jadi detektif data kotor. Kumpulkan poin live, raih multiplier, dan bersaing di klasemen realtime kelas!</p>
+
+  <nav class="tab-nav">
+    <button class="g-tab active" onclick="switchTab(0)">🎡 G1: Roda Review</button>
+    <button class="g-tab" onclick="switchTab(1)">🔄 G2: Rakit Alur Analisis</button>
+    <button class="g-tab" onclick="switchTab(2)">🃏 G3: Kartu Fungsi Pandas</button>
+    <button class="g-tab" onclick="switchTab(3)">🧹 G4: Detektif Data Kotor</button>
+    <button class="g-tab" onclick="switchTab(4)">🏆 Papan Skor</button>
+  </nav>
+</header>
+
+<main class="main">
+
+  <!-- ══════════ TEMA 1: RODA REVIEW PYTHON & DATA ══════════ -->
+  <div class="game-pane active" id="pane0">
+    <div class="gcard">
+      <div class="ghd">
+        <div>
+          <h2 class="gtitle">🎡 G1 · Roda Review Python &amp; Data</h2>
+          <div class="gsub">Putar roda untuk menentukan multiplier → Jawab pertanyaan review P01–P03</div>
+        </div>
+        <div class="gmeta">
+          <span class="gchip" id="g1Round">0/6 Soal</span>
+          <span class="gchip" id="g1Combo">🔥 x1</span>
+          <span class="gchip" id="g1Time">⏱ —</span>
+          <span class="gchip" style="color:#FFB885">Skor: <strong id="g1Score">0</strong>/900</span>
+        </div>
+      </div>
+      <div class="gbody">
+        <div class="wheel-stage">
+          <div class="wheel-holder">
+            <div class="wheel-ptr">🔻</div>
+            <canvas id="wheelCanvas" width="300" height="300"></canvas>
+            <div class="wheel-hub">🎡</div>
+          </div>
+          <div class="wheel-result" id="g1WheelTxt">Putar roda untuk menentukan multiplier &amp; soal review!</div>
+          <button class="btn-spin" id="g1Spin" onclick="g1DoSpin()">🎡 Putar Roda Review</button>
+        </div>
+        <div class="pdots" id="g1Dots" style="justify-content:center;margin-bottom:8px"></div>
+        <div class="qbox" id="g1QuizBox" style="display:none">
+          <div class="qtag" id="g1Tag">SOAL #1</div>
+          <div class="qtext" id="g1Scenario">—</div>
+          <div class="qcode" id="g1Code" style="display:none"></div>
+          <div class="qmeta" id="g1Meta">—</div>
+          <div class="opts-grid" id="g1Opts"></div>
+          <div class="fb" id="g1Fb"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ TEMA 2: RAKIT ALUR ANALISIS DATA ══════════ -->
+  <div class="game-pane" id="pane1">
+    <div class="gcard">
+      <div class="ghd">
+        <div>
+          <h2 class="gtitle">🔄 G2 · Rakit Alur Analisis Data</h2>
+          <div class="gsub" id="g2Stage">Babak 1/2 · Susun 4 tahap alur analisis data yang benar</div>
+        </div>
+        <div class="gmeta">
+          <span class="gchip" id="g2Time">⏱ —</span>
+          <span class="gchip" style="color:#FFB885">Skor: <strong id="g2Score">0</strong>/700</span>
+        </div>
+      </div>
+      <div class="gbody">
+        <div id="g2Part1">
+          <p style="font-size:13px;color:var(--txm);margin-bottom:10px">Klik kartu tahap di bawah, lalu klik kotak urutan tujuan (urutan 1→4).</p>
+          <div class="chip-pool" id="g2Pool"></div>
+          <div class="drag-slots" id="g2Slots"></div>
+          <div class="fb" id="g2Fb"></div>
+          <div style="text-align:center;margin-top:16px">
+            <button class="btn-spin" id="g2Check" onclick="g2Check()" disabled>✅ Periksa Urutan</button>
+          </div>
+        </div>
+        <div id="g2Part2" style="display:none">
+          <div class="pdots" id="g2Dots" style="justify-content:center;margin-bottom:12px"></div>
+          <div class="qbox">
+            <div class="qtag" id="g2Tag">SKENARIO 1/4</div>
+            <div class="qtext" id="g2Scenario">—</div>
+            <div class="qmeta" id="g2Meta">—</div>
+            <div class="opts-grid" id="g2Opts"></div>
+            <div class="fb" id="g2Fb2"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ TEMA 3: KARTU MEMORI FUNGSI PANDAS ══════════ -->
+  <div class="game-pane" id="pane2">
+    <div class="gcard">
+      <div class="ghd">
+        <div>
+          <h2 class="gtitle">🃏 G3 · Kartu Memori Fungsi Pandas</h2>
+          <div class="gsub">Balik kartu, pasangkan fungsi pandas dengan kegunaannya</div>
+        </div>
+        <div class="gmeta">
+          <span class="gchip" id="g3Pairs">0/8</span>
+          <span class="gchip" id="g3Time">⏱ —</span>
+          <span class="gchip" style="color:#FFB885">Skor: <strong id="g3Score">0</strong>/800</span>
+        </div>
+      </div>
+      <div class="gbody">
+        <div class="mem-grid" id="g3Grid"></div>
+        <div class="fb" id="g3Fb"></div>
+        <div style="text-align:center;margin-top:16px">
+          <button class="btn-spin" id="g3StartBtn" onclick="g3Start()">🎮 Mulai Buka Kartu</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ TEMA 4: DETEKTIF DATA KOTOR ══════════ -->
+  <div class="game-pane" id="pane3">
+    <div class="gcard">
+      <div class="ghd">
+        <div>
+          <h2 class="gtitle">🧹 G4 · Detektif Data Kotor</h2>
+          <div class="gsub">Diagnosis cepat: jenis masalah data apa yang sedang kamu hadapi?</div>
+        </div>
+        <div class="gmeta">
+          <span class="gchip" id="g4Round">0/8 Kasus</span>
+          <span class="gchip" id="g4Time">⏱ —</span>
+          <span class="gchip" style="color:#FFB885">Skor: <strong id="g4Score">0</strong>/800</span>
+        </div>
+      </div>
+      <div class="gbody">
+        <div class="pdots" id="g4Dots" style="justify-content:center;margin-bottom:8px"></div>
+        <button class="btn-spin danger" id="g4StartBtn" onclick="g4Start()">🔍 Mulai Patroli Detektif</button>
+        <div class="qbox" id="g4QuizBox" style="display:none;margin-top:16px">
+          <div class="qtag" id="g4Tag">KASUS #1</div>
+          <div class="qtext" id="g4Scenario">—</div>
+          <div class="qmeta" id="g4Meta">—</div>
+          <div class="opts-grid" id="g4Opts"></div>
+          <div class="fb" id="g4Fb"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ PAPAN SKOR REKAP ══════════ -->
+  <div class="game-pane" id="pane4">
+    <div class="gcard">
+      <div class="ghd">
+        <div>
+          <h2 class="gtitle">🏆 Rekapitulasi Review &amp; Peringkat</h2>
+          <div class="gsub">Capaian skor per game dan sinkronisasi otomatis ke Cloud Firestore</div>
+        </div>
+        <button class="btn-spin" onclick="triggerManualSync()">☁️ Sinkronkan ke Cloud</button>
+      </div>
+      <div class="gbody">
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:24px" id="sbGrid"></div>
+        <div style="background:#061218;border:1px solid var(--bd);border-radius:10px;padding:20px;text-align:center">
+          <div style="font-size:13px;color:var(--txm);text-transform:uppercase;letter-spacing:.08em">Total Poin Review</div>
+          <div style="font-family:'Source Code Pro',monospace;font-size:42px;font-weight:700;color:#F97316;margin:4px 0" id="sbTotal">0</div>
+          <div style="font-family:'Amiri',serif;font-size:20px;font-weight:700;color:#fff" id="sbRank">Siap Outing Class</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- RODA TANTANGAN EDUKATIF / FORFEIT MODAL -->
+<div id="modalPunishment" class="modal-overlay" onclick="if(event.target===this) closeForfeitModal()">
+  <div class="modal-box">
+    <div class="modal-hd" style="background:linear-gradient(135deg,#5A1A0A,#1B0C18)">
+      <div>
+        <h3 class="modal-title">🎪 Roda Tantangan Edukatif &amp; Sportivitas</h3>
+        <div style="font-size:11.5px;color:rgba(255,255,255,.75)">Putar roda tantangan outing class &amp; raih +50 Poin Sportivitas!</div>
+      </div>
+      <button class="modal-close" onclick="closeForfeitModal()">✕</button>
+    </div>
+    <div class="modal-body" style="text-align:center">
+      <div class="wheel-stage">
+        <div class="wheel-holder">
+          <div class="wheel-ptr">🔻</div>
+          <canvas id="forfeitWheelCanvas" width="280" height="280"></canvas>
+          <div class="wheel-hub">🎉</div>
+        </div>
+        <div class="wheel-result" id="forfeitWheelTxt">Putar roda untuk menentukan tantangan seru!</div>
+        <button class="btn-spin danger" id="btnSpinForfeit" onclick="spinForfeitWheel()">🎡 Putar Roda Tantangan</button>
+      </div>
+
+      <div id="activeForfeitBox" style="display:none;text-align:left;background:#061218;border:1px solid var(--bd);border-radius:8px;padding:16px;margin-top:14px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <span style="font-size:11px;font-weight:700;color:#FFB885;text-transform:uppercase">TANTANGAN OUTING CLASS</span>
+          <span style="font-family:'Source Code Pro',monospace;font-weight:700;color:#30D8E0" id="forfeitTimerTxt">30s</span>
+        </div>
+        <div style="font-family:'Amiri',serif;font-size:18px;font-weight:700;color:#fff" id="activeForfeitTitle">—</div>
+        <p style="font-size:13px;color:rgba(255,255,255,.85);margin:6px 0 14px" id="activeForfeitDetail">—</p>
+        <div style="display:flex;gap:8px;justify-content:flex-end">
+          <button class="nav-back" onclick="startForfeitTimer(30)" style="cursor:pointer">⏱️ Mulai 30s</button>
+          <button class="btn-spin" style="background:#10B981;border-color:#10B981;color:#fff;padding:6px 14px;font-size:12px" onclick="completeForfeit()">✅ Selesai (+50 Pts)</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LEADERBOARD MODAL -->
+<div id="modalLeaderboard" class="modal-overlay" onclick="if(event.target===this) closeLeaderboardModal()">
+  <div class="modal-box" style="max-width:560px">
+    <div class="modal-hd">
+      <div>
+        <h3 class="modal-title">🏆 Klasemen Real-Time Kelas</h3>
+        <div style="font-size:11.5px;color:var(--txm)">Akumulasi Skor 4 Game Arena ADA Outing Class (Maks. 3.200 pts)</div>
+      </div>
+      <button class="modal-close" onclick="closeLeaderboardModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="leaderboardList" style="display:grid;gap:8px">
+        <div style="color:var(--txl);font-size:12.5px;text-align:center;padding:16px 0">Memuat klasemen real-time...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="ft">
+  Universitas Tazkia · Fakultas Ekonomi &amp; Bisnis Islam · Tim Dosen Sistem Informasi Akuntansi &amp; Data Analytics © 2026
+</footer>
+
+<script>
+/* ═══ SOUND SYNTHESIS ═══ */
+let soundEnabled = true;
+let audioCtx = null;
+function getAudioCtx(){
+  if(!audioCtx){
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if(AC) audioCtx = new AC();
+  }
+  if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+  return audioCtx;
+}
+function toggleSound(){
+  soundEnabled = !soundEnabled;
+  const b = document.getElementById('soundBtn');
+  if(b) b.textContent = soundEnabled ? '🔊 ON' : '🔇 OFF';
+}
+function playTone(freq, type, dur, gain){
+  if(!soundEnabled) return;
+  try{
+    const ctx = getAudioCtx(); if(!ctx) return;
+    const osc = ctx.createOscillator();
+    const g = ctx.createGain();
+    osc.type = type || 'sine';
+    osc.frequency.setValueAtTime(freq, ctx.currentTime);
+    g.gain.setValueAtTime(gain || 0.15, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + (dur || 0.15));
+    osc.connect(g); g.connect(ctx.destination);
+    osc.start(); osc.stop(ctx.currentTime + (dur || 0.15));
+  }catch(e){}
+}
+function sGood(){ playTone(523,'triangle',.12); setTimeout(()=>playTone(659,'triangle',.15),80); setTimeout(()=>playTone(784,'sine',.22),160); }
+function sBad(){ playTone(220,'sawtooth',.22,.2); setTimeout(()=>playTone(180,'sawtooth',.28,.2),120); }
+function sWin(){ [523,659,784,1046].forEach((f,i)=>setTimeout(()=>playTone(f,'sine',.3,.2),i*100)); }
+function sFlip(){ playTone(440,'sine',.06,.08); }
+
+/* ═══ TABS ═══ */
+function switchTab(idx){
+  document.querySelectorAll('.g-tab').forEach((t,i)=>t.classList.toggle('active', i===idx));
+  document.querySelectorAll('.game-pane').forEach((p,i)=>p.classList.toggle('active', i===idx));
+  if(idx === 0) g1Draw();
+  if(idx === 4) sbRender();
+}
+
+/* ═══ SHARED SCORE & SYNC ═══ */
+const GAMES = [
+  {id:0,name:'Roda Review Python & Data',max:900,color:'#20C8D0'},
+  {id:1,name:'Rakit Alur Analisis Data',max:700,color:'#D46020'},
+  {id:2,name:'Kartu Memori Fungsi Pandas',max:800,color:'#1F9060'},
+  {id:3,name:'Detektif Data Kotor',max:800,color:'#7040B0'}
+];
+const scores = [0,0,0,0], finished = [false,false,false,false];
+
+function setScore(g, val){
+  scores[g] = val;
+  const el = document.getElementById('g'+(g+1)+'Score');
+  if(el) el.textContent = val;
+  const total = scores.reduce((a,b)=>a+b,0);
+  const gt = document.getElementById('grandTotal');
+  if(gt) gt.textContent = total;
+  const doneCount = finished.filter(Boolean).length;
+  if(window.RealtimeGameEngine){
+    RealtimeGameEngine.submitPlayerScore(total, 1, doneCount, [...scores], g);
+  }
+}
+function markDone(g){
+  finished[g] = true;
+  if(window.saveScoreToCloud){
+    saveScoreToCloud('ADA Outing Class (Review P01-P03)', GAMES[g].name, scores[g], GAMES[g].max);
+  }
+  sbRender();
+}
+
+/* ═══ TIMER & UTILS ═══ */
+function mkTimer(elId, sec, onTick, onEnd){
+  let left = sec;
+  const el = document.getElementById(elId);
+  if(el) el.textContent = '⏱ ' + left + 's';
+  const h = setInterval(()=>{
+    left--;
+    if(el) el.textContent = '⏱ ' + Math.max(0,left) + 's';
+    if(onTick) onTick(left);
+    if(left<=0){ clearInterval(h); if(onEnd) onEnd(); }
+  },1000);
+  return { stop:()=>clearInterval(h), left:()=>left };
+}
+function dots(elId, total, state){
+  const el = document.getElementById(elId); if(!el) return;
+  el.innerHTML = '';
+  for(let i=0;i<total;i++){
+    const d = document.createElement('div');
+    d.className = 'pdot' + (state[i]==='ok'?' done':state[i]==='no'?' miss':state[i]==='now'?' now':'');
+    el.appendChild(d);
+  }
+}
+function fb(elId, good, html){
+  const el = document.getElementById(elId); if(!el) return;
+  el.className = 'fb show ' + (good?'good':'bad');
+  el.innerHTML = html;
+}
+function fbHide(elId){ const el=document.getElementById(elId); if(el) el.className='fb'; }
+function shuffle(a){
+  const r = a.slice();
+  for(let i=r.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [r[i],r[j]]=[r[j],r[i]]; }
+  return r;
+}
+
+/* ══════════ G1: RODA REVIEW PYTHON & DATA ══════════ */
+const WHEEL_SECTORS = [
+  { label:'Python Basic', emoji:'🐍', color:'#20C8D0', bonusType:'1x Poin', mult:1, add:0 },
+  { label:'Pandas Power', emoji:'🐼', color:'#D46020', bonusType:'+50 Pts 🎁', mult:1, add:50 },
+  { label:'Data Cleaning', emoji:'🧹', color:'#1F9060', bonusType:'2x Poin 🔥', mult:2, add:0 },
+  { label:'Groupby Master', emoji:'📊', color:'#7040B0', bonusType:'+75 Pts ⚡', mult:1, add:75 },
+  { label:'Colab Explorer', emoji:'☁️', color:'#2A50B0', bonusType:'3x Jackpot 💎', mult:3, add:0 },
+  { label:'Outlier Hunter', emoji:'🎯', color:'#C03818', bonusType:'+100 Pts 🎯', mult:1, add:100 },
+  { label:'Merge Expert', emoji:'🔗', color:'#0F766E', bonusType:'2.5x Booster 🚀', mult:2.5, add:0 },
+  { label:'BPRS Analyst', emoji:'🏦', color:'#D97706', bonusType:'+80 Pts 🌟', mult:1, add:80 }
+];
+
+const G1_CASES = [
+  {
+    tag:'REVIEW P01 · SETUP & COLAB',
+    s:'Mbak Rani baru pertama kali membuka Google Colab dan ingin memuat dataset BPRS ke dalam notebooknya. Perintah pandas yang tepat untuk langkah pertama ini adalah...',
+    m:'Dataset: dataset-bprs-p01.csv · 20 baris BPRS',
+    opts:[
+      {t:"pd.read_csv('bprs.csv')", ok:true},
+      {t:"pd.load_csv('bprs.csv')", ok:false},
+      {t:"df.open_csv('bprs.csv')", ok:false},
+      {t:"pd.import_csv('bprs.csv')", ok:false}
+    ],
+    why:"<code>pd.read_csv()</code> adalah fungsi standar pandas untuk memuat file CSV menjadi DataFrame. Tidak ada fungsi <code>pd.load_csv()</code>, <code>df.open_csv()</code>, atau <code>pd.import_csv()</code> di pandas."
+  },
+  {
+    tag:'REVIEW P01 · 6 LIBRARY INTI',
+    s:'Dari 6 library inti yang dipelajari di ADA (pandas, numpy, matplotlib/seaborn, scikit-learn, Streamlit, DuckDB), library manakah yang digunakan khusus untuk membangun pipeline Machine Learning (preprocessing, model, evaluasi)?',
+    m:'Konsep: Ekosistem Python untuk Data Science',
+    opts:[
+      {t:'scikit-learn', ok:true},
+      {t:'Streamlit', ok:false},
+      {t:'DuckDB', ok:false},
+      {t:'matplotlib', ok:false}
+    ],
+    why:'<code>scikit-learn</code> menyediakan pipeline ML lengkap: preprocessing, train/test split, model (classification, regression, clustering), dan evaluation. Streamlit untuk web app, DuckDB untuk SQL analytics, matplotlib untuk visualisasi.'
+  },
+  {
+    tag:'REVIEW P02 · INDEXING loc vs iloc',
+    s:'Perhatikan kode berikut, lalu tentukan berapa baris yang dikembalikan:',
+    code:"df.loc[2:5, 'nama_bprs']",
+    m:'Konsep: Perbedaan krusial loc (label-based, inclusive) vs iloc (position-based, exclusive)',
+    opts:[
+      {t:'3 baris (index 2, 3, 4)', ok:false},
+      {t:'4 baris (index 2, 3, 4, 5)', ok:true},
+      {t:'5 baris (index 1 sampai 5)', ok:false},
+      {t:'Error, karena slicing tidak valid pada loc', ok:false}
+    ],
+    why:"<code>.loc[]</code> bersifat <strong>inclusive</strong> pada batas akhir slicing (berbeda dari <code>.iloc[]</code> atau slicing Python biasa yang exclusive). Maka <code>df.loc[2:5]</code> mengembalikan baris berlabel 2, 3, 4, DAN 5 — total 4 baris."
+  },
+  {
+    tag:'REVIEW P02 · MERGE / JOIN',
+    s:'Pak Rizal ingin menggabungkan tabel BPRS (20 baris) dengan tabel benchmark OJK (6 baris, hanya mencakup 6 dari 9 provinsi). Ia ingin tetap mempertahankan SEMUA 20 BPRS meski ada yang provinsinya tidak ada di tabel benchmark. Jenis merge yang tepat adalah:',
+    m:'Konsep: how=\'left\' vs \'inner\' vs \'right\' vs \'outer\'',
+    opts:[
+      {t:"df.merge(benchmark, how='inner')", ok:false},
+      {t:"df.merge(benchmark, how='left')", ok:true},
+      {t:"df.merge(benchmark, how='right')", ok:false},
+      {t:"pd.concat([df, benchmark])", ok:false}
+    ],
+    why:"<code>how='left'</code> mempertahankan SEMUA baris dari tabel kiri (BPRS, 20 baris) dan mengisi NaN untuk baris yang tidak punya pasangan di tabel kanan. <code>how='inner'</code> justru akan MEMBUANG BPRS yang provinsinya tidak ada di benchmark."
+  },
+  {
+    tag:'REVIEW P03 · MISSING VALUES',
+    s:'Sebuah kolom gaji karyawan memiliki 10 baris dengan nilai rata-rata Rp 5 juta, namun terdapat 1 orang eksekutif bergaji Rp 250 juta. Jika ada 2 nilai hilang, metode pengisian manakah yang paling aman agar tidak mendistorsi statistik keseluruhan?',
+    m:'Konsep: Mean vs Median — mana yang robust terhadap outlier?',
+    opts:[
+      {t:'Imputasi Mean (Rata-rata)', ok:false},
+      {t:'Imputasi Median (Nilai Tengah)', ok:true},
+      {t:'Mengisi dengan 0 (Nol)', ok:false},
+      {t:'Menghapus seluruh kolom gaji', ok:false}
+    ],
+    why:'Median bersifat <em>robust</em> (tahan) terhadap outlier ekstrem. Mean akan tertarik tinggi oleh gaji Rp 250 juta sehingga memberikan estimasi yang terlalu tinggi untuk staf biasa.'
+  },
+  {
+    tag:'REVIEW P03 · OUTLIER IQR',
+    s:'Dalam metode deteksi outlier Interquartile Range (IQR), jika Q1 = 20 dan Q3 = 50, maka batas atas (upper bound) untuk menentukan nilai outlier adalah:',
+    m:'Rumus: IQR = Q3-Q1 · Upper Bound = Q3 + (1.5 × IQR)',
+    opts:[
+      {t:'65', ok:false},
+      {t:'80', ok:false},
+      {t:'95', ok:true},
+      {t:'125', ok:false}
+    ],
+    why:'IQR = Q3 − Q1 = 50 − 20 = 30. Batas Atas = Q3 + (1.5 × IQR) = 50 + (1.5 × 30) = 50 + 45 = <strong>95</strong>.'
+  }
+];
+
+let g1Angle = 0, g1Spinning = false, g1Round = 0, g1Score = 0, g1Combo = 0, g1Timer = null, g1Cur = null;
+let g1State = [];
+
+function g1Draw(){
+  const cv = document.getElementById('wheelCanvas'); if(!cv) return;
+  const ctx = cv.getContext('2d'), N = WHEEL_SECTORS.length;
+  const cx = cv.width/2, cy = cv.height/2, R = cx - 6, seg = (Math.PI*2)/N;
+  ctx.clearRect(0,0,cv.width,cv.height);
+  for(let i=0;i<N;i++){
+    const a0 = g1Angle + i*seg, a1 = a0 + seg;
+    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,R,a0,a1); ctx.closePath();
+    ctx.fillStyle = WHEEL_SECTORS[i].color; ctx.fill();
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.save();
+    ctx.translate(cx,cy); ctx.rotate(a0 + seg/2);
+    ctx.textAlign = 'right'; ctx.fillStyle = '#fff';
+    ctx.font = '700 11px sans-serif';
+    ctx.fillText(WHEEL_SECTORS[i].label, R-16, 0);
+    ctx.font = '14px sans-serif';
+    ctx.fillText(WHEEL_SECTORS[i].emoji, R-2, 0);
+    ctx.restore();
+  }
+}
+function g1DoSpin(){
+  if(g1Spinning) return;
+  if(g1Round >= G1_CASES.length){ g1Restart(); return; }
+  g1Spinning = true;
+  document.getElementById('g1Spin').disabled = true;
+  document.getElementById('g1QuizBox').style.display = 'none';
+  fbHide('g1Fb');
+  document.getElementById('g1WheelTxt').textContent = 'Roda berputar menentukan multiplier…';
+  const dur = 3000 + Math.random()*600;
+  const target = g1Angle + Math.PI*2*(5 + Math.random()*3);
+  const start = g1Angle, t0 = performance.now();
+  let lastSeg = -1;
+  (function anim(now){
+    const p = Math.min(1,(now-t0)/dur);
+    const e = 1 - Math.pow(1-p, 3.2);
+    g1Angle = start + (target-start)*e;
+    g1Draw();
+    const N = WHEEL_SECTORS.length, seg = (Math.PI*2)/N;
+    let a = (-Math.PI/2 - g1Angle) % (Math.PI*2); if(a<0) a += Math.PI*2;
+    const s = Math.floor(a/seg) % N;
+    if(s !== lastSeg){ lastSeg = s; if(p < .95) playTone(420+s*30,'square',.03,.05); }
+    if(p < 1) requestAnimationFrame(anim);
+    else g1Landed(s);
+  })(t0);
+}
+function g1Landed(sIdx){
+  g1Spinning = false;
+  const sector = WHEEL_SECTORS[sIdx];
+  playTone(660,'triangle',.2);
+  document.getElementById('g1WheelTxt').innerHTML = `🎯 Terpilih: <strong>${sector.emoji} ${sector.label}</strong> (${sector.bonusType})`;
+  const caseObj = G1_CASES[g1Round % G1_CASES.length];
+  g1Cur = { sector, caseObj };
+  document.getElementById('g1Tag').textContent = `${caseObj.tag} · MULTIPLIER: ${sector.bonusType}`;
+  document.getElementById('g1Scenario').textContent = caseObj.s;
+  const codeEl = document.getElementById('g1Code');
+  if(caseObj.code){ codeEl.style.display='block'; codeEl.textContent = caseObj.code; } else { codeEl.style.display='none'; }
+  document.getElementById('g1Meta').textContent = caseObj.m;
+  const opts = shuffle(caseObj.opts.map((o,i)=>({...o, origIdx:i})));
+  const box = document.getElementById('g1Opts'); box.innerHTML = '';
+  opts.forEach((o,i)=>{
+    const b = document.createElement('button');
+    b.className = 'opt-btn';
+    b.innerHTML = `<span class="okey">${'ABCD'[i]}</span><span>${o.t}</span>`;
+    b.onclick = ()=>g1Answer(o.ok, b);
+    box.appendChild(b);
+  });
+  document.getElementById('g1QuizBox').style.display = 'block';
+  if(g1Timer) g1Timer.stop();
+  g1Timer = mkTimer('g1Time', 25, null, ()=>g1Answer(null,null));
+  g1State[g1Round] = 'now';
+  dots('g1Dots', G1_CASES.length, g1State);
+}
+function g1Answer(isOk, btn){
+  if(g1Timer) g1Timer.stop();
+  const left = g1Timer ? Math.max(0,g1Timer.left()) : 0;
+  document.querySelectorAll('#g1Opts .opt-btn').forEach((b,i)=>{
+    b.disabled = true;
+    const matchOpt = g1Cur.caseObj.opts.find(o=>o.t === b.textContent.replace(/^[ABCD]/,''));
+  });
+  // Mark correct option
+  const correctText = g1Cur.caseObj.opts.find(o=>o.ok).t;
+  document.querySelectorAll('#g1Opts .opt-btn').forEach(b=>{
+    if(b.textContent.includes(correctText)) b.classList.add('correct');
+  });
+  if(btn && !isOk) btn.classList.add('wrong');
+  if(isOk){
+    g1Combo++;
+    const pts = Math.round((100 + left*2 + (g1Combo-1)*20) * (g1Cur.sector.mult||1)) + (g1Cur.sector.add||0);
+    g1Score += pts; g1State[g1Round] = 'ok';
+    setScore(0, g1Score); sGood();
+    fb('g1Fb', true, `<strong>🎉 Tepat! +${pts} poin</strong><br>${g1Cur.caseObj.why}`);
+  } else {
+    g1Combo = 0; g1State[g1Round] = 'no'; sBad();
+    fb('g1Fb', false, `<strong>Jawaban benar: ${correctText}</strong><br>${g1Cur.caseObj.why}`);
+  }
+  document.getElementById('g1Combo').textContent = g1Combo>0 ? `🔥 x${g1Combo}` : '💤 x0';
+  g1Round++;
+  document.getElementById('g1Round').textContent = g1Round + '/' + G1_CASES.length;
+  dots('g1Dots', G1_CASES.length, g1State);
+  const sp = document.getElementById('g1Spin');
+  sp.disabled = false;
+  if(g1Round >= G1_CASES.length){
+    sp.textContent = '🔄 Ulangi Roda Review';
+    markDone(0); sWin();
+  } else {
+    sp.textContent = '🎡 Putar Soal Berikutnya';
+  }
+}
+function g1Restart(){
+  g1Round = 0; g1Score = 0; g1Combo = 0; g1State = [];
+  setScore(0,0);
+  document.getElementById('g1Round').textContent = '0/' + G1_CASES.length;
+  document.getElementById('g1Combo').textContent = '🔥 x1';
+  document.getElementById('g1QuizBox').style.display = 'none';
+  document.getElementById('g1WheelTxt').textContent = 'Putar roda untuk menentukan multiplier & soal review!';
+  dots('g1Dots', G1_CASES.length, g1State);
+  g1DoSpin();
+}
+g1Draw();
+dots('g1Dots', G1_CASES.length, g1State);
+
+/* ══════════ G2: RAKIT ALUR ANALISIS DATA ══════════ */
+const G2_STAGES = [
+  {id:0, icon:'📥', name:'Load & Inspect', hint:'P01: read_csv, head, info'},
+  {id:1, icon:'🔎', name:'Filter & Groupby', hint:'P02: boolean filter, groupby, merge'},
+  {id:2, icon:'🧹', name:'Bersihkan & Validasi', hint:'P03: missing value, outlier, tipe data'},
+  {id:3, icon:'💡', name:'Insight & Laporan', hint:'Simpulkan temuan untuk keputusan bisnis'}
+];
+const G2_CASES = [
+  {s:'Seorang analis menjalankan pd.read_csv(\'bprs.csv\') lalu df.head() untuk memastikan data termuat dengan benar.', m:'Aktivitas: Memuat & memeriksa data pertama kali', a:0, why:'Memuat file dan memeriksa bentuk awal data (read_csv, head, info) adalah tahap Load & Inspect — fondasi P01.'},
+  {s:'Analis menjalankan df[df[\'npf_persen\'] > 5] untuk menyaring BPRS berisiko tinggi, lalu df.groupby(\'provinsi\').mean() untuk melihat rata-rata per provinsi.', m:'Aktivitas: Menyaring & mengelompokkan data', a:1, why:'Boolean filtering dan groupby adalah inti tahap Filter & Groupby — teknik utama P02.'},
+  {s:'Ditemukan 3 baris gaji kosong pada dataset; nilai tersebut diisi dengan median kategori masing-masing menggunakan groupby().transform().', m:'Aktivitas: Menangani missing values', a:2, why:'Imputasi missing value dan penanganan outlier adalah tahap Bersihkan & Validasi — fokus utama P03.'},
+  {s:'Setelah semua data rapi dan tervalidasi, tim menyusun 3 insight utama (BPRS berisiko tinggi, provinsi dengan NPF terbaik, dan tren usia lembaga) untuk dipresentasikan ke direksi.', m:'Aktivitas: Menyusun kesimpulan untuk pengambilan keputusan', a:3, why:'Merangkum temuan menjadi insight yang actionable bagi pengambil keputusan adalah tahap akhir: Insight & Laporan.'}
+];
+let g2Placed = [null,null,null,null], g2Score = 0, g2Idx = 0, g2State = [], g2Timer = null, g2Sel = null;
+function g2Reset(){
+  g2Placed = [null,null,null,null]; g2Sel = null;
+  const pool = document.getElementById('g2Pool'); pool.innerHTML = '';
+  shuffle(G2_STAGES).forEach(st=>{
+    const c = document.createElement('div');
+    c.className = 'hud-pill'; c.style.cursor = 'pointer'; c.dataset.sid = st.id;
+    c.innerHTML = `${st.icon} ${st.name}`;
+    c.onclick = ()=>{
+      if(c.style.opacity === '0.3') return;
+      document.querySelectorAll('#g2Pool .hud-pill').forEach(x=>x.style.outline='');
+      if(g2Sel === st.id){ g2Sel = null; c.style.outline=''; }
+      else { g2Sel = st.id; c.style.outline = '2px solid #F97316'; sFlip(); }
+    };
+    pool.appendChild(c);
+  });
+  g2Paint();
+}
+function g2Paint(){
+  const slots = document.getElementById('g2Slots'); slots.innerHTML = '';
+  for(let i=0;i<4;i++){
+    const s = document.createElement('div');
+    s.className = 'qbox'; s.style.textAlign = 'center'; s.style.cursor = 'pointer'; s.style.padding='12px';
+    const sid = g2Placed[i];
+    if(sid === null){
+      s.innerHTML = `<div style="font-size:11px;color:var(--txl)">URUTAN ${i+1}</div><div style="font-size:12px;color:var(--txm)">Klik kartu, lalu klik di sini</div>`;
+      s.onclick = ()=>{
+        if(g2Sel === null) return;
+        g2Placed = g2Placed.map(v=>v===g2Sel?null:v);
+        g2Placed[i] = g2Sel; g2Sel = null; sFlip(); g2Reset2Paint();
+      };
+    } else {
+      s.innerHTML = `<div style="font-size:11px;color:#30D8E0">URUTAN ${i+1}</div><div style="font-weight:700">${G2_STAGES[sid].icon} ${G2_STAGES[sid].name}</div>`;
+      s.onclick = ()=>{ g2Placed[i] = null; g2Reset2Paint(); };
+    }
+    slots.appendChild(s);
+  }
+  document.querySelectorAll('#g2Pool .hud-pill').forEach(c=>{
+    const used = g2Placed.indexOf(parseInt(c.dataset.sid,10)) >= 0;
+    c.style.opacity = used ? '0.3' : '1';
+  });
+  document.getElementById('g2Check').disabled = g2Placed.includes(null);
+}
+function g2Reset2Paint(){ g2Paint(); }
+function g2Check(){
+  let ok = g2Placed.every((v,i)=>v===i);
+  if(ok){
+    g2Score += 300; setScore(1, g2Score); sGood();
+    fb('g2Fb', true, '<strong>✅ Urutan tepat! +300 poin</strong><br>Load & Inspect → Filter & Groupby → Bersihkan & Validasi → Insight & Laporan. Lanjut ke Babak 2 (Pengenalan Skenario).');
+    setTimeout(()=>{
+      document.getElementById('g2Part1').style.display = 'none';
+      document.getElementById('g2Part2').style.display = 'block';
+      document.getElementById('g2Stage').textContent = 'Babak 2/2 · Kenali tahap dari skenario nyata';
+      g2Idx = 0; g2Render();
+    }, 1800);
+  } else {
+    sBad(); fb('g2Fb', false, 'Urutan belum tepat. Ingat: mulai dari memuat data, lalu menyaring/mengelompokkan, lalu membersihkan, baru menyimpulkan insight.');
+  }
+}
+function g2Render(){
+  const c = G2_CASES[g2Idx];
+  g2State[g2Idx] = 'now';
+  dots('g2Dots', G2_CASES.length, g2State);
+  document.getElementById('g2Tag').textContent = `SKENARIO ${g2Idx+1}/${G2_CASES.length}`;
+  document.getElementById('g2Scenario').textContent = c.s;
+  document.getElementById('g2Meta').textContent = c.m;
+  const box = document.getElementById('g2Opts'); box.innerHTML = '';
+  G2_STAGES.forEach((st,i)=>{
+    const b = document.createElement('button');
+    b.className = 'opt-btn';
+    b.innerHTML = `<span class="okey">${'ABCD'[i]}</span><span>${st.icon} ${st.name}</span>`;
+    b.onclick = ()=>g2Answer(st.id, b);
+    box.appendChild(b);
+  });
+  if(g2Timer) g2Timer.stop();
+  g2Timer = mkTimer('g2Time', 20, null, ()=>g2Answer(-1,null));
+}
+function g2Answer(sid, btn){
+  if(g2Timer) g2Timer.stop();
+  const c = G2_CASES[g2Idx], ok = sid === c.a;
+  document.querySelectorAll('#g2Opts .opt-btn').forEach((b,i)=>{
+    b.disabled = true; if(i === c.a) b.classList.add('correct');
+  });
+  if(btn && !ok) btn.classList.add('wrong');
+  if(ok){
+    g2Score += 100; g2State[g2Idx] = 'ok';
+    setScore(1, g2Score); sGood();
+    fb('g2Fb2', true, `<strong>🎉 Tepat! +100 poin</strong><br>${c.why}`);
+  } else {
+    g2State[g2Idx] = 'no'; sBad();
+    fb('g2Fb2', false, `<strong>Jawaban benar: ${G2_STAGES[c.a].name}.</strong><br>${c.why}`);
+  }
+  dots('g2Dots', G2_CASES.length, g2State);
+  setTimeout(()=>{
+    g2Idx++;
+    if(g2Idx < G2_CASES.length) g2Render();
+    else { markDone(1); sWin(); fb('g2Fb2', true, `<strong>🏁 Alur Analisis Data tuntas! Total ${g2Score} poin.</strong>`); }
+  }, 2200);
+}
+g2Reset();
+
+/* ══════════ G3: KARTU MEMORI FUNGSI PANDAS ══════════ */
+const G3_PAIRS = [
+  {t:'pd.read_csv()', d:'Memuat file CSV menjadi DataFrame'},
+  {t:'df.head()', d:'Menampilkan beberapa baris pertama data'},
+  {t:'df.info()', d:'Ringkasan tipe data & jumlah non-null tiap kolom'},
+  {t:'df.describe()', d:'Statistik ringkas kolom numerik (mean, std, dll)'},
+  {t:'df.loc[]', d:'Mengakses baris/kolom berdasarkan label'},
+  {t:'df.groupby()', d:'Mengelompokkan data berdasarkan kategori'},
+  {t:'df.merge()', d:'Menggabungkan dua DataFrame berdasarkan kunci'},
+  {t:'df.apply(lambda)', d:'Menerapkan fungsi kustom ke tiap baris/kolom'}
+];
+let g3Deck = [], g3Open = [], g3Match = 0, g3Score = 0, g3Timer = null, g3Tries = 0, g3Lock = false;
+function g3Start(){
+  g3Match = 0; g3Tries = 0; g3Score = 0; g3Open = []; g3Lock = false;
+  setScore(2,0);
+  document.getElementById('g3Pairs').textContent = '0/8';
+  document.getElementById('g3StartBtn').textContent = '🔄 Kocok Ulang Kartu';
+  fbHide('g3Fb');
+  g3Deck = shuffle(G3_PAIRS.flatMap((p,i)=>[{pid:i,kind:'term',txt:p.t},{pid:i,kind:'def',txt:p.d}]));
+  const grid = document.getElementById('g3Grid'); grid.innerHTML = '';
+  g3Deck.forEach((c,i)=>{
+    const el = document.createElement('div');
+    el.className = 'mem-card';
+    el.innerHTML = `<div class="mem-inner"><div class="mem-face mem-back">🐼</div><div class="mem-face mem-front">${c.txt}</div></div>`;
+    el.onclick = ()=>g3Flip(i, el);
+    grid.appendChild(el);
+  });
+  if(g3Timer) g3Timer.stop();
+  g3Timer = mkTimer('g3Time', 130, null, ()=>g3End(false));
+}
+function g3Flip(i, el){
+  if(g3Lock || el.classList.contains('flip') || el.classList.contains('matched')) return;
+  el.classList.add('flip'); sFlip();
+  g3Open.push({i, el});
+  if(g3Open.length < 2) return;
+  g3Lock = true; g3Tries++;
+  const [a,b] = g3Open;
+  const ca = g3Deck[a.i], cb = g3Deck[b.i];
+  if(ca.pid === cb.pid && ca.kind !== cb.kind){
+    setTimeout(()=>{
+      a.el.classList.add('matched'); b.el.classList.add('matched');
+      g3Match++;
+      document.getElementById('g3Pairs').textContent = g3Match + '/8';
+      g3Score += 70; setScore(2, g3Score); sGood();
+      fb('g3Fb', true, `<strong>✅ Pasangan ke-${g3Match}! +70 poin</strong><br><code>${G3_PAIRS[ca.pid].t}</code> — ${G3_PAIRS[ca.pid].d}`);
+      g3Open = []; g3Lock = false;
+      if(g3Match === 8) g3End(true);
+    }, 420);
+  } else {
+    setTimeout(()=>{
+      a.el.classList.remove('flip'); b.el.classList.remove('flip');
+      g3Open = []; g3Lock = false; sBad();
+    }, 900);
+  }
+}
+function g3End(won){
+  if(g3Timer) g3Timer.stop();
+  document.getElementById('g3Time').textContent = won ? '⏱ ✓' : '⏱ 0s';
+  if(won){
+    const bonus = Math.max(0, 120 - Math.max(0,(g3Tries-8))*10);
+    g3Score += bonus; setScore(2, g3Score);
+    markDone(2); sWin();
+    fb('g3Fb', true, `<strong>🏁 Semua 8 pasangan terbuka! Total ${g3Score} poin.</strong><br>Bonus efisiensi +${bonus} (${g3Tries} percobaan).`);
+  } else {
+    fb('g3Fb', false, `<strong>⏱ Waktu habis!</strong> Baru ${g3Match} dari 8 pasangan terbuka. Klik "Kocok Ulang Kartu" untuk coba lagi.`);
+    sBad();
+  }
+}
+
+/* ══════════ G4: DETEKTIF DATA KOTOR ══════════ */
+const G4_CASES = [
+  {s:'Kolom customer_rating kosong pada 7 dari 100 baris transaksi e-commerce.', m:'Dataset: e-commerce dirty (P03)', a:0, why:'Nilai yang tidak terisi sama sekali pada beberapa baris adalah ciri khas Missing Value — butuh strategi dropna/fillna.'},
+  {s:'Kolom quantity pada satu baris tertulis 99, padahal rentang wajar pembelian retail biasanya 1–10.', m:'Dataset: e-commerce dirty (P03)', a:1, why:'Nilai yang jauh menyimpang dari pola mayoritas data adalah ciri Outlier — dideteksi dengan metode IQR atau Z-score.'},
+  {s:'Baris ke-17 dan ke-34 pada dataset transaksi memiliki order_id, tanggal, dan semua kolom yang identik persis.', m:'Dataset: e-commerce dirty (P03)', a:2, why:'Baris yang terekam dua kali secara identik adalah ciri khas Duplikat — ditangani dengan drop_duplicates().'},
+  {s:'Kolom price_raw tersimpan sebagai teks "Rp 195.000" alih-alih angka murni, sehingga tidak bisa dijumlahkan langsung.', m:'Dataset: e-commerce dirty (P03)', a:3, why:'Data yang terbaca sebagai string padahal seharusnya numerik adalah Tipe Data Salah — butuh fungsi pembersih & casting ke float.'},
+  {s:'Beberapa baris pada kolom order_date tertulis "INVALID_DATE" alih-alih format tanggal yang valid.', m:'Dataset: e-commerce dirty (P03)', a:3, why:'Format tanggal yang rusak/tidak terbaca adalah Tipe Data Salah — ditangani dengan pd.to_datetime(errors=\'coerce\').'},
+  {s:'Nilai customer_rating pada satu baris tertulis -1, padahal rentang rating yang sah hanya 1 sampai 5.', m:'Dataset: e-commerce dirty (P03)', a:1, why:'Nilai di luar rentang logis/wajar (bahkan negatif) adalah Outlier/nilai tidak valid — perlu difilter lalu diimputasi.'},
+  {s:'Kolom shipping_cost kosong (NaN) untuk 9 dari 105 baris transaksi.', m:'Dataset: e-commerce dirty (P03)', a:0, why:'Sel yang benar-benar kosong tanpa nilai apapun adalah Missing Value klasik.'},
+  {s:'Gaji karyawan rata-rata Rp 5 juta, tapi satu baris eksekutif tertulis Rp 250 juta — nilai sah namun ekstrem.', m:'Konteks: Kasus review statistik P03', a:1, why:'Nilai ekstrem namun tetap valid/mungkin benar adalah Outlier — bukan data salah, tapi perlu penanganan statistik khusus (gunakan median, bukan mean).'}
+];
+const G4_LABELS = ['🕳️ Missing Value','📈 Outlier','👯 Duplikat','🔤 Tipe Data Salah'];
+let g4Idx = 0, g4Score = 0, g4State = [], g4Timer = null;
+function g4Start(){
+  g4Idx = 0; g4Score = 0; g4State = [];
+  setScore(3,0);
+  document.getElementById('g4StartBtn').textContent = '🔄 Ulangi Patroli';
+  document.getElementById('g4QuizBox').style.display = 'block';
+  g4Render();
+}
+function g4Render(){
+  const c = G4_CASES[g4Idx];
+  g4State[g4Idx] = 'now';
+  dots('g4Dots', G4_CASES.length, g4State);
+  document.getElementById('g4Tag').textContent = `KASUS ${g4Idx+1}/${G4_CASES.length} · ${c.m}`;
+  document.getElementById('g4Scenario').textContent = c.s;
+  document.getElementById('g4Meta').textContent = 'Jenis masalah data apakah ini?';
+  fbHide('g4Fb');
+  const box = document.getElementById('g4Opts'); box.innerHTML = '';
+  G4_LABELS.forEach((lbl,i)=>{
+    const b = document.createElement('button');
+    b.className = 'opt-btn';
+    b.innerHTML = `<span class="okey">${'ABCD'[i]}</span><span>${lbl}</span>`;
+    b.onclick = ()=>g4Answer(i, b);
+    box.appendChild(b);
+  });
+  if(g4Timer) g4Timer.stop();
+  g4Timer = mkTimer('g4Time', 18, null, ()=>g4Answer(-1,null));
+}
+function g4Answer(ai, btn){
+  if(g4Timer) g4Timer.stop();
+  const c = G4_CASES[g4Idx], ok = ai === c.a, left = g4Timer ? Math.max(0,g4Timer.left()) : 0;
+  document.querySelectorAll('#g4Opts .opt-btn').forEach((b,i)=>{
+    b.disabled = true; if(i === c.a) b.classList.add('correct');
+  });
+  if(btn && !ok) btn.classList.add('wrong');
+  if(ok){
+    const pts = 80 + left*2;
+    g4Score += pts; g4State[g4Idx] = 'ok';
+    setScore(3, g4Score); sGood();
+    fb('g4Fb', true, `<strong>🎯 Diagnosis tepat! +${pts} poin</strong><br>${c.why}`);
+  } else {
+    g4State[g4Idx] = 'no'; sBad();
+    fb('g4Fb', false, `<strong>Jawaban benar: ${G4_LABELS[c.a]}.</strong><br>${c.why}`);
+  }
+  document.getElementById('g4Round').textContent = (g4Idx+1) + '/' + G4_CASES.length;
+  dots('g4Dots', G4_CASES.length, g4State);
+  setTimeout(()=>{
+    g4Idx++;
+    if(g4Idx < G4_CASES.length) g4Render();
+    else {
+      const benar = g4State.filter(s=>s==='ok').length;
+      markDone(3); sWin();
+      fb('g4Fb', true, `<strong>🏁 Patroli Detektif tuntas! ${benar}/${G4_CASES.length} benar, total ${g4Score} poin.</strong>`);
+      document.getElementById('g4Time').textContent = '⏱ —';
+    }
+  }, 2400);
+}
+
+/* ══════════ PAPAN SKOR ══════════ */
+function sbRender(){
+  const grid = document.getElementById('sbGrid'); if(!grid) return;
+  grid.innerHTML = GAMES.map(g=>`
+    <div style="background:#061218;border:1px solid var(--bd);border-left:4px solid ${g.color};padding:12px;border-radius:8px">
+      <div style="font-size:12.5px;color:var(--txm)">${finished[g.id]?'✅ Selesai':'⏳ Belum'}</div>
+      <div style="font-weight:700;font-size:14px;color:#fff">${g.name}</div>
+      <div style="font-family:'Source Code Pro',monospace;font-size:18px;color:#30D8E0;margin-top:4px">${scores[g.id]} <span style="font-size:12px;color:var(--txl)">/ ${g.max}</span></div>
+    </div>`).join('');
+  const total = scores.reduce((a,b)=>a+b,0);
+  document.getElementById('sbTotal').textContent = total;
+  const done = finished.filter(Boolean).length;
+  let rank = done < 4 ? `${done}/4 Game Selesai` : (total >= 2800 ? '🥇 Juara Outing Class ADA' : total >= 1800 ? '🥈 Analis Data Andal' : '🥉 Peserta Aktif Outing Class');
+  document.getElementById('sbRank').textContent = rank;
+}
+
+/* ══════════ RODA TANTANGAN (FORFEIT WHEEL) ══════════ */
+const FORFEIT_LIST = [
+  {icon:'🎤', title:'News Anchor Data', desc:'Laporkan salah satu insight dataset BPRS dengan gaya pembaca berita heboh selama 30 detik di depan kelompok!'},
+  {icon:'📜', title:"Baca Ayat Iqra'", desc:"Bacakan QS. Al-'Alaq: 1 dan jelaskan 1 kalimat bagaimana perintah 'membaca' relevan dengan membaca data di Python!"},
+  {icon:'🎭', title:'Pantomim Bug Python', desc:'Peragakan ekspresi programmer saat menemukan error di Colab tanpa suara, sampai teman kelompok menebak!'},
+  {icon:'🤝', title:'Apresiasi Sang Juara', desc:'Berikan 3 kalimat apresiasi tulus ke peserta yang sedang memimpin klasemen outing class hari ini!'},
+  {icon:'💡', title:'Insight Kilat 3 Poin', desc:'Sebutkan 3 hal paling berkesan yang kamu pelajari dari Pertemuan 01–03 ADA secara lantang dan jelas!'},
+  {icon:'🔍', title:'Tebak Fungsi Misterius', desc:'Minta satu teman menyebutkan 1 output pandas (tanpa nama fungsi), kamu harus menebak fungsi penyebabnya!'},
+  {icon:'⚡', title:'Pantun Data Spontan', desc:'Buat 1 bait pantun jenaka bertema Python, pandas, atau data analytics secara spontan!'},
+  {icon:'🧋', title:'Kenalan & Networking', desc:'Ajak 1 teman yang belum akrab untuk berkenalan dan ceritakan progress belajar ADA-mu selama 1 menit!'}
+];
+let forfeitWheelAngle = 0, forfeitSpinning = false, forfeitTimerH = null;
+function openForfeitModal(){ document.getElementById('modalPunishment').classList.add('show'); drawForfeitWheel(); }
+function closeForfeitModal(){ document.getElementById('modalPunishment').classList.remove('show'); if(forfeitTimerH) clearInterval(forfeitTimerH); }
+function drawForfeitWheel(){
+  const cv = document.getElementById('forfeitWheelCanvas'); if(!cv) return;
+  const ctx = cv.getContext('2d'), N = FORFEIT_LIST.length;
+  const cx = cv.width/2, cy = cv.height/2, R = cx - 6, seg = (Math.PI*2)/N;
+  const cols = ['#C03818','#20C8D0','#7040B0','#1F9060','#D46020','#2A50B0','#0F766E','#B45309'];
+  ctx.clearRect(0,0,cv.width,cv.height);
+  for(let i=0;i<N;i++){
+    const a0 = forfeitWheelAngle + i*seg, a1 = a0 + seg;
+    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,R,a0,a1); ctx.closePath();
+    ctx.fillStyle = cols[i % cols.length]; ctx.fill();
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.save();
+    ctx.translate(cx,cy); ctx.rotate(a0 + seg/2);
+    ctx.textAlign = 'right'; ctx.fillStyle = '#fff';
+    ctx.font = '700 10.5px sans-serif';
+    ctx.fillText(FORFEIT_LIST[i].title.split(' ')[0], R-16, 0);
+    ctx.font = '14px sans-serif';
+    ctx.fillText(FORFEIT_LIST[i].icon, R-2, 0);
+    ctx.restore();
+  }
+}
+function spinForfeitWheel(){
+  if(forfeitSpinning) return;
+  forfeitSpinning = true;
+  document.getElementById('btnSpinForfeit').disabled = true;
+  document.getElementById('forfeitWheelTxt').textContent = 'Roda berputar menentukan tantangan…';
+  const dur = 3000 + Math.random()*500;
+  const target = forfeitWheelAngle + Math.PI*2*(5 + Math.random()*3);
+  const start = forfeitWheelAngle, t0 = performance.now();
+  let lastSeg = -1;
+  (function anim(now){
+    const p = Math.min(1,(now-t0)/dur);
+    const e = 1 - Math.pow(1-p, 3.2);
+    forfeitWheelAngle = start + (target-start)*e;
+    drawForfeitWheel();
+    const N = FORFEIT_LIST.length, seg = (Math.PI*2)/N;
+    let a = (-Math.PI/2 - forfeitWheelAngle) % (Math.PI*2); if(a<0) a += Math.PI*2;
+    const s = Math.floor(a/seg) % N;
+    if(s !== lastSeg){ lastSeg = s; if(p < .95) playTone(460+s*30,'square',.03,.05); }
+    if(p < 1) requestAnimationFrame(anim);
+    else {
+      forfeitSpinning = false;
+      document.getElementById('btnSpinForfeit').disabled = false;
+      const f = FORFEIT_LIST[s];
+      document.getElementById('forfeitWheelTxt').innerHTML = `🎯 Terpilih: <strong>${f.icon} ${f.title}</strong>`;
+      document.getElementById('activeForfeitBox').style.display = 'block';
+      document.getElementById('activeForfeitTitle').textContent = `${f.icon} ${f.title}`;
+      document.getElementById('activeForfeitDetail').textContent = f.desc;
+    }
+  })(t0);
+}
+function startForfeitTimer(sec){
+  if(forfeitTimerH) clearInterval(forfeitTimerH);
+  let left = sec || 30;
+  const el = document.getElementById('forfeitTimerTxt');
+  el.textContent = left + 's';
+  forfeitTimerH = setInterval(()=>{
+    left--;
+    el.textContent = Math.max(0,left) + 's';
+    if(left <= 0){ clearInterval(forfeitTimerH); playTone(880,'triangle',.3); el.textContent = 'Waktu Habis!'; }
+  },1000);
+}
+function completeForfeit(){
+  scores[0] += 50; setScore(0, scores[0]); sWin();
+  alert('🎉 LUAR BIASA! Bonus +50 Poin Sportivitas berhasil ditambahkan ke skormu!');
+  closeForfeitModal();
+}
+
+/* ══════════ LEADERBOARD (TANPA FILTER KELAS — ADA SATU KELAS GABUNGAN) ══════════ */
+let rawLeaderboardData = [];
+function openLeaderboardModal(){ document.getElementById('modalLeaderboard').classList.add('show'); }
+function closeLeaderboardModal(){ document.getElementById('modalLeaderboard').classList.remove('show'); }
+
+function renderLeaderboard(players){
+  rawLeaderboardData = players || [];
+  const box = document.getElementById('leaderboardList');
+  if(!box) return;
+
+  const isDosen = window.isDosenUser && window.isDosenUser(window.currentStudent);
+  const myNim = (window.currentStudent && window.currentStudent.nim) || localStorage.getItem('tazkia_student_nim') || '';
+  const myName = (window.currentStudent && window.currentStudent.nama) || localStorage.getItem('tazkia_student_nama') || 'Anda';
+
+  const validPlayers = (players || []).filter(p => {
+    if (window.isDosenUser && window.isDosenUser(p)) return false;
+    if (p.nim === '0206015' || /dewi\s*febriani|dosen/i.test(p.nama || '')) return false;
+    if (window.findStudentByNim && p.nim) {
+      const s = window.findStudentByNim(p.nim);
+      if (s && s.courses && !s.courses.includes('ADA')) return false;
+    }
+    return true;
+  });
+
+  const sorted = [...validPlayers].sort((a,b)=>(b.score||0)-(a.score||0));
+
+  if (isDosen) {
+    const hud = document.getElementById('hudRank');
+    if (hud) hud.textContent = 'Dosen 🎓';
+  } else {
+    const myRank = sorted.findIndex(p => (myNim && p.nim === myNim) || p.nama === myName) + 1;
+    const hud = document.getElementById('hudRank');
+    if (hud) hud.textContent = myRank > 0 ? `#${myRank}` : '#—';
+  }
+
+  if(!sorted.length){
+    box.innerHTML = isDosen
+      ? `<div style="background:rgba(32,200,208,.12);border:1px solid rgba(32,200,208,.3);padding:10px 14px;border-radius:8px;font-size:12px;color:var(--pri);text-align:center">🎓 <strong>Mode Dosen / Pengawas:</strong> Skor Anda tidak ditampilkan di klasemen mahasiswa.</div><div style="text-align:center;color:var(--txl);padding:16px 0">Belum ada data skor outing class.</div>`
+      : `<div style="text-align:center;color:var(--txl);padding:16px 0">Belum ada data klasemen. Mulai main untuk menjadi yang pertama!</div>`;
+    return;
+  }
+
+  let html = '';
+  if (isDosen) {
+    html += `<div style="background:rgba(32,200,208,.12);border:1px solid rgba(32,200,208,.3);padding:10px 14px;border-radius:8px;font-size:12.5px;color:var(--pri);margin-bottom:12px;text-align:center">
+      🎓 <strong>Mode Dosen / Pengawas:</strong> Skor Anda tidak dipublikasikan ke papan klasemen mahasiswa.
+    </div>`;
+  }
+
+  html += sorted.slice(0,20).map((p,i)=>{
+    const isMe = !isDosen && ((myNim && p.nim === myNim) || (p.nama === myName));
+    const pScore = p.score || 0;
+    let doneGames = 1;
+    if (p.gameScores && Array.isArray(p.gameScores)) {
+      doneGames = p.gameScores.filter(s => s > 0).length || 1;
+    } else if (p.round) {
+      doneGames = p.round;
+    }
+    return `
+    <div style="background:#061218;border:1px solid ${isMe ? '#F97316' : 'var(--bd)'};padding:10px 14px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;${isMe ? 'box-shadow:0 0 12px rgba(249,115,22,.2);background:rgba(249,115,22,.04)' : ''}">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-weight:800;font-size:16px;width:24px;text-align:center">${['🥇','🥈','🥉'][i]||(i+1)+'.'}</span>
+        <div>
+          <div style="font-weight:700;color:#fff;display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+            ${p.nama||'Mahasiswa'}
+            ${isMe ? '<span style="font-size:10px;background:#F97316;color:#fff;padding:1px 6px;border-radius:4px;font-weight:800">ANDA</span>' : ''}
+          </div>
+          <div style="font-size:11px;color:var(--txm);margin-top:2px">
+            NIM: ${p.nim||'-'} · <span style="color:#30D8E0;font-weight:600">🎮 ${doneGames}/4 Game Selesai</span>
+          </div>
+        </div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-family:'Source Code Pro',monospace;font-weight:700;font-size:15px;color:#30D8E0">${pScore} pts</div>
+        <div style="font-size:10.5px;color:var(--txl)">Total Akumulasi</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  box.innerHTML = html;
+}
+
+function triggerManualSync(){
+  const total = scores.reduce((a,b)=>a+b,0);
+  const done = finished.filter(Boolean).length;
+  if(window.RealtimeGameEngine){
+    RealtimeGameEngine.submitPlayerScore(total, 1, done, [...scores]);
+  }
+  sGood();
+  alert(`☁️ Skor total (${total} pts) berhasil diperbarui!`);
+}
+
+if(window.RealtimeGameEngine){
+  RealtimeGameEngine.joinRoom('ADA-ARENA-P04');
+  RealtimeGameEngine.listenLeaderboard(players=>renderLeaderboard(players), 'ADA-ARENA-P04');
+}
+
+sbRender();
+</script>
+</body>
+</html>
