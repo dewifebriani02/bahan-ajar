@@ -526,12 +526,14 @@ const GAMES = [
   {id:2,name:'Kartu Memori Fungsi Pandas',max:800,color:'#1F9060'},
   {id:3,name:'Detektif Data Kotor',max:800,color:'#7040B0'}
 ];
-const scores = [0,0,0,0], finished = [false,false,false,false];
+const scores = [0,0,0,0], finished = [false,false,false,false], submitted = [false,false,false,false];
 
 function setScore(g, val){
-  scores[g] = val;
+  // Hard cap: a game can never report more than its own stated max (prevents >100% scores
+  // from stacking multipliers/time bonuses across RNG-favorable rounds).
+  scores[g] = Math.max(0, Math.min(val, GAMES[g].max));
   const el = document.getElementById('g'+(g+1)+'Score');
-  if(el) el.textContent = val;
+  if(el) el.textContent = scores[g];
   const total = scores.reduce((a,b)=>a+b,0);
   const gt = document.getElementById('grandTotal');
   if(gt) gt.textContent = total;
@@ -542,6 +544,11 @@ function setScore(g, val){
 }
 function markDone(g){
   finished[g] = true;
+  // Only the FIRST completion of each game is recorded to the gradebook. Replaying (for
+  // practice) keeps updating the live in-page score, but never creates duplicate quiz
+  // entries — so the leaderboard always shows exactly one row per student per game.
+  if(submitted[g]) { sbRender(); return; }
+  submitted[g] = true;
   if(window.saveScoreToCloud){
     saveScoreToCloud('ADA Outing Class (Review P01-P03)', GAMES[g].name, scores[g], GAMES[g].max);
   }
