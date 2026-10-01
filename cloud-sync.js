@@ -869,6 +869,26 @@ window.RealtimeGameEngine = {
     });
   },
 
+  // Dosen-only: wipe every player document in a room's leaderboard (e.g. to clear data
+  // left behind by the old cross-room migration bug, or to reset a room before a new session).
+  resetRoom: function (roomId, onDone) {
+    if (!isDosenUser(currentStudent)) {
+      console.warn("resetRoom: hanya dosen yang dapat mereset klasemen.");
+      return;
+    }
+    const targetRoom = roomId || this.getEffectiveRoomId();
+    window.onCloudSyncReady(dbInstance => {
+      dbInstance.collection('games').doc(targetRoom).collection('players').get()
+        .then(snap => {
+          const batch = dbInstance.batch();
+          snap.forEach(d => batch.delete(d.ref));
+          return batch.commit();
+        })
+        .then(() => { console.log(`✓ Klasemen room ${targetRoom} berhasil direset.`); if (onDone) onDone(null); })
+        .catch(err => { console.error("Error resetting room:", err); if (onDone) onDone(err); });
+    });
+  },
+
   // Listen to Top Players Realtime Leaderboard
   listenLeaderboard: function (onLeaderboardChange, customRoomId) {
     const roomId = this.getEffectiveRoomId(customRoomId);
@@ -909,27 +929,12 @@ window.RealtimeGameEngine = {
         }
       };
 
-      // 1. Fetch & Auto-migrate historical scores from legacy BMT-ARENA-02 if running in dedicated room
-      if (roomId !== 'BMT-ARENA-02') {
-        dbInstance.collection('games').doc('BMT-ARENA-02').collection('players').get().then(snap => {
-          snap.forEach(d => {
-            const data = d.data();
-            if (data && data.nim && !isDosenUser(data) && data.nim !== '0206015') {
-              handleDoc(d);
-              // Migrate to dedicated room in background
-              const student = findStudentByNim(data.nim);
-              const info = detectCurrentCourseInfo();
-              const courseCode = (info && info.code) || 'AIS';
-              if (student && student.courses && (student.courses.includes(courseCode) || (courseCode === 'AIS' && student.courses.includes('SIA')))) {
-                dbInstance.collection('games').doc(roomId).collection('players').doc(data.nim).set(data, { merge: true }).catch(()=>{});
-              }
-            }
-          });
-          emitPlayers();
-        }).catch(()=>{});
-      }
-
-      // 2. Realtime listener on dedicated room
+      // Realtime listener on dedicated room
+      // (A one-time legacy migration from the old BMT-ARENA-02 room used to run here on every
+      // listenLeaderboard() call. It copied players into whichever room asked, regardless of
+      // course, and even wrote that stale data permanently into the new room's Firestore
+      // collection — polluting every fresh leaderboard with scores from games those students
+      // never played. Removed; each room now only ever shows players who actually joined it.)
       this.leaderboardUnsubscribe = dbInstance.collection('games').doc(roomId).collection('players')
         .orderBy('score', 'desc')
         .limit(100)

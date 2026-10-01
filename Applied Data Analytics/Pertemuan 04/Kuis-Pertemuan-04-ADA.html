@@ -442,6 +442,9 @@ body{
       <button class="modal-close" onclick="closeLeaderboardModal()">✕</button>
     </div>
     <div class="modal-body">
+      <div id="dosenResetRow" style="display:none;margin-bottom:12px;text-align:right">
+        <button class="hud-pill" style="cursor:pointer;background:rgba(239,68,68,.15);border-color:rgba(239,68,68,.4);color:#FCA5A5" onclick="resetLeaderboardRoom()">🗑️ Reset Klasemen Room Ini</button>
+      </div>
       <div id="leaderboardList" style="display:grid;gap:8px">
         <div style="color:var(--txl);font-size:12.5px;text-align:center;padding:16px 0">Memuat klasemen real-time...</div>
       </div>
@@ -1124,7 +1127,21 @@ function completeForfeit(){
 
 /* ══════════ LEADERBOARD (TANPA FILTER KELAS — ADA SATU KELAS GABUNGAN) ══════════ */
 let rawLeaderboardData = [];
-function openLeaderboardModal(){ document.getElementById('modalLeaderboard').classList.add('show'); }
+function openLeaderboardModal(){
+  document.getElementById('modalLeaderboard').classList.add('show');
+  const row = document.getElementById('dosenResetRow');
+  if(row) row.style.display = (window.isDosenUser && window.isDosenUser(window.currentStudent)) ? 'block' : 'none';
+}
+function resetLeaderboardRoom(){
+  if(!window.isDosenUser || !window.isDosenUser(window.currentStudent)){ return; }
+  if(!confirm('Hapus SEMUA skor di klasemen room "ADA-ARENA-P04"? Tindakan ini tidak bisa dibatalkan.')) return;
+  if(window.RealtimeGameEngine && window.RealtimeGameEngine.resetRoom){
+    RealtimeGameEngine.resetRoom('ADA-ARENA-P04', (err)=>{
+      if(err){ alert('Gagal mereset klasemen: '+err.message); }
+      else { alert('✅ Klasemen room ADA-ARENA-P04 berhasil dikosongkan.'); }
+    });
+  }
+}
 function closeLeaderboardModal(){ document.getElementById('modalLeaderboard').classList.remove('show'); }
 
 function renderLeaderboard(players){
