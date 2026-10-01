@@ -455,16 +455,17 @@ body{
 
 <!-- QUIZ LEADERBOARD MODAL (gradebook-sourced, tidak digabung dengan game lain) -->
 <div id="modalQuizLeaderboard" class="modal-overlay" onclick="if(event.target===this) closeQuizLeaderboardModal()">
-  <div class="modal-box" style="max-width:560px">
+  <div class="modal-box" style="max-width:600px">
     <div class="modal-hd">
       <div>
         <h3 class="modal-title">📋 Klasemen P04 (Rekap Kuis)</h3>
-        <div style="font-size:11.5px;color:var(--txm)">Diambil langsung dari gradebook — khusus kuis "ADA Outing Class (Review P01-P03)", tidak digabung dengan pertemuan lain</div>
+        <div style="font-size:11.5px;color:var(--txm)">Dari gradebook, per game — tiap mahasiswa dihitung sekali (skor terbaik), khusus kuis "ADA Outing Class (Review P01-P03)"</div>
       </div>
       <button class="modal-close" onclick="closeQuizLeaderboardModal()">✕</button>
     </div>
     <div class="modal-body">
-      <div id="quizLeaderboardList" style="display:grid;gap:10px">
+      <div id="quizGameTabs" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px"></div>
+      <div id="quizLeaderboardList" style="display:grid;gap:8px">
         <div style="color:var(--txl);font-size:12.5px;text-align:center;padding:16px 0">Memuat rekap kuis P04...</div>
       </div>
     </div>
@@ -1173,9 +1174,12 @@ function closeLeaderboardModal(){ document.getElementById('modalLeaderboard').cl
 /* ══════════ KLASEMEN P04 — BERSUMBER DARI GRADEBOOK ('quiz' COLLECTION), PER-GAME, TIDAK DIGABUNG ══════════ */
 const QUIZ_PERTEMUAN_LABEL = 'ADA Outing Class (Review P01-P03)';
 let quizLeaderboardUnsub = null;
+let quizRawRows = [];
+let quizActiveTab = 0; // index into GAMES; which per-game ranking is showing
 
 function openQuizLeaderboardModal(){
   document.getElementById('modalQuizLeaderboard').classList.add('show');
+  renderQuizTabs();
   if(quizLeaderboardUnsub) return; // listener already attached, just show cached render
   if(!window.onCloudSyncReady) return;
   window.onCloudSyncReady(dbInstance=>{
@@ -1190,7 +1194,8 @@ function openQuizLeaderboardModal(){
           if(d.nim === '0206015' || /dewi\s*febriani|dosen/i.test(d.nama||'')) return; // never show dosen
           rows.push(d);
         });
-        renderQuizLeaderboard(rows);
+        quizRawRows = rows;
+        renderQuizLeaderboard();
       }, err=>{
         console.error('Error listening quiz leaderboard:', err);
         document.getElementById('quizLeaderboardList').innerHTML =
@@ -1200,46 +1205,66 @@ function openQuizLeaderboardModal(){
 }
 function closeQuizLeaderboardModal(){ document.getElementById('modalQuizLeaderboard').classList.remove('show'); }
 
-function renderQuizLeaderboard(rows){
+function renderQuizTabs(){
+  const tabBox = document.getElementById('quizGameTabs');
+  if(!tabBox) return;
+  tabBox.innerHTML = GAMES.map((g,i)=>{
+    const active = i===quizActiveTab;
+    const short = { 'Roda Review Python & Data':'🎡 Roda Review', 'Rakit Alur Analisis Data':'🔄 Rakit Alur', 'Kartu Memori Fungsi Pandas':'🃏 Kartu Memori', 'Detektif Data Kotor':'🧹 Detektif' }[g.name] || g.name;
+    return `<button class="hud-pill" style="cursor:pointer;${active
+        ? 'background:linear-gradient(135deg,rgba(32,200,208,.35),rgba(14,122,130,.25));border-color:#30D8E0;color:#fff;font-weight:800'
+        : 'background:var(--sf2);border-color:var(--bd);color:var(--txm)'}"
+      onclick="setQuizTab(${i})">${short}</button>`;
+  }).join('');
+}
+function setQuizTab(i){ quizActiveTab = i; renderQuizTabs(); renderQuizLeaderboard(); }
+
+function renderQuizLeaderboard(){
   const box = document.getElementById('quizLeaderboardList');
   if(!box) return;
-  if(!rows.length){
-    box.innerHTML = '<div style="color:var(--txl);font-size:12.5px;text-align:center;padding:16px 0">Belum ada kuis P04 yang tercatat di gradebook. Selesaikan salah satu dari 4 game untuk muncul di sini.</div>';
-    return;
-  }
-  // Group per student (nim) — setiap game TETAP ditampilkan terpisah, tidak dijumlahkan jadi satu angka.
-  const byStudent = new Map();
-  rows.forEach(d=>{
+  const game = GAMES[quizActiveTab];
+
+  // Dedupe: kalau ada beberapa dokumen untuk mahasiswa+game yang sama (misal dari replay
+  // sebelum perbaikan anti-duplikat), yang dipakai cuma SKOR TERBAIK satu baris per mahasiswa.
+  const bestPerStudent = new Map();
+  quizRawRows.forEach(d=>{
+    if((d.aktivitas||'') !== game.name) return;
     const key = d.nim;
-    if(!byStudent.has(key)) byStudent.set(key, { nim:d.nim, nama:d.nama||'Mahasiswa', games:[] });
-    byStudent.get(key).games.push({ aktivitas:d.aktivitas||'-', skor:d.skor||0, total:d.total||0, persentase:d.persentase });
-  });
-  const myNim = (window.currentStudent && window.currentStudent.nim) || localStorage.getItem('tazkia_student_nim') || '';
-  const students = Array.from(byStudent.values()).sort((a,b)=>{
-    if(b.games.length !== a.games.length) return b.games.length - a.games.length; // paling banyak game selesai di atas
-    return a.nama.localeCompare(b.nama);
+    const skor = Math.min(Number(d.skor)||0, game.max); // jaga-jaga data lama yang belum di-cap
+    const prev = bestPerStudent.get(key);
+    if(!prev || skor > prev.skor){
+      bestPerStudent.set(key, { nim:d.nim, nama:d.nama||'Mahasiswa', skor });
+    }
   });
 
-  box.innerHTML = students.map(s=>{
+  const ranked = Array.from(bestPerStudent.values()).sort((a,b)=>b.skor - a.skor);
+
+  if(!ranked.length){
+    box.innerHTML = `<div style="color:var(--txl);font-size:12.5px;text-align:center;padding:16px 0">Belum ada yang menyelesaikan <strong>${game.name}</strong>.</div>`;
+    return;
+  }
+
+  const myNim = (window.currentStudent && window.currentStudent.nim) || localStorage.getItem('tazkia_student_nim') || '';
+  const medals = ['🥇','🥈','🥉'];
+  box.innerHTML = ranked.map((s,i)=>{
     const isMe = myNim && s.nim === myNim;
-    const gameRows = s.games.map(g=>{
-      const pct = g.total ? Math.round((g.skor/g.total)*100) : 0;
-      return `<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:12.5px;color:var(--txm);border-top:1px solid var(--bd)">
-        <span>${g.aktivitas}</span>
-        <span style="font-family:'Source Code Pro',monospace;color:#30D8E0;font-weight:700">${g.skor}/${g.total} <span style="color:var(--txl);font-weight:400">(${pct}%)</span></span>
-      </div>`;
-    }).join('');
+    const pct = game.max ? Math.round((s.skor/game.max)*100) : 0;
     return `
-    <div style="background:#061218;border:1px solid ${isMe?'#F97316':'var(--bd)'};border-radius:8px;padding:12px 14px;${isMe?'box-shadow:0 0 12px rgba(249,115,22,.2);background:rgba(249,115,22,.04)':''}">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <div style="font-weight:700;color:#fff;display:flex;align-items:center;gap:6px;flex-wrap:wrap">
-          ${s.nama}
-          ${isMe?'<span style="font-size:10px;background:#F97316;color:#fff;padding:1px 6px;border-radius:4px;font-weight:800">ANDA</span>':''}
+    <div style="background:#061218;border:1px solid ${isMe?'#F97316':'var(--bd)'};border-radius:8px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;${isMe?'box-shadow:0 0 12px rgba(249,115,22,.2);background:rgba(249,115,22,.04)':''}">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-weight:800;font-size:16px;width:26px;text-align:center">${medals[i]||(i+1)+'.'}</span>
+        <div>
+          <div style="font-weight:700;color:#fff;display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+            ${s.nama}
+            ${isMe?'<span style="font-size:10px;background:#F97316;color:#fff;padding:1px 6px;border-radius:4px;font-weight:800">ANDA</span>':''}
+          </div>
+          <div style="font-size:11px;color:var(--txl)">NIM: ${s.nim}</div>
         </div>
-        <span style="font-size:11px;color:#30D8E0;font-weight:700">🎮 ${s.games.length}/4 Game Tercatat</span>
       </div>
-      <div style="font-size:11px;color:var(--txl);margin:2px 0 4px">NIM: ${s.nim}</div>
-      ${gameRows}
+      <div style="text-align:right">
+        <div style="font-family:'Source Code Pro',monospace;font-weight:700;font-size:15px;color:#30D8E0">${s.skor}/${game.max}</div>
+        <div style="font-size:10.5px;color:var(--txl)">${pct}%</div>
+      </div>
     </div>`;
   }).join('');
 }
