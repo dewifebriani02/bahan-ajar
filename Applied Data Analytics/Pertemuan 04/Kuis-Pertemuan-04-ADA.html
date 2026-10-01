@@ -219,7 +219,8 @@ body{
     <span style="font-family:'Amiri',serif;font-size:18px;font-weight:700;color:#fff">Arena Outing Class ADA</span>
   </div>
   <div class="hud-stats">
-    <button class="hud-pill hud-rank-btn" onclick="openLeaderboardModal()">🏆 Klasemen <span id="hudRank">#—</span></button>
+    <button class="hud-pill hud-rank-btn" onclick="openLeaderboardModal()">🏆 Klasemen Live <span id="hudRank">#—</span></button>
+    <button class="hud-pill hud-rank-btn" onclick="openQuizLeaderboardModal()" style="background:linear-gradient(135deg,rgba(32,200,208,.18),rgba(14,122,130,.1));border-color:rgba(32,200,208,.4);color:#7DEEF2">📋 Klasemen P04</button>
     <div class="hud-pill hud-score">🏅 <span id="grandTotal">0</span> pts</div>
     <button class="hud-pill hud-wheel-btn" onclick="openForfeitModal()">🎪 Roda Tantangan</button>
     <button class="hud-pill" style="cursor:pointer" onclick="toggleSound()" id="soundBtn">🔊 ON</button>
@@ -436,8 +437,8 @@ body{
   <div class="modal-box" style="max-width:560px">
     <div class="modal-hd">
       <div>
-        <h3 class="modal-title">🏆 Klasemen Real-Time Kelas</h3>
-        <div style="font-size:11.5px;color:var(--txm)">Akumulasi Skor 4 Game Arena ADA Outing Class (Maks. 3.200 pts)</div>
+        <h3 class="modal-title">🏆 Klasemen Live (Sesi Ini)</h3>
+        <div style="font-size:11.5px;color:var(--txm)">Skor berjalan dari room game ADA-ARENA-P04 — untuk suasana kompetitif selama outing class</div>
       </div>
       <button class="modal-close" onclick="closeLeaderboardModal()">✕</button>
     </div>
@@ -447,6 +448,24 @@ body{
       </div>
       <div id="leaderboardList" style="display:grid;gap:8px">
         <div style="color:var(--txl);font-size:12.5px;text-align:center;padding:16px 0">Memuat klasemen real-time...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- QUIZ LEADERBOARD MODAL (gradebook-sourced, tidak digabung dengan game lain) -->
+<div id="modalQuizLeaderboard" class="modal-overlay" onclick="if(event.target===this) closeQuizLeaderboardModal()">
+  <div class="modal-box" style="max-width:560px">
+    <div class="modal-hd">
+      <div>
+        <h3 class="modal-title">📋 Klasemen P04 (Rekap Kuis)</h3>
+        <div style="font-size:11.5px;color:var(--txm)">Diambil langsung dari gradebook — khusus kuis "ADA Outing Class (Review P01-P03)", tidak digabung dengan pertemuan lain</div>
+      </div>
+      <button class="modal-close" onclick="closeQuizLeaderboardModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="quizLeaderboardList" style="display:grid;gap:10px">
+        <div style="color:var(--txl);font-size:12.5px;text-align:center;padding:16px 0">Memuat rekap kuis P04...</div>
       </div>
     </div>
   </div>
@@ -1143,6 +1162,80 @@ function resetLeaderboardRoom(){
   }
 }
 function closeLeaderboardModal(){ document.getElementById('modalLeaderboard').classList.remove('show'); }
+
+/* ══════════ KLASEMEN P04 — BERSUMBER DARI GRADEBOOK ('quiz' COLLECTION), PER-GAME, TIDAK DIGABUNG ══════════ */
+const QUIZ_PERTEMUAN_LABEL = 'ADA Outing Class (Review P01-P03)';
+let quizLeaderboardUnsub = null;
+
+function openQuizLeaderboardModal(){
+  document.getElementById('modalQuizLeaderboard').classList.add('show');
+  if(quizLeaderboardUnsub) return; // listener already attached, just show cached render
+  if(!window.onCloudSyncReady) return;
+  window.onCloudSyncReady(dbInstance=>{
+    if(quizLeaderboardUnsub) return;
+    quizLeaderboardUnsub = dbInstance.collection('quiz')
+      .where('pertemuan', '==', QUIZ_PERTEMUAN_LABEL)
+      .onSnapshot(snapshot=>{
+        const rows = [];
+        snapshot.forEach(doc=>{
+          const d = doc.data();
+          if(!d || !d.nim) return;
+          if(d.nim === '0206015' || /dewi\s*febriani|dosen/i.test(d.nama||'')) return; // never show dosen
+          rows.push(d);
+        });
+        renderQuizLeaderboard(rows);
+      }, err=>{
+        console.error('Error listening quiz leaderboard:', err);
+        document.getElementById('quizLeaderboardList').innerHTML =
+          '<div style="color:var(--warn);font-size:12.5px;text-align:center;padding:16px 0">Gagal memuat rekap kuis.</div>';
+      });
+  });
+}
+function closeQuizLeaderboardModal(){ document.getElementById('modalQuizLeaderboard').classList.remove('show'); }
+
+function renderQuizLeaderboard(rows){
+  const box = document.getElementById('quizLeaderboardList');
+  if(!box) return;
+  if(!rows.length){
+    box.innerHTML = '<div style="color:var(--txl);font-size:12.5px;text-align:center;padding:16px 0">Belum ada kuis P04 yang tercatat di gradebook. Selesaikan salah satu dari 4 game untuk muncul di sini.</div>';
+    return;
+  }
+  // Group per student (nim) — setiap game TETAP ditampilkan terpisah, tidak dijumlahkan jadi satu angka.
+  const byStudent = new Map();
+  rows.forEach(d=>{
+    const key = d.nim;
+    if(!byStudent.has(key)) byStudent.set(key, { nim:d.nim, nama:d.nama||'Mahasiswa', games:[] });
+    byStudent.get(key).games.push({ aktivitas:d.aktivitas||'-', skor:d.skor||0, total:d.total||0, persentase:d.persentase });
+  });
+  const myNim = (window.currentStudent && window.currentStudent.nim) || localStorage.getItem('tazkia_student_nim') || '';
+  const students = Array.from(byStudent.values()).sort((a,b)=>{
+    if(b.games.length !== a.games.length) return b.games.length - a.games.length; // paling banyak game selesai di atas
+    return a.nama.localeCompare(b.nama);
+  });
+
+  box.innerHTML = students.map(s=>{
+    const isMe = myNim && s.nim === myNim;
+    const gameRows = s.games.map(g=>{
+      const pct = g.total ? Math.round((g.skor/g.total)*100) : 0;
+      return `<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:12.5px;color:var(--txm);border-top:1px solid var(--bd)">
+        <span>${g.aktivitas}</span>
+        <span style="font-family:'Source Code Pro',monospace;color:#30D8E0;font-weight:700">${g.skor}/${g.total} <span style="color:var(--txl);font-weight:400">(${pct}%)</span></span>
+      </div>`;
+    }).join('');
+    return `
+    <div style="background:#061218;border:1px solid ${isMe?'#F97316':'var(--bd)'};border-radius:8px;padding:12px 14px;${isMe?'box-shadow:0 0 12px rgba(249,115,22,.2);background:rgba(249,115,22,.04)':''}">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div style="font-weight:700;color:#fff;display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+          ${s.nama}
+          ${isMe?'<span style="font-size:10px;background:#F97316;color:#fff;padding:1px 6px;border-radius:4px;font-weight:800">ANDA</span>':''}
+        </div>
+        <span style="font-size:11px;color:#30D8E0;font-weight:700">🎮 ${s.games.length}/4 Game Tercatat</span>
+      </div>
+      <div style="font-size:11px;color:var(--txl);margin:2px 0 4px">NIM: ${s.nim}</div>
+      ${gameRows}
+    </div>`;
+  }).join('');
+}
 
 function renderLeaderboard(players){
   rawLeaderboardData = players || [];
